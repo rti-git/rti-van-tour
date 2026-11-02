@@ -1,0 +1,2489 @@
+<!DOCTYPE html>
+<html lang="zh-TW" id="root-html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title id="page-title">央廣1號 Rti 行動廣播車 · 3D 模型</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700;900&family=VT323&display=swap" rel="stylesheet">
+
+    <!-- Three.js & OrbitControls -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <style>
+        :root {
+            --mc-bg-dark: rgba(18, 18, 22, 0.94);
+            --mc-gui-bg: #c6c6c6;
+        }
+        * {
+            user-select: none;
+            -webkit-user-select: none;
+            box-sizing: border-box;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #0b1120;
+            font-family: 'VT323', 'Noto Sans TC', sans-serif;
+        }
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            touch-action: none;
+        }
+        .mc-hud-box {
+            background: var(--mc-bg-dark);
+            border: 3px solid #2e2e38;
+            box-shadow: inset 0 0 0 2px #4a4a5a, 0 6px 0 rgba(0,0,0,0.5);
+            color: #fff;
+            text-shadow: 2px 2px 0 #000;
+        }
+        .mc-gui-window {
+            background-color: var(--mc-gui-bg);
+            border-top: 4px solid #fff;
+            border-left: 4px solid #fff;
+            border-right: 4px solid #555;
+            border-bottom: 4px solid #555;
+            box-shadow: 0 0 0 3px #000, 0 12px 28px rgba(0,0,0,0.75);
+            color: #222;
+        }
+        .mc-slot {
+            background-color: #8b8b8b;
+            border-top: 3px solid #373737;
+            border-left: 3px solid #373737;
+            border-right: 3px solid #fff;
+            border-bottom: 3px solid #fff;
+        }
+        .mc-mini-slot {
+            background-color: rgba(28, 30, 38, 0.92);
+            border-top: 2px solid #6b7280;
+            border-left: 2px solid #6b7280;
+            border-right: 2px solid #111827;
+            border-bottom: 2px solid #111827;
+            color: #fff;
+            text-shadow: 1px 1px 0 #000;
+            cursor: pointer;
+        }
+        .mc-mini-slot:hover {
+            background-color: rgba(59, 130, 246, 0.4);
+        }
+        .mc-mini-slot.active-state {
+            border-top-color: #fbbf24;
+            border-left-color: #fbbf24;
+            border-right-color: #d97706;
+            border-bottom-color: #d97706;
+            background-color: rgba(37, 99, 235, 0.65);
+        }
+        .mc-btn {
+            background-color: #7d7d7d;
+            border-top: 3px solid #bababa;
+            border-left: 3px solid #bababa;
+            border-right: 3px solid #3b3b3b;
+            border-bottom: 3px solid #3b3b3b;
+            outline: 2px solid #000;
+            color: #fff;
+            text-shadow: 2px 2px 0 #1f1f1f;
+            cursor: pointer;
+        }
+        .mc-btn:hover {
+            background-color: #6b7ba8;
+            color: #ffff77;
+        }
+        .mc-btn-emerald {
+            background-color: #167c36;
+            border-top-color: #4ade80;
+            border-left-color: #4ade80;
+            border-right-color: #064e20;
+            border-bottom-color: #064e20;
+        }
+        .mc-btn-redstone {
+            background-color: #991b1b;
+            border-top-color: #f87171;
+            border-left-color: #f87171;
+            border-right-color: #450a0a;
+            border-bottom-color: #450a0a;
+        }
+        .marker-label {
+            position: absolute;
+            transform: translate(-50%, -100%);
+            pointer-events: auto;
+            cursor: pointer;
+            z-index: 15;
+            white-space: nowrap;
+        }
+        .marker-label.selected .marker-badge {
+            border-color: #ffff55;
+            background: rgba(20, 45, 85, 0.96);
+            box-shadow: 0 0 15px rgba(255,255,85,0.8);
+        }
+        .marker-badge {
+            background: rgba(15, 18, 26, 0.9);
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 2px #000;
+            padding: 3px 8px;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            text-shadow: 1px 1px 0 #000;
+        }
+        .marker-pin {
+            width: 0;
+            height: 0;
+            margin: 0 auto;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid #fff;
+        }
+        /* 手機寬度不足以容納 nowrap 長名稱；width:max-content 避免標籤靠近螢幕右緣時被 absolute 的可用寬度壓成一個字寬 */
+        @media (max-width: 639px) {
+            .marker-label { width: max-content; }
+            .marker-badge {
+                max-width: 42vw;
+                white-space: normal;
+                line-height: 1.15;
+            }
+        }
+        .floating-widget {
+            position: fixed;
+            z-index: 40;
+            touch-action: none;
+            user-select: none;
+        }
+        .drag-handle {
+            cursor: grab;
+            background: linear-gradient(90deg, #1e293b, #334155, #1e293b);
+            border-bottom: 2px solid #0f172a;
+        }
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+        /* 手機（含橫向，低高度 <500）上收合圖鑑卡只剩標題列，並縮窄到控制台（w-60=240px）右側，才不會蓋住控制台底部的快捷列；
+           不用 translateY 是因為拖曳時會把 getBoundingClientRect 的位置寫回 top/left，位移會被重複計算 */
+        @media (max-width: 639px), (max-height: 499px) {
+            #crafting-modal.inspector-collapsed {
+                width: auto;
+                min-width: 56px;
+                max-width: calc(100vw - 272px);
+            }
+            #crafting-modal.inspector-collapsed #inspector-drag-handle ~ div,
+            #crafting-modal.inspector-collapsed #modal-category-badge,
+            #crafting-modal.inspector-collapsed #inspector-compact-btn { display: none; }
+            #modal-title::before { content: '▼ '; }
+            #crafting-modal.inspector-collapsed #modal-title::before { content: '▲ '; }
+        }
+        /* 任務情境地圖 */
+        .map-pin { position: absolute; transform: translate(-50%, -100%); cursor: pointer; z-index: 3; white-space: nowrap; background: none; border: 0; padding: 0; }
+        .map-pin .pin-badge { background: rgba(15, 18, 26, 0.92); border: 2px solid #fff; box-shadow: 0 0 0 2px #000; color: #fff; font-size: 11px; font-weight: 700; padding: 2px 6px; text-shadow: 1px 1px 0 #000; display: flex; gap: 4px; align-items: center; font-family: 'Noto Sans TC', sans-serif; }
+        .map-pin:hover .pin-badge { background: rgba(59, 130, 246, 0.9); }
+        .map-pin.active .pin-badge { border-color: #ffff55; background: rgba(20, 45, 85, 0.96); box-shadow: 0 0 0 2px #000, 0 0 14px rgba(255, 255, 85, 0.85); }
+        .map-pin .pin-tip { width: 0; height: 0; margin: 0 auto; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid #fff; }
+        .map-van { position: absolute; font-size: 24px; z-index: 4; transition: left 1s ease-in-out, top 1s ease-in-out; filter: drop-shadow(2px 2px 0 #000); pointer-events: none; }
+        .scenario-card { font-family: 'Noto Sans TC', sans-serif; }
+        #mission-card p, #mission-status { font-family: 'Noto Sans TC', sans-serif; }
+    </style>
+</head>
+<body class="select-none overflow-hidden">
+
+    <div id="canvas-container"></div>
+    <div id="labels-container" class="inset-0 pointer-events-none fixed z-10 overflow-hidden"></div>
+
+    <!-- HUD Header -->
+    <header class="fixed top-2 left-2 right-2 z-20 flex items-start justify-between gap-2 pointer-events-none">
+        <div class="mc-hud-box px-2 sm:px-3 py-1.5 pointer-events-auto max-w-[55vw] sm:max-w-lg">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-white border-2 border-red-600 flex items-center justify-center font-black text-red-600 text-sm tracking-tighter shrink-0">Rti</div>
+                <div class="min-w-0">
+                    <div class="flex items-center gap-1.5">
+                        <h1 id="hud-title" class="text-sm sm:text-base font-black text-yellow-300 truncate">央廣1號 Rti 行動廣播車 · 3D 模型</h1>
+                        <span id="hud-view-mode" class="bg-emerald-800 border border-emerald-400 text-[10px] px-1 text-emerald-100 font-bold shrink-0">車外全覽</span>
+                        <span id="hud-scene" class="hidden sm:inline bg-sky-800 border border-sky-400 text-[10px] px-1 text-sky-100 font-bold shrink-0">🏠 央廣基地</span>
+                    </div>
+                    <p class="text-[10px] sm:text-xs text-gray-300 truncate">Rti On the Go</p>
+                </div>
+            </div>
+            <div class="mt-1 pt-1 border-t border-gray-700/80 flex items-center justify-between text-[10px] font-mono">
+                <span id="hud-coords" class="text-cyan-300 hidden sm:inline">XYZ: 17.0/13.0/21.0</span>
+                <div class="flex items-center gap-1">
+                    <span id="hud-plate-label" class="text-gray-400">車牌:</span>
+                    <span class="text-yellow-300 font-bold bg-black/60 px-1 border border-yellow-500/50">CER-1928</span>
+                    <span id="hud-signal-text" class="text-lime-400 font-bold ml-1">● 待命</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center gap-1 pointer-events-auto flex-wrap justify-end shrink-0">
+            <button id="map-hint-btn" onclick="toggleScenarioMap(true)" class="hidden sm:inline-flex mc-btn mc-btn-emerald px-2 py-1 text-xs font-bold animate-pulse" title="任務情境地圖 (M)">🗺️</button>
+            <button onclick="switchLanguage()" id="lang-btn" class="mc-btn px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs font-bold" title="中/EN">🌐</button>
+            <button onclick="resetCameraOverview()" id="btn-center" class="mc-btn mc-btn-emerald px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs font-bold" title="置中廣播車">🎯</button>
+            <button onclick="toggleLabelsVisibility()" id="btn-labels" class="mc-btn px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs font-bold" title="標籤開關">🏷️</button>
+            <button onclick="toggleMute()" id="btn-music" class="mc-btn px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs font-bold" title="音樂開關"><span id="audio-icon">🔊</span></button>
+        </div>
+    </header>
+
+    <!-- Floating Console Widget -->
+    <div id="floating-console" class="floating-widget w-60 sm:w-64" style="left: 12px; bottom: 14px;">
+        <div id="console-expanded" class="mc-hud-box overflow-hidden shadow-2xl">
+            <div id="console-drag-handle" class="drag-handle px-2.5 py-1.5 flex items-center justify-between">
+                <span id="console-title" class="text-xs font-bold text-yellow-300">🎮 央廣1號控制台</span>
+                <button onclick="toggleConsoleMinimize(event)" class="mc-btn px-1.5 text-[10px]">_</button>
+            </div>
+            <div class="p-2 grid grid-cols-3 gap-1.5 bg-[#14151c]/90">
+                <button id="fbtn-ext" onclick="setCutawayMode(false, true)" class="mc-mini-slot active-state p-1.5 flex flex-col items-center justify-center">
+                    <span class="text-base">🏠</span><span id="ext-btn-text" class="text-[10px] font-bold mt-1">車外全覽</span>
+                </button>
+                <button id="fbtn-int" onclick="setCutawayMode(true, true)" class="mc-mini-slot p-1.5 flex flex-col items-center justify-center">
+                    <span class="text-base">🔍</span><span id="int-btn-text" class="text-[10px] font-bold mt-1">車內透視</span>
+                </button>
+                <button id="fbtn-flip" onclick="toggleLedScreenFlip()" class="mc-mini-slot p-1.5 flex flex-col items-center justify-center">
+                    <span class="text-base">📺</span><span id="flip-btn-text" class="text-[10px] font-bold mt-1">電視外翻</span>
+                </button>
+                <button id="fbtn-sat" onclick="toggleBroadcastSignal()" class="mc-mini-slot p-1.5 flex flex-col items-center justify-center">
+                    <span class="text-base">📡</span><span id="broadcast-btn-text" class="text-[10px] font-bold mt-1">衛星發射</span>
+                </button>
+                <button onclick="toggleDayNight()" class="mc-mini-slot p-1.5 flex flex-col items-center justify-center">
+                    <span id="daynight-icon" class="text-base">☀️</span><span id="daynight-btn-text" class="text-[10px] font-bold mt-1">日夜切換</span>
+                </button>
+                <button id="fbtn-card" onclick="toggleInspectorCard()" class="mc-mini-slot active-state p-1.5 flex flex-col items-center justify-center">
+                    <span class="text-base">📋</span><span id="guide-btn-text" class="text-[10px] font-bold mt-1 text-amber-300">設備圖鑑</span>
+                </button>
+            </div>
+            <div class="px-2 pb-2 bg-[#14151c]/90">
+                <button onclick="toggleScenarioMap(true)" class="mc-mini-slot w-full py-1.5 text-[11px] font-bold flex items-center justify-center gap-1"><span>🗺️</span><span id="map-btn-text">任務情境地圖</span></button>
+            </div>
+            <div class="px-2 pb-2 pt-1 bg-[#14151c]/90 border-t border-gray-700/70">
+                <div class="flex items-center justify-between text-[10px] text-gray-400 mb-1">
+                    <span id="quickbar-label">⚡ 裝備快捷列：</span><span id="console-current-feat" class="text-cyan-300 font-bold truncate max-w-[110px]"></span>
+                </div>
+                <div id="mini-feature-dock" class="grid grid-cols-6 gap-1"></div>
+            </div>
+        </div>
+        <div id="console-minimized" class="hidden">
+            <div id="console-min-drag-handle" class="mc-hud-box px-3 py-2 flex items-center gap-2 border-2 border-yellow-400 shadow-2xl">
+                <span class="text-lg">🚐</span><div id="console-mini-label" class="text-[11px] font-black text-yellow-300">控制台</div>
+                <button onclick="toggleConsoleMinimize(event)" class="mc-btn px-1.5 text-xs font-bold ml-1">□</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Crafting Inspector Window -->
+    <section id="crafting-modal" class="floating-widget w-[calc(100vw-24px)] sm:w-80 max-w-sm" style="right: 12px; bottom: 14px;">
+        <div class="mc-gui-window flex flex-col overflow-hidden shadow-2xl">
+            <div id="inspector-drag-handle" class="drag-handle px-2.5 py-1.5 flex items-center justify-between text-white">
+                <div class="flex items-center gap-1.5 truncate">
+                    <span id="modal-category-badge" class="px-1.5 py-0.2 text-[10px] font-bold bg-blue-700 border border-black shrink-0">車外裝備</span>
+                    <h2 id="modal-title" class="text-xs sm:text-sm font-black text-yellow-300 truncate">載入中</h2>
+                </div>
+                <div class="flex items-center gap-1 shrink-0 ml-1">
+                    <button id="inspector-compact-btn" onclick="toggleInspectorCompactBody()" class="mc-btn px-1.5 text-[10px]">↕</button>
+                    <button onclick="toggleInspectorCard(false)" class="mc-btn mc-btn-redstone px-1.5 text-[10px] font-bold">✕</button>
+                </div>
+            </div>
+            <div class="p-2.5 sm:p-3 max-h-[52vh] sm:max-h-[68vh] overflow-y-auto space-y-2">
+                <div class="flex items-center justify-between text-[10px] font-mono bg-gray-300 px-2 py-0.5 border border-gray-500 text-gray-800">
+                    <span id="modal-en-title" class="truncate">Loading</span>
+                    <span id="modal-power-tag" class="text-emerald-800 font-bold shrink-0"></span>
+                </div>
+                <div class="bg-[#212126] text-white p-2 border-2 border-[#4a4a55] text-xs leading-relaxed">
+                    <p id="modal-description" class="text-gray-100"></p>
+                </div>
+                <div id="inspector-details-body" class="space-y-2">
+                    <div class="bg-[#b0b0b0] border-2 border-[#555] p-2">
+                        <div id="crafting-grid-label" class="text-[11px] font-bold text-gray-800 mb-1">⚒️ 方塊合成表 (Crafting Grid)</div>
+                        <div class="flex items-center justify-around gap-1">
+                            <div id="crafting-grid" class="grid grid-cols-3 gap-0.5 bg-[#8b8b8b] p-1 border-2 border-[#373737]"></div>
+                            <span class="text-lg font-black text-gray-700">➡</span>
+                            <div class="mc-slot w-11 h-11 flex flex-col items-center justify-center p-1 bg-[#8b8b8b]">
+                                <div id="crafting-output-icon" class="text-lg">📡</div>
+                                <span class="text-[8px] font-bold text-white">MAX</span>
+                            </div>
+                        </div>
+                        <div id="crafting-ingredients-note" class="mt-1 text-[10px] text-gray-800 bg-[#d8d8d8] px-1 py-0.5 border border-gray-500"></div>
+                    </div>
+                    <div id="modal-specs-list" class="space-y-1 text-xs"></div>
+                </div>
+                <div class="pt-1.5 border-t border-gray-400 flex items-center justify-between gap-1">
+                    <button id="prev-btn" onclick="cycleFeature(-1)" class="mc-btn px-2 py-1 text-[11px] font-bold flex-1">◀ 上個</button>
+                    <button id="modal-action-btn" onclick="triggerFeatureAction()" class="mc-btn mc-btn-emerald px-2 py-1 text-[11px] font-bold flex-1">⚡ 互動測試</button>
+                    <button id="next-btn" onclick="cycleFeature(1)" class="mc-btn px-2 py-1 text-[11px] font-bold flex-1">下個 ▶</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Card (目前情境) -->
+    <section id="mission-card" class="floating-widget hidden w-64 sm:w-72" style="top: 100px; left: 12px;">
+        <div class="mc-hud-box overflow-hidden shadow-2xl">
+            <div id="mission-drag-handle" class="drag-handle px-2.5 py-1.5 flex items-center justify-between gap-1">
+                <span id="mission-title" class="text-xs font-bold text-yellow-300 truncate">📍 任務情境</span>
+                <div class="flex gap-1 shrink-0">
+                    <button onclick="toggleScenarioMap(true)" class="mc-btn px-1.5 text-[10px]" title="任務情境地圖">🗺️</button>
+                    <button onclick="toggleMissionBody()" class="mc-btn px-1.5 text-[10px]">↕</button>
+                    <button onclick="hideMissionCard()" class="mc-btn mc-btn-redstone px-1.5 text-[10px] font-bold">✕</button>
+                </div>
+            </div>
+            <div id="mission-body" class="p-2 bg-[#14151c]/90 space-y-1.5">
+                <p id="mission-desc" class="text-[11px] leading-relaxed text-gray-200"></p>
+                <div id="mission-status" class="space-y-0.5 text-[11px]"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scenario Map (任務情境地圖) -->
+    <div id="scenario-map" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 p-3" onclick="if (event.target === this) toggleScenarioMap(false)">
+        <div class="mc-gui-window w-full max-w-[620px] max-h-[94vh] overflow-y-auto">
+            <div class="drag-handle px-3 py-1.5 flex items-center justify-between text-white" style="cursor: default;">
+                <span id="scenario-map-title" class="text-sm font-black text-yellow-300">🗺️ 央廣1號 任務情境地圖</span>
+                <button onclick="toggleScenarioMap(false)" class="mc-btn mc-btn-redstone px-1.5 text-[10px] font-bold">✕</button>
+            </div>
+            <div class="p-2.5 space-y-2">
+                <div id="scenario-map-hint" class="text-[11px] text-gray-800 font-bold" style="font-family: 'Noto Sans TC', sans-serif;">點選地圖上的地點或下方任務卡，央廣1號就會出發前往該情境現場。</div>
+                <div id="map-board" class="relative w-full border-4 border-[#373737] overflow-hidden" style="aspect-ratio: 16 / 10; background: #6fbf4a;">
+                    <svg viewBox="0 0 400 250" preserveAspectRatio="none" class="absolute inset-0 w-full h-full" shape-rendering="crispEdges">
+                        <defs>
+                            <pattern id="grassPat" width="20" height="20" patternUnits="userSpaceOnUse">
+                                <rect width="20" height="20" fill="#6fbf4a"/><rect width="10" height="10" fill="#79c853"/><rect x="10" y="10" width="10" height="10" fill="#66b543"/>
+                            </pattern>
+                        </defs>
+                        <rect width="400" height="250" fill="url(#grassPat)"/>
+                        <!-- 山區 (災區) -->
+                        <polygon points="262,92 300,22 338,92" fill="#7c6f64"/>
+                        <polygon points="300,92 350,8 400,92" fill="#6b5f55"/>
+                        <polygon points="340,26 350,8 360,26" fill="#e5e7eb"/>
+                        <g fill="#4b5563"><rect x="300" y="12" width="60" height="14"/><rect x="312" y="4" width="34" height="10"/></g>
+                        <polyline points="330,26 324,40 332,40 326,54" fill="none" stroke="#facc15" stroke-width="3"/>
+                        <g stroke="#93c5fd" stroke-width="1.5"><line x1="306" y1="28" x2="303" y2="36"/><line x1="316" y1="28" x2="313" y2="36"/><line x1="348" y1="28" x2="345" y2="36"/><line x1="356" y1="28" x2="353" y2="36"/></g>
+                        <!-- 河流 -->
+                        <path d="M0 158 C 70 138, 130 198, 210 176 S 330 118, 400 138" stroke="#3b8fd9" stroke-width="16" fill="none"/>
+                        <!-- 城區 (總統府) -->
+                        <g fill="#9ca3af"><rect x="14" y="214" width="22" height="18"/><rect x="128" y="212" width="24" height="22"/><rect x="40" y="232" width="30" height="14"/><rect x="104" y="230" width="20" height="16"/><rect x="150" y="236" width="26" height="12"/></g>
+                        <rect x="60" y="210" width="56" height="8" fill="#3f4248"/>
+                        <rect x="70" y="194" width="36" height="16" fill="#b5523b"/><rect x="84" y="178" width="8" height="32" fill="#b5523b"/>
+                        <rect x="70" y="200" width="36" height="2" fill="#f1ebe0"/><rect x="84" y="186" width="8" height="2" fill="#f1ebe0"/>
+                        <!-- 校園 -->
+                        <rect x="38" y="70" width="64" height="26" rx="13" fill="#5aa83c" stroke="#b4533a" stroke-width="5"/>
+                        <rect x="56" y="40" width="48" height="18" fill="#f2e6cf"/><rect x="76" y="30" width="8" height="28" fill="#efe2c8"/><rect x="56" y="40" width="48" height="3" fill="#8b3a2e"/>
+                        <!-- 城市廣場 -->
+                        <circle cx="320" cy="198" r="26" fill="#d9cbb0"/>
+                        <polygon points="300,196 307,186 314,196" fill="#dc2626"/><polygon points="316,192 323,182 330,192" fill="#16a34a"/><polygon points="332,198 339,188 346,198" fill="#2563eb"/>
+                        <!-- 道路 (基地 → 各地點) -->
+                        <g stroke="#d6d3cc" stroke-width="9" fill="none" stroke-linecap="round">
+                            <path d="M200 140 L80 65"/><path d="M200 140 L320 175"/><path d="M200 140 L332 65"/><path d="M200 140 L88 205"/>
+                        </g>
+                        <g stroke="#ffffff" stroke-width="1.5" fill="none" stroke-dasharray="5 5">
+                            <path d="M200 140 L80 65"/><path d="M200 140 L320 175"/><path d="M200 140 L332 65"/><path d="M200 140 L88 205"/>
+                        </g>
+                        <!-- 央廣基地 -->
+                        <rect x="186" y="122" width="28" height="18" fill="#f5f6f7" stroke="#e5323c" stroke-width="2"/>
+                        <text x="200" y="135" font-size="9" fill="#e5323c" text-anchor="middle" font-weight="900" font-family="Arial Black, Arial, sans-serif">Rti</text>
+                    </svg>
+                    <div id="map-pins"></div>
+                    <div id="map-van" class="map-van">🚐</div>
+                </div>
+                <div id="scenario-cards" class="grid grid-cols-1 sm:grid-cols-2 gap-1.5"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scene transition -->
+    <div id="scene-fade" class="fixed inset-0 z-[60] pointer-events-none flex items-center justify-center bg-black" style="opacity: 0; transition: opacity 0.6s;">
+        <div id="scene-fade-text" class="mc-hud-box px-4 py-2 text-yellow-300 font-black text-sm sm:text-base" style="font-family: 'Noto Sans TC', sans-serif;"></div>
+    </div>
+
+    <script>
+        // --- 1. Web Audio Engine (Day & Night Mode Synth) ---
+        let audioCtx = null, isMuted = false, isBgmPlaying = false, bgmNextNoteTime = 0, bgmCurrentNote = 0, bgmTimerID = null;
+        const DAY_MELODY = [392.0, 0, 523.3, 0, 659.3, 523.3, 784.0, 0, 659.3, 0, 523.3, 0, 392.0, 329.6, 261.6, 0];
+        const NIGHT_MELODY = [261.6, 329.6, 392.0, 493.9, 523.2, 392.0, 329.6, 261.6, 220.0, 261.6, 329.6, 440.0, 392.0, 329.6, 261.6, 196.0];
+
+        function bgmScheduler() {
+            if (isMuted || !isBgmPlaying || !audioCtx) return;
+            while (bgmNextNoteTime < audioCtx.currentTime + 0.1) {
+                const currentSeq = isNightMode ? NIGHT_MELODY : DAY_MELODY;
+                const freq = currentSeq[bgmCurrentNote];
+                if (freq > 0) {
+                    const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+                    osc.type = isNightMode ? 'triangle' : 'square';
+                    osc.frequency.value = freq;
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    const vol = isNightMode ? 0.025 : 0.02;
+                    gain.gain.setValueAtTime(0, bgmNextNoteTime);
+                    gain.gain.linearRampToValueAtTime(vol, bgmNextNoteTime + 0.01);
+                    gain.gain.exponentialRampToValueAtTime(0.001, bgmNextNoteTime + (isNightMode ? 0.22 : 0.12));
+                    osc.start(bgmNextNoteTime);
+                    osc.stop(bgmNextNoteTime + (isNightMode ? 0.24 : 0.14));
+                }
+                bgmNextNoteTime += isNightMode ? 0.22 : 0.16;
+                bgmCurrentNote = (bgmCurrentNote + 1) % currentSeq.length;
+            }
+            bgmTimerID = setTimeout(bgmScheduler, 25);
+        }
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (!isMuted) {
+                    isBgmPlaying = true;
+                    bgmNextNoteTime = audioCtx.currentTime + 0.1;
+                    bgmScheduler();
+                }
+            }
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function playSound(type) {
+            if (isMuted) return;
+            try {
+                initAudio();
+                if (!audioCtx) return;
+                const now = audioCtx.currentTime, osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                if (type === 'click') {
+                    osc.type = 'square'; osc.frequency.setValueAtTime(500, now); osc.frequency.exponentialRampToValueAtTime(250, now + 0.05);
+                    gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                    osc.start(now); osc.stop(now + 0.05);
+                } else if (type === 'piston') {
+                    osc.type = 'sawtooth'; osc.frequency.setValueAtTime(160, now); osc.frequency.linearRampToValueAtTime(90, now + 0.2);
+                    gain.gain.setValueAtTime(0.12, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+                    osc.start(now); osc.stop(now + 0.22);
+                } else if (type === 'beacon') {
+                    osc.type = 'triangle'; osc.frequency.setValueAtTime(440, now); osc.frequency.setValueAtTime(880, now + 0.15);
+                    gain.gain.setValueAtTime(0.12, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+                    osc.start(now); osc.stop(now + 0.35);
+                }
+            } catch (e) {}
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            document.getElementById('audio-icon').textContent = isMuted ? '🔇' : '🔊';
+            if (isMuted) {
+                isBgmPlaying = false;
+                clearTimeout(bgmTimerID);
+            } else {
+                playSound('click');
+                if (audioCtx) {
+                    isBgmPlaying = true;
+                    bgmNextNoteTime = audioCtx.currentTime + 0.1;
+                    bgmScheduler();
+                }
+            }
+        }
+
+        // --- 2. Feature Database ---
+        const VEHICLE_FEATURES = [
+            {
+                id: 'outdoor_stage', category: 'exterior', categoryLabel: '車外裝備', name: 'RTI On The Go 外翻電視牆', enName: 'Hinged Outward TV Screen & Glass Window', icon: '📺',
+                markerPos: { x: -3.5, y: 5.8, z: 4.2 }, cameraPos: { x: -3.5, y: 7.0, z: 15.0 }, lookAtPos: { x: -3.5, y: 5.2, z: 3.5 }, requireCutaway: false,
+                powerTag: '車頭側鉸鏈向車頭外翻', recipeNote: '合成材料：高畫質Rti On The Go貼圖 + 外翻鉸鏈 + 5mm觀景窗', recipeGrid: ['💡', '📺', '💡', '🔴', '🪟', '🔴', '🔊', '⚙️', '🔊'],
+                description: '電視牆關閉時完整覆蓋採訪區玻璃窗，呈現高畫質 Rti LOGO 與 RTI On The Go 貼圖；點選時以靠車頭一側的鉸鏈為軸心，向車頭方向外翻，畫面切換為「🔴 全球多語直播」，並露出採訪區實況。',
+                specs: [{ label: '電視牆位置', value: '車身右側採訪區外牆 (對齊採訪桌)', pct: 100 }, { label: '外翻機構', value: '靠車頭側鉸鏈，向車頭外翻開啟', pct: 100 }]
+            },
+            {
+                id: 'mobile_studio', category: 'interior', categoryLabel: '車內採訪區', name: '多語採訪區', enName: 'Interview Studio (3 Hosts & 3 Mics)', icon: '🎙️',
+                markerPos: { x: -3.5, y: 6.8, z: 0.8 }, cameraPos: { x: -2.5, y: 12.0, z: 12.0 }, lookAtPos: { x: -3.5, y: 5.2, z: 0.8 }, requireCutaway: true,
+                powerTag: '採訪區佔 3/4 淨空間', recipeNote: '合成材料：木紋地板 + 折疊桌 + 電容麥克風 x3 + 主持人 x3 + 紅色霓虹燈', recipeGrid: ['🪟', '🎙️', '🪟', '🎧', '🪵', '🎧', '🪑', '👨‍💼', '🪑'],
+                description: '現場採訪區，設有防滑地板與採訪桌，配備 3 支帶避震架的廣播級電容麥克風。背景牆設有紅色「Rti On the Go」霓虹燈。可提供主持人及來賓進行現場訪問錄音及直播。',
+                specs: [{ label: '空間比例', value: '車廂 75% 淨空間 (與導播區 3:1)', pct: 75 }, { label: '主持卡司', value: '三主持人 (金髮女, 黑髮女, 男性主持人)', pct: 100 }]
+            },
+            {
+                id: 'control_room', category: 'interior', categoryLabel: '車內導播區', name: '前段導播區', enName: 'Director Area (25% Space & Engineer)', icon: '🎛️',
+                markerPos: { x: 2.8, y: 6.5, z: 0.0 }, cameraPos: { x: 3.0, y: 12.0, z: 11.0 }, lookAtPos: { x: 2.8, y: 5.2, z: 0.0 }, requireCutaway: true,
+                powerTag: '車頭 1/4 獨立機櫃區', recipeNote: '合成材料：硬式滑門隔板 + 4K導播機 + 閃爍機櫃 + 男性工程師', recipeGrid: ['🖥️', '🎛️', '🎚️', '⚡', '🗄️', '📡', '🔒', '🚪', '🔒'],
+                description: '靠車頭前段獨立導播區，配有滑門隔板與高密度機櫃，整合 4K 導播機、成音設備、儲能/逆變器面板、傳輸設備，坐著 1 位導播，並可搭配1位工程師協同作業。',
+                specs: [{ label: '空間比例', value: '靠車頭 25% 獨立空間 (3:1 分區)', pct: 25 }, { label: '機櫃監控', value: '導播/成音/電力/通訊一體化閃爍機櫃', pct: 100 }]
+            },
+            {
+                id: 'leo_satellite', category: 'exterior', categoryLabel: '車外裝備', name: 'OneWeb 低軌衛星 & 5G 陣列天線', enName: 'OneWeb LEO & 5G MIMO Antenna', icon: '📡',
+                markerPos: { x: -2.0, y: 11.4, z: 0.0 }, cameraPos: { x: -10.0, y: 15.5, z: 12.0 }, lookAtPos: { x: -2.0, y: 9.8, z: 0.0 }, requireCutaway: false,
+                powerTag: '極端備援: 雙重防線', recipeNote: '合成材料：OneWeb 低軌衛星圓盤 + 5G MIMO 天線', recipeGrid: ['🛰️', '💎', '🛰️', '🔴', '📡', '🔴', '🔩', '⚡', '🔩'],
+                description: '車頂搭載中華電信 OneWeb 低軌衛星天線與 5G 4X4 MIMO 陣列天線，平時利用5G行動通訊網路進行節目傳輸，在極端情境下利用低軌衛星保持雙重備援通訊。',
+                specs: [{ label: '韌性通訊', value: '低軌衛星 + 5G Bonding 雙備援', pct: 100 }, { label: '災防應變', value: '斷網不斷訊對外權威發送', pct: 98 }]
+            },
+            {
+                id: 'power_system', category: 'exterior', categoryLabel: '車外裝備', name: '綠能儲能與 800W 太陽能板', enName: '20kWh Battery & 800W Solar Panels', icon: '🔋',
+                markerPos: { x: -5.2, y: 3.2, z: -4.2 }, cameraPos: { x: -11.0, y: 6.5, z: -14.0 }, lookAtPos: { x: -4.5, y: 3.5, z: -2.5 }, requireCutaway: false,
+                powerTag: '自主電力: 6-8小時', recipeNote: '合成材料：太陽能板 x2 + 20kWh 鋰鐵電池', recipeGrid: ['☀️', '☀️', '☀️', '🔴', '🔋', '🔴', '⚙️', '⚡', '⚙️'],
+                description: '車頂配有雙太陽能板，車底配備 20kWh 鋰鐵儲能電池與雙 3000W 逆變器，可透過太陽能及行駛中充電，不靠外部電源可連續播音 6-8 小時。',
+                specs: [{ label: '續航力', value: '20kWh 鋰鐵電池 (UN38.3認證)', pct: 96 }, { label: '太陽能', value: '車頂 800W 綠能輔助充電', pct: 90 }]
+            },
+            {
+                id: 'smart_cockpit', category: 'exterior', categoryLabel: '車外裝備', name: '智慧駕駛艙', enName: '5-Ton Diesel Chassis Cockpit', icon: '🛞',
+                markerPos: { x: 5.5, y: 6.4, z: 0.0 }, cameraPos: { x: 14.0, y: 11.0, z: 10.0 }, lookAtPos: { x: 4.8, y: 5.4, z: 0.0 }, requireCutaway: false,
+                powerTag: '5噸柴油底盤 / 歐盟六期', recipeNote: '合成材料：5噸全新底盤 + CER-1928 車牌 + 導流套件', recipeGrid: ['🧭', '🛰️', '🧭', '🪟', '🛞', '🪟', '⚙️', '🛣️', '⚙️'],
+                description: '5 噸柴油全新貨車底盤，掛有 CER-1928 歷史特選車牌（象徵央廣於 1928 年成立）。小型車普通駕照即可駕駛，機動性強。駕駛座上的司機除了駕駛任務外，也兼任工程任務。',
+                specs: [{ label: '底盤動力', value: '5噸六期柴油 / 普通駕照可開', pct: 95 }, { label: '歷史密碼', value: 'CER-1928 特選專屬車牌', pct: 100 }]
+            }
+        ];
+
+        // --- 2b. Bilingual i18n ---
+        let currentLang = 'zh';
+        const UI = {
+            zh: {
+                htmlLang: 'zh-TW', title: '央廣1號 Rti 行動廣播車 · 3D 模型',
+                viewExt: '車外全覽', viewCut: '車內透視', plate: '車牌:', standby: '● 待命', satLive: '● 衛星+5G直播',
+                consoleTitle: '🎮 央廣1號控制台', consoleMini: '控制台',
+                btnExt: '車外全覽', btnCut: '車內透視', btnFlip: '電視外翻', btnUplink: '衛星發射', btnUplinkOn: '發射中!',
+                btnDayNight: '日夜切換', btnGuide: '設備圖鑑', quickbar: '⚡ 裝備快捷列：',
+                craftGrid: '⚒️ 方塊合成表 (Crafting Grid)', prev: '◀ 上個', next: '下個 ▶',
+                action: '⚡ 互動測試', actionFlip: '⚡ 點擊外翻電視牆', loading: '載入中',
+                tipCenter: '置中廣播車', tipLabels: '標籤開關', tipMusic: '音樂開關',
+                ledLine1: '🔴 ON AIR 全球多語直播', ledLine2: '讓臺灣的聲音走向世界', ledLine3: 'RTI MULTILINGUAL GLOBAL LIVE BROADCAST',
+                marquee: '🔴 多語全球直播  ★  中央廣播電臺 RTI MULTILINGUAL LIVE BROADCAST  ★  ',
+                mapBtn: '任務情境地圖', mapTitle: '🗺️ 央廣1號 任務情境地圖', mapHint: '點選地圖上的地點或下方任務卡，央廣1號就會出發前往該情境現場。',
+                missionPrefix: '🚐 央廣1號出發 →', hudBase: '🏠 央廣基地'
+            },
+            en: {
+                htmlLang: 'en', title: 'RTI No.1 · Rti Mobile Broadcast Van · 3D Model',
+                viewExt: 'Exterior', viewCut: 'Cutaway', plate: 'Plate:', standby: '● Standby', satLive: '● SAT+5G Live',
+                consoleTitle: '🎮 RTI No.1 Console', consoleMini: 'Console',
+                btnExt: 'Exterior', btnCut: 'Cutaway', btnFlip: 'Flip TV', btnUplink: 'Uplink', btnUplinkOn: 'Live!',
+                btnDayNight: 'Day/Night', btnGuide: 'Guide', quickbar: '⚡ Quick bar:',
+                craftGrid: '⚒️ Crafting Grid', prev: '◀ Prev', next: 'Next ▶',
+                action: '⚡ Try it', actionFlip: '⚡ Flip TV wall', loading: 'Loading',
+                tipCenter: 'Center the van', tipLabels: 'Toggle labels', tipMusic: 'Toggle music',
+                ledLine1: '🔴 ON AIR · GLOBAL MULTILINGUAL LIVE', ledLine2: "Taiwan's Voice to the World", ledLine3: 'RADIO TAIWAN INTERNATIONAL · RTI',
+                marquee: '🔴 GLOBAL MULTILINGUAL LIVE  ★  RADIO TAIWAN INTERNATIONAL · RTI  ★  ',
+                mapBtn: 'Mission Map', mapTitle: '🗺️ RTI No.1 Mission Map', mapHint: 'Click a location on the map or a mission card below, and RTI No.1 will head to the scene.',
+                missionPrefix: '🚐 RTI No.1 departing →', hudBase: '🏠 RTI Base'
+            }
+        };
+        const FEATURES_I18N = {
+            outdoor_stage: {
+                zh: { categoryLabel: '車外裝備', name: 'RTI On The Go 外翻電視牆', powerTag: '車頭側鉸鏈向車頭外翻', recipeNote: '合成材料：高畫質Rti On The Go貼圖 + 外翻鉸鏈 + 5mm觀景窗', description: '電視牆關閉時完整覆蓋採訪區玻璃窗，呈現高畫質 Rti LOGO 與 RTI On The Go 貼圖；點選時以靠車頭一側的鉸鏈為軸心，向車頭方向外翻，畫面切換為「🔴 全球多語直播」，並露出採訪區實況。', specs: [{ label: '電視牆位置', value: '車身右側採訪區外牆 (對齊採訪桌)', pct: 100 }, { label: '外翻機構', value: '靠車頭側鉸鏈，向車頭外翻開啟', pct: 100 }] },
+                en: { categoryLabel: 'Exterior', name: 'RTI On The Go Flip-Out TV Wall', powerTag: 'Front-side hinge, flips forward', recipeNote: 'Ingredients: HD Rti On The Go graphic + flip-out hinge + 5mm viewing window', description: 'When closed, the TV wall fully covers the studio glass window and shows a high-definition Rti logo and "RTI On The Go" graphic. When tapped, it swings outward toward the front on its front-side hinge, switching the screen to "🔴 Global Multilingual Live" and revealing the studio inside.', specs: [{ label: 'Location', value: 'Right-side studio wall (aligned with the table)', pct: 100 }, { label: 'Mechanism', value: 'Front-side hinge, opens toward the cab', pct: 100 }] }
+            },
+            mobile_studio: {
+                zh: { categoryLabel: '車內採訪區', name: '多語採訪區', powerTag: '採訪區佔 3/4 淨空間', recipeNote: '合成材料：木紋地板 + 折疊桌 + 電容麥克風 x3 + 主持人 x3 + 紅色霓虹燈', description: '現場採訪區，設有防滑地板與採訪桌，配備 3 支帶避震架的廣播級電容麥克風。背景牆設有紅色「Rti On the Go」霓虹燈。可提供主持人及來賓進行現場訪問錄音及直播。', specs: [{ label: '空間比例', value: '車廂 75% 淨空間 (與導播區 3:1)', pct: 75 }, { label: '主持卡司', value: '三主持人 (金髮女, 黑髮女, 男性主持人)', pct: 100 }] },
+                en: { categoryLabel: 'Interior · Studio', name: 'Multilingual Studio', powerTag: 'Studio: 3/4 of cabin space', recipeNote: 'Ingredients: wood-grain floor + folding table + condenser mic x3 + hosts x3 + red neon sign', description: 'On-site interview studio with a non-slip floor and an interview table, equipped with three broadcast-grade condenser microphones on shock mounts. A red "Rti On the Go" neon sign lights up the back wall. Hosts and guests can record on-site interviews and broadcast live from here.', specs: [{ label: 'Space ratio', value: '75% of cabin (3:1 with control room)', pct: 75 }, { label: 'Hosts', value: 'Three hosts (blonde, black-haired, male)', pct: 100 }] }
+            },
+            control_room: {
+                zh: { categoryLabel: '車內導播區', name: '前段導播區', powerTag: '車頭 1/4 獨立機櫃區', recipeNote: '合成材料：硬式滑門隔板 + 4K導播機 + 閃爍機櫃 + 男性工程師', description: '靠車頭前段獨立導播區，配有滑門隔板與高密度機櫃，整合 4K 導播機、成音設備、儲能/逆變器面板、傳輸設備，坐著 1 位導播，並可搭配1位工程師協同作業。', specs: [{ label: '空間比例', value: '靠車頭 25% 獨立空間 (3:1 分區)', pct: 25 }, { label: '機櫃監控', value: '導播/成音/電力/通訊一體化閃爍機櫃', pct: 100 }] },
+                en: { categoryLabel: 'Interior · Control', name: 'Front Control Room', powerTag: 'Front 1/4 equipment rack zone', recipeNote: 'Ingredients: rigid sliding partition + 4K switcher + blinking rack + engineer', description: 'A separate control room at the front of the cabin, with a sliding partition and a high-density equipment rack integrating a 4K video switcher, audio equipment, a battery/inverter panel and transmission gear. One director is seated here and can work together with an engineer.', specs: [{ label: 'Space ratio', value: 'Front 25% separate zone (3:1 layout)', pct: 25 }, { label: 'Rack', value: 'Integrated video/audio/power/comms rack', pct: 100 }] }
+            },
+            leo_satellite: {
+                zh: { categoryLabel: '車外裝備', name: 'OneWeb 低軌衛星 & 5G 陣列天線', powerTag: '極端備援: 雙重防線', recipeNote: '合成材料：OneWeb 低軌衛星圓盤 + 5G MIMO 天線', description: '車頂搭載中華電信 OneWeb 低軌衛星天線與 5G 4X4 MIMO 陣列天線，平時利用5G行動通訊網路進行節目傳輸，在極端情境下利用低軌衛星保持雙重備援通訊。', specs: [{ label: '韌性通訊', value: '低軌衛星 + 5G Bonding 雙備援', pct: 100 }, { label: '災防應變', value: '斷網不斷訊對外權威發送', pct: 98 }] },
+                en: { categoryLabel: 'Exterior', name: 'OneWeb LEO Satellite & 5G Array Antenna', powerTag: 'Extreme backup: dual redundancy', recipeNote: 'Ingredients: OneWeb LEO satellite dish + 5G MIMO antenna', description: 'The roof carries a Chunghwa Telecom OneWeb low-Earth-orbit (LEO) satellite antenna and a 5G 4X4 MIMO array antenna. Programs are normally transmitted over the 5G mobile network; in extreme situations, the LEO satellite keeps a redundant backup link running.', specs: [{ label: 'Resilient comms', value: 'LEO satellite + 5G bonding dual backup', pct: 100 }, { label: 'Disaster response', value: 'Stays on air even when networks go down', pct: 98 }] }
+            },
+            power_system: {
+                zh: { categoryLabel: '車外裝備', name: '綠能儲能與 800W 太陽能板', powerTag: '自主電力: 6-8小時', recipeNote: '合成材料：太陽能板 x2 + 20kWh 鋰鐵電池', description: '車頂配有雙太陽能板，車底配備 20kWh 鋰鐵儲能電池與雙 3000W 逆變器，可透過太陽能及行駛中充電，不靠外部電源可連續播音 6-8 小時。', specs: [{ label: '續航力', value: '20kWh 鋰鐵電池 (UN38.3認證)', pct: 96 }, { label: '太陽能', value: '車頂 800W 綠能輔助充電', pct: 90 }] },
+                en: { categoryLabel: 'Exterior', name: 'Green Energy Storage & 800W Solar Panels', powerTag: 'Self-powered: 6-8 hours', recipeNote: 'Ingredients: solar panel x2 + 20kWh LiFePO4 battery', description: 'Two solar panels on the roof, plus a 20kWh LiFePO4 battery and dual 3000W inverters under the chassis. Charged by solar power and while driving, it can broadcast continuously for 6-8 hours without external power.', specs: [{ label: 'Endurance', value: '20kWh LiFePO4 battery (UN38.3 certified)', pct: 96 }, { label: 'Solar', value: 'Roof 800W green auxiliary charging', pct: 90 }] }
+            },
+            smart_cockpit: {
+                zh: { categoryLabel: '車外裝備', name: '智慧駕駛艙', powerTag: '5噸柴油底盤 / 歐盟六期', recipeNote: '合成材料：5噸全新底盤 + CER-1928 車牌 + 導流套件', description: '5 噸柴油全新貨車底盤，掛有 CER-1928 歷史特選車牌（象徵央廣於 1928 年成立）。小型車普通駕照即可駕駛，機動性強。駕駛座上的司機除了駕駛任務外，也兼任工程任務。', specs: [{ label: '底盤動力', value: '5噸六期柴油 / 普通駕照可開', pct: 95 }, { label: '歷史密碼', value: 'CER-1928 特選專屬車牌', pct: 100 }] },
+                en: { categoryLabel: 'Exterior', name: 'Smart Cockpit', powerTag: '5-ton diesel chassis / Euro 6', recipeNote: 'Ingredients: new 5-ton chassis + CER-1928 plate + aero kit', description: 'A brand-new 5-ton diesel truck chassis bearing the special CER-1928 license plate (marking RTI founding in 1928). It can be driven with a regular car license and is highly mobile. Besides driving, the driver also takes on engineering duties.', specs: [{ label: 'Chassis', value: '5-ton Euro 6 diesel / regular license', pct: 95 }, { label: 'Heritage code', value: 'CER-1928 special-issue plate', pct: 100 }] }
+            }
+        };
+        const SCENARIOS_I18N = {
+            default: { en: { name: 'RTI Base', pin: 'RTI Base', tagline: 'Return to standby base (default scene)', desc: 'The RTI No.1 standby base. Open the "🗺️ Mission Map" to choose a location, and the broadcast van will drive to the event or mission site.', status: [['📍 Location', 'RTI No.1 Standby Base', 'info'], ['📡 Status', 'Standing by, ready to deploy', 'ok']] } },
+            campus: { en: { name: 'Young Voice Campus Tour', pin: 'Campus', tagline: 'Broadcast van enters campus; students experience the mobile studio', desc: 'Young Voice Campus Tour: RTI No.1 drives into a school campus to become a mobile recording studio, letting students experience multilingual program production, Podcast recording and live broadcasting, nurturing young voices with a global perspective.', status: [['📍 Location', 'Campus field & main building', 'info'], ['🎓 Event', 'Campus broadcast workshop & Podcast recording', 'info'], ['👥 Audience', 'High-school & university students', 'info'], ['📺 TV Wall', 'Flipped out, displaying', 'ok']] } },
+            plaza: { en: { name: 'Multilingual Community Festival', pin: 'City Square', tagline: 'Broadcast van arrives at the square for a multicultural celebration', desc: 'Multilingual Community Festival: RTI No.1 pulls into the city square, where multilingual hosts broadcast live in Vietnamese, Indonesian, Thai, Filipino and more, connecting with new immigrant friends and listeners in a festive gathering.', status: [['📍 Location', 'City Square', 'info'], ['🌏 Languages', 'Vietnamese, Indonesian, Thai, Filipino, Mandarin', 'info'], ['🎉 Event', 'Multilingual live broadcast & listener meetup', 'info'], ['📺 TV Wall', 'Flipped out, displaying', 'ok']] } },
+            disaster: { en: { name: 'Disaster Resilience Mission', pin: 'Disaster Zone', tagline: 'Power & network down; broadcasting continues via satellite backup', desc: 'Disaster Resilience Mission: When typhoons, earthquakes or other disasters knock out mains power and terrestrial networks, RTI No.1 enters the disaster zone, powered by its own battery storage and transmitting via LEO satellite backup, to keep broadcasting disaster-relief and rescue information without interruption.', signalText: '● LEO Satellite Backup Live', status: [['⚡ Mains Power', 'Down ✖', 'bad'], ['🌐 Terrestrial Network', 'Down ✖', 'bad'], ['🛰️ LEO Satellite', 'Connected ✔', 'ok'], ['🔋 Battery', '100% (self-powered)', 'ok', 'mission-battery'], ['☀️ Solar', 'Supplemental charging', 'ok']] } },
+            national: { en: { name: 'National Day Celebration Broadcast', pin: 'Presidential Office', tagline: 'Multilingual live broadcast at national celebrations', desc: 'National Day Celebration Broadcast: During major national celebrations like Double Ten Day, RTI No.1 is stationed in front of the Presidential Office Building on Ketagalan Boulevard, broadcasting the festivities live in multiple languages so audiences worldwide can share the festive atmosphere of Taiwan.', signalText: '● National Day Multilingual Broadcast', status: [['📍 Location', 'Presidential Office Bldg. & Ketagalan Blvd.', 'info'], ['🎆 Event', 'Double Ten National Day Broadcast', 'info'], ['🌍 Broadcast', 'Multilingual simultaneous live', 'ok'], ['🛰️ Transmission', '5G + LEO Satellite', 'ok']] } }
+        };
+        function applyFeatureLang(lang) {
+            VEHICLE_FEATURES.forEach(f => {
+                const t = FEATURES_I18N[f.id]?.[lang]; if (!t) return;
+                f.categoryLabel = t.categoryLabel; f.name = t.name; f.powerTag = t.powerTag;
+                f.recipeNote = t.recipeNote; f.description = t.description; f.specs = t.specs;
+            });
+        }
+        let _marqueeFullText = null;
+        function switchLanguage() {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh'; playSound('click');
+            const t = UI[currentLang];
+            document.getElementById('root-html').lang = t.htmlLang;
+            document.getElementById('page-title').textContent = t.title;
+            document.getElementById('hud-title').textContent = t.title;
+            document.getElementById('hud-plate-label').textContent = t.plate;
+            if (!isBroadcasting) document.getElementById('hud-signal-text').textContent = t.standby;
+            document.getElementById('console-title').textContent = t.consoleTitle;
+            document.getElementById('console-mini-label').textContent = t.consoleMini;
+            document.getElementById('ext-btn-text').textContent = t.btnExt;
+            document.getElementById('int-btn-text').textContent = t.btnCut;
+            const flipText = document.getElementById('flip-btn-text'); if (flipText) flipText.textContent = t.btnFlip;
+            document.getElementById('daynight-btn-text').textContent = t.btnDayNight;
+            document.getElementById('guide-btn-text').textContent = t.btnGuide;
+            const uplinkText = document.getElementById('broadcast-btn-text'); if (uplinkText) uplinkText.textContent = isBroadcasting ? t.btnUplinkOn : t.btnUplink;
+            document.getElementById('quickbar-label').textContent = t.quickbar;
+            document.getElementById('crafting-grid-label').textContent = t.craftGrid;
+            document.getElementById('prev-btn').textContent = t.prev;
+            document.getElementById('next-btn').textContent = t.next;
+            document.getElementById('btn-center').title = t.tipCenter;
+            document.getElementById('btn-labels').title = t.tipLabels;
+            document.getElementById('btn-music').title = t.tipMusic;
+            const mapBtnText = document.getElementById('map-btn-text'); if (mapBtnText) mapBtnText.textContent = t.mapBtn;
+            const viewHud = document.getElementById('hud-view-mode');
+            if (viewHud) viewHud.textContent = isCutawayOpen ? t.viewCut : t.viewExt;
+            applyFeatureLang(currentLang);
+            createFloatingHTMLMarkers(); buildUIListsAndHotbar();
+            if (typeof currentFeatureIndex !== 'undefined') { updateCraftingModalUI(VEHICLE_FEATURES[currentFeatureIndex]); highlightQuickListButton(VEHICLE_FEATURES[currentFeatureIndex].id); }
+            rebuildLedTexture(); rebuildMarqueeText();
+            updateScenarioLang();
+        }
+        function rebuildLedTexture() {
+            if (!ledTexOpen || !ledScreenPivot) return;
+            const oldTex = ledTexOpen;
+            ledTexOpen = createLedTextureOpen(); ledTexOpen.encoding = THREE.sRGBEncoding;
+            const panel = ledScreenPivot.children[0];
+            if (panel && panel.material && panel.material[5]) { panel.material[5].map = ledTexOpen; panel.material[5].needsUpdate = true; }
+            oldTex.dispose();
+        }
+        function rebuildMarqueeText() { _marqueeFullText = UI[currentLang].marquee; }
+        function updateScenarioLang() {
+            const sc = currentScenario(); if (!sc) return;
+            const t = UI[currentLang];
+            const mapTitleEl = document.getElementById('scenario-map-title'); if (mapTitleEl) mapTitleEl.textContent = t.mapTitle;
+            const mapHintEl = document.getElementById('scenario-map-hint'); if (mapHintEl) mapHintEl.textContent = t.mapHint;
+            updateScenarioUI(sc);
+            buildScenarioMapUI();
+        }
+
+        // --- 3. Texture Generators ---
+        function createPixelNoiseTexture(baseHex, variation = 14, size = 16) {
+            const canvas = document.createElement('canvas'); canvas.width = size; canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            const num = parseInt(baseHex.replace('#', ''), 16);
+            const rB = (num >> 16) & 255, gB = (num >> 8) & 255, bB = num & 255;
+            for (let y = 0; y < size; y++) {
+                for (let x = 0; x < size; x++) {
+                    const delta = Math.floor((Math.random() - 0.5) * variation * 2);
+                    ctx.fillStyle = `rgb(${Math.min(255, Math.max(0, rB + delta))},${Math.min(255, Math.max(0, gB + delta))},${Math.min(255, Math.max(0, bB + delta))})`;
+                    ctx.fillRect(x, y, 1, 1);
+                }
+            }
+            const tex = new THREE.CanvasTexture(canvas); tex.magFilter = THREE.NearestFilter; tex.minFilter = THREE.NearestFilter; return tex;
+        }
+
+        // LEFT WALL TEXTURE (Red Geometric Slash & Large Red 'R')
+        function fitFont(ctx, text, maxW, maxSz, family, weight) {
+            for (let s = maxSz; s >= 12; s -= 2) { ctx.font = `${weight} ${s}px ${family}`; if (ctx.measureText(text).width <= maxW) return s; }
+            ctx.font = `${weight} 12px ${family}`; return 12;
+        }
+        function createLedTextureOpen() {
+            const t = UI[currentLang];
+            const canvas = document.createElement('canvas'); canvas.width = 1024; canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, 1024, 512);
+
+            ctx.strokeStyle = 'rgba(234, 179, 8, 0.3)'; ctx.lineWidth = 3;
+            for (let i = 0; i < 360; i += 15) {
+                const rad = i * Math.PI / 180;
+                ctx.beginPath(); ctx.moveTo(512, 256); ctx.lineTo(512 + Math.cos(rad) * 600, 256 + Math.sin(rad) * 600); ctx.stroke();
+            }
+            ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 16; ctx.strokeRect(12, 12, 1000, 488);
+
+            ctx.fillStyle = '#dc2626'; ctx.fillRect(40, 40, 944, 110);
+            ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center';
+            fitFont(ctx, t.ledLine1, 920, 68, '"Noto Sans TC", sans-serif', '900');
+            ctx.fillText(t.ledLine1, 512, 120);
+
+            ctx.fillStyle = '#facc15'; ctx.shadowColor = '#000'; ctx.shadowBlur = 12;
+            fitFont(ctx, t.ledLine2, 920, 85, '"Noto Sans TC", sans-serif', '900');
+            ctx.fillText(t.ledLine2, 512, 290); ctx.shadowBlur = 0;
+
+            ctx.fillStyle = '#38bdf8';
+            fitFont(ctx, t.ledLine3, 920, 36, 'monospace', 'bold');
+            ctx.fillText(t.ledLine3, 512, 410);
+            ctx.textAlign = 'left';
+
+            const tex = new THREE.CanvasTexture(canvas); tex.magFilter = THREE.NearestFilter; tex.minFilter = THREE.NearestFilter; return tex;
+        }
+
+        // MARQUEE TEXTURE ("多語全球直播")
+        let marqueeCanvas, marqueeCtx, marqueeTexture;
+        function initMarqueeTexture() {
+            marqueeCanvas = document.createElement('canvas'); marqueeCanvas.width = 1024; marqueeCanvas.height = 96;
+            marqueeCtx = marqueeCanvas.getContext('2d');
+            marqueeTexture = new THREE.CanvasTexture(marqueeCanvas);
+            marqueeTexture.magFilter = THREE.NearestFilter; marqueeTexture.minFilter = THREE.NearestFilter;
+        }
+        function updateMarqueeTexture(elapsed) {
+            if (!marqueeCtx) return;
+            marqueeCtx.fillStyle = '#05070a'; marqueeCtx.fillRect(0, 0, 1024, 96);
+            marqueeCtx.strokeStyle = '#dc2626'; marqueeCtx.lineWidth = 6; marqueeCtx.strokeRect(4, 4, 1016, 88);
+            const fullText = _marqueeFullText || UI[currentLang].marquee;
+            marqueeCtx.font = 'bold 50px "Noto Sans TC", sans-serif'; marqueeCtx.fillStyle = '#facc15';
+            const textWidth = marqueeCtx.measureText(fullText).width;
+            const scrollX = 1024 - ((elapsed * 160) % (textWidth + 1024));
+            marqueeCtx.fillText(fullText, scrollX, 64); marqueeCtx.fillText(fullText, scrollX + textWidth, 64);
+            marqueeTexture.needsUpdate = true;
+        }
+
+        // --- 4. Three.js Setup & Scene Construction ---
+        let scene, camera, renderer, controls;
+        let vehicleGroup, cutawayRoofGroup, cutawaySideWallGroup;
+        let leoDishPivot, ledScreenPivot, ledScreenMesh, broadcastWaveGroup;
+        let ledTexClosed, ledTexOpen;
+        let interactiveMeshes = [], featureGroupsMap = {}, markerElements = {};
+        let isCutawayOpen = false, isBroadcasting = false, isNightMode = false, showLabels = true;
+        let isLedScreenFlip = false, ledScreenFlipProgress = 0;
+        let currentFeatureIndex = 0, isConsoleMinimized = false, isInspectorVisible = true, isInspectorDetailsOpen = true;
+        let cutawayProgress = 0, cameraLerpTarget = null, controlsTargetLerp = null;
+        let ambientLight, sunLight, studioPointLight, stagePointLight, starsGroup, satelliteSpaceModel;
+        let cabinetStatusLeds = [];
+        let neonMat = null, neonLight = null;
+        function adjustCameraForViewport() {
+            const w = window.innerWidth || 800, h = window.innerHeight || 600;
+            if (w < 640 && h > w) { camera.position.set(22, 16, 26); controls.target.set(0, 4.2, 0); }
+            else { camera.position.set(17, 13, 21); controls.target.set(0, 5.0, 0); }
+            if (controls) controls.update();
+        }
+
+        function createVoxelBox(w, h, d, mat, x, y, z, parent, castShadow = true) {
+            const geom = new THREE.BoxGeometry(w, h, d); const mesh = new THREE.Mesh(geom, mat);
+            mesh.position.set(x, y, z); mesh.castShadow = castShadow; mesh.receiveShadow = true;
+            if (parent) parent.add(mesh);
+            return mesh;
+        }
+
+        // Voxel Character Builders
+        function buildFemaleHostVoxel(hairColorHex, shirtColorHex, isBlonde) {
+            const group = new THREE.Group();
+            const skinMat = new THREE.MeshLambertMaterial({ color: 0xfed7aa });
+            const hairMat = new THREE.MeshLambertMaterial({ color: hairColorHex });
+            const shirtMat = new THREE.MeshLambertMaterial({ color: shirtColorHex });
+            const headsetMat = new THREE.MeshLambertMaterial({ color: 0x1e293b });
+            const eyeMat = new THREE.MeshBasicMaterial({ color: 0x0f172a });
+            const mouthMat = new THREE.MeshBasicMaterial({ color: 0xe11d48 });
+
+            createVoxelBox(0.6, 0.7, 0.5, shirtMat, 0, 0.35, 0, group);
+            createVoxelBox(0.18, 0.5, 0.18, skinMat, -0.32, 0.25, -0.2, group);
+            createVoxelBox(0.18, 0.5, 0.18, skinMat, 0.32, 0.25, -0.2, group);
+
+            createVoxelBox(0.55, 0.55, 0.55, skinMat, 0, 0.95, 0, group);
+
+            createVoxelBox(0.59, 0.2, 0.59, hairMat, 0, 1.25, 0, group);
+            createVoxelBox(0.59, 0.55, 0.2, hairMat, 0, 0.95, 0.2, group);
+            if (isBlonde) {
+                createVoxelBox(0.2, 0.55, 0.58, hairMat, -0.22, 0.9, -0.02, group);
+                createVoxelBox(0.2, 0.55, 0.58, hairMat, 0.22, 0.9, -0.02, group);
+            } else {
+                createVoxelBox(0.15, 0.45, 0.56, hairMat, -0.22, 0.92, 0, group);
+                createVoxelBox(0.15, 0.45, 0.56, hairMat, 0.22, 0.92, 0, group);
+            }
+
+            createVoxelBox(0.1, 0.1, 0.05, eyeMat, -0.14, 1.0, -0.28, group);
+            createVoxelBox(0.1, 0.1, 0.05, eyeMat, 0.14, 1.0, -0.28, group);
+            createVoxelBox(0.22, 0.08, 0.05, mouthMat, 0, 0.82, -0.28, group);
+
+            createVoxelBox(0.62, 0.08, 0.1, headsetMat, 0, 1.28, 0, group);
+            createVoxelBox(0.12, 0.22, 0.22, headsetMat, -0.3, 0.95, 0, group);
+            createVoxelBox(0.12, 0.22, 0.22, headsetMat, 0.3, 0.95, 0, group);
+            createVoxelBox(0.22, 0.04, 0.04, headsetMat, -0.18, 0.82, -0.28, group);
+
+            return group;
+        }
+
+        function buildMaleHostVoxel() {
+            const group = new THREE.Group();
+            const skinMat = new THREE.MeshLambertMaterial({ color: 0xfed7aa });
+            const hairMat = new THREE.MeshLambertMaterial({ color: 0x292524 });
+            const suitMat = new THREE.MeshLambertMaterial({ color: 0x0f172a });
+            const shirtMat = new THREE.MeshLambertMaterial({ color: 0xf8fafc });
+            const headsetMat = new THREE.MeshLambertMaterial({ color: 0x334155 });
+            const eyeMat = new THREE.MeshBasicMaterial({ color: 0x0284c7 });
+            const mouthMat = new THREE.MeshBasicMaterial({ color: 0xd97706 });
+
+            createVoxelBox(0.6, 0.7, 0.5, suitMat, 0, 0.35, 0, group);
+            createVoxelBox(0.2, 0.5, 0.05, shirtMat, 0, 0.4, -0.26, group);
+            createVoxelBox(0.18, 0.5, 0.18, skinMat, -0.32, 0.25, -0.2, group);
+            createVoxelBox(0.18, 0.5, 0.18, skinMat, 0.32, 0.25, -0.2, group);
+
+            createVoxelBox(0.55, 0.55, 0.55, skinMat, 0, 0.95, 0, group);
+            createVoxelBox(0.58, 0.22, 0.58, hairMat, 0, 1.25, 0, group);
+            createVoxelBox(0.58, 0.25, 0.18, hairMat, 0, 1.12, 0.2, group);
+
+            createVoxelBox(0.1, 0.1, 0.05, eyeMat, -0.14, 1.0, -0.28, group);
+            createVoxelBox(0.1, 0.1, 0.05, eyeMat, 0.14, 1.0, -0.28, group);
+            createVoxelBox(0.22, 0.08, 0.05, mouthMat, 0, 0.82, -0.28, group);
+
+            createVoxelBox(0.6, 0.08, 0.1, headsetMat, 0, 1.28, 0, group);
+            createVoxelBox(0.12, 0.22, 0.2, headsetMat, -0.3, 0.95, 0, group);
+            createVoxelBox(0.12, 0.22, 0.2, headsetMat, 0.3, 0.95, 0, group);
+            createVoxelBox(0.22, 0.04, 0.04, headsetMat, -0.18, 0.82, -0.28, group);
+
+            return group;
+        }
+
+        function buildMaleEngineerVoxel() {
+            const group = new THREE.Group();
+            const skinMat = new THREE.MeshLambertMaterial({ color: 0xfed7aa });
+            const hairMat = new THREE.MeshLambertMaterial({ color: 0x1c1917 });
+            const shirtMat = new THREE.MeshLambertMaterial({ color: 0x1e3a8a });
+            const vestMat = new THREE.MeshLambertMaterial({ color: 0x334155 });
+            const headsetMat = new THREE.MeshLambertMaterial({ color: 0x0f172a });
+            const eyeMat = new THREE.MeshBasicMaterial({ color: 0x111827 });
+
+            createVoxelBox(0.6, 0.7, 0.5, shirtMat, 0, 0.35, 0, group);
+            createVoxelBox(0.62, 0.65, 0.52, vestMat, 0, 0.35, 0, group);
+            createVoxelBox(0.18, 0.5, 0.18, skinMat, -0.32, 0.25, -0.2, group);
+            createVoxelBox(0.18, 0.5, 0.18, skinMat, 0.32, 0.25, -0.2, group);
+
+            createVoxelBox(0.55, 0.55, 0.55, skinMat, 0, 0.95, 0, group);
+            createVoxelBox(0.58, 0.18, 0.58, hairMat, 0, 1.25, 0, group);
+            createVoxelBox(0.58, 0.3, 0.2, hairMat, 0, 1.1, 0.2, group);
+
+            createVoxelBox(0.1, 0.1, 0.05, eyeMat, -0.14, 0.98, -0.28, group);
+            createVoxelBox(0.1, 0.1, 0.05, eyeMat, 0.14, 0.98, -0.28, group);
+
+            createVoxelBox(0.6, 0.08, 0.1, headsetMat, 0, 1.28, 0, group);
+            createVoxelBox(0.12, 0.22, 0.2, headsetMat, -0.3, 0.95, 0, group);
+            createVoxelBox(0.12, 0.22, 0.2, headsetMat, 0.3, 0.95, 0, group);
+            createVoxelBox(0.24, 0.04, 0.04, headsetMat, 0.18, 0.85, -0.28, group);
+
+            return group;
+        }
+
+        function buildDriverVoxel() {
+            const group = new THREE.Group();
+            const skinMat = new THREE.MeshLambertMaterial({ color: 0xfed7aa });
+            const hairMat = new THREE.MeshLambertMaterial({ color: 0x1c1917 });
+            const shirtMat = new THREE.MeshLambertMaterial({ color: 0xf1f5f9 });
+            const tieMat = new THREE.MeshLambertMaterial({ color: 0xdc2626 });
+            const capMat = new THREE.MeshLambertMaterial({ color: 0x1e3a8a });
+            const eyeMat = new THREE.MeshBasicMaterial({ color: 0x111827 });
+            const mouthMat = new THREE.MeshBasicMaterial({ color: 0xb45309 });
+
+            createVoxelBox(0.6, 0.7, 0.5, shirtMat, 0, 0.35, 0, group);
+            createVoxelBox(0.08, 0.4, 0.04, tieMat, 0, 0.45, -0.26, group);
+            // 雙手前伸握方向盤
+            createVoxelBox(0.16, 0.16, 0.5, shirtMat, -0.32, 0.55, -0.3, group);
+            createVoxelBox(0.16, 0.16, 0.5, shirtMat, 0.32, 0.55, -0.3, group);
+            createVoxelBox(0.15, 0.15, 0.12, skinMat, -0.3, 0.55, -0.6, group);
+            createVoxelBox(0.15, 0.15, 0.12, skinMat, 0.3, 0.55, -0.6, group);
+
+            createVoxelBox(0.55, 0.55, 0.55, skinMat, 0, 0.95, 0, group);
+            createVoxelBox(0.58, 0.3, 0.2, hairMat, 0, 1.08, 0.2, group);
+            // 司機帽
+            createVoxelBox(0.6, 0.18, 0.6, capMat, 0, 1.3, 0, group);
+            createVoxelBox(0.5, 0.05, 0.22, capMat, 0, 1.22, -0.36, group);
+            createVoxelBox(0.14, 0.08, 0.02, new THREE.MeshLambertMaterial({ color: 0xfacc15 }), 0, 1.3, -0.31, group);
+
+            createVoxelBox(0.1, 0.1, 0.05, eyeMat, -0.14, 1.0, -0.28, group);
+            createVoxelBox(0.1, 0.1, 0.05, eyeMat, 0.14, 1.0, -0.28, group);
+            createVoxelBox(0.2, 0.06, 0.05, mouthMat, 0, 0.83, -0.28, group);
+            return group;
+        }
+
+        function buildMinecraftTerrain() {
+            const terrainGroup = new THREE.Group(); scene.add(terrainGroup);
+            const grassMat = new THREE.MeshLambertMaterial({ map: createPixelNoiseTexture('#4d9e34', 16, 32) });
+            const dirtMat = new THREE.MeshLambertMaterial({ map: createPixelNoiseTexture('#79553a', 16, 32) });
+            const roadMat = new THREE.MeshLambertMaterial({ map: createPixelNoiseTexture('#3b3f46', 12, 32) });
+            createVoxelBox(48, 2, 38, grassMat, 0, -1, 0, terrainGroup, false);
+            createVoxelBox(46, 3, 36, dirtMat, 0, -3.5, 0, terrainGroup, false);
+            createVoxelBox(36, 0.25, 13, roadMat, 0, 0.12, 0, terrainGroup, false);
+        }
+
+        function buildStarfieldAndOrbitSatellite() {
+            starsGroup = new THREE.Group(); starsGroup.visible = false; scene.add(starsGroup);
+            const starGeom = new THREE.BoxGeometry(0.45, 0.45, 0.45);
+            const starMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            for (let i = 0; i < 140; i++) {
+                const star = new THREE.Mesh(starGeom, starMat);
+                const r = 55 + Math.random() * 45, theta = Math.random() * Math.PI * 2, phi = Math.random() * (Math.PI * 0.42);
+                star.position.set(r * Math.sin(phi) * Math.cos(theta), 18 + r * Math.cos(phi) * 0.6, r * Math.sin(phi) * Math.sin(theta));
+                starsGroup.add(star);
+            }
+            satelliteSpaceModel = new THREE.Group(); satelliteSpaceModel.position.set(-1.5, 29, 0); scene.add(satelliteSpaceModel);
+            createVoxelBox(1.6, 1.6, 1.6, new THREE.MeshLambertMaterial({ color: 0xf8fafc }), 0, 0, 0, satelliteSpaceModel, false);
+            createVoxelBox(5.5, 0.18, 1.4, new THREE.MeshBasicMaterial({ color: 0x1d4ed8 }), 3.6, 0, 0, satelliteSpaceModel, false);
+            createVoxelBox(5.5, 0.18, 1.4, new THREE.MeshBasicMaterial({ color: 0x1d4ed8 }), -3.6, 0, 0, satelliteSpaceModel, false);
+        }
+
+        function createFloatingHTMLMarkers() {
+            const container = document.getElementById('labels-container');
+            if (!container) return; container.innerHTML = ''; markerElements = {};
+            VEHICLE_FEATURES.forEach((feat, idx) => {
+                const el = document.createElement('div'); el.className = 'marker-label';
+                el.innerHTML = `<div class="marker-badge"><span>${feat.icon}</span><span>${feat.name}</span></div><div class="marker-pin"></div>`;
+                el.addEventListener('click', (e) => { e.stopPropagation(); selectFeatureByIndex(idx); });
+                container.appendChild(el); markerElements[feat.id] = el;
+            });
+        }
+
+        function updateFloatingHTMLMarkers() {
+            if (!camera || !renderer) return;
+            const width = window.innerWidth, height = window.innerHeight;
+            const activeFeatId = VEHICLE_FEATURES[currentFeatureIndex]?.id;
+            VEHICLE_FEATURES.forEach(feat => {
+                const el = markerElements[feat.id]; if (!el) return;
+                if (!showLabels) { el.style.display = 'none'; return; }
+                if (feat.category === 'interior' && !isCutawayOpen && feat.id !== activeFeatId) { el.style.opacity = '0.35'; } else { el.style.opacity = '1'; }
+                el.classList.toggle('selected', feat.id === activeFeatId);
+                const worldPos = new THREE.Vector3(feat.markerPos.x, feat.markerPos.y, feat.markerPos.z); worldPos.project(camera);
+                if (worldPos.z > 1) { el.style.display = 'none'; } else {
+                    el.style.display = 'block'; el.style.left = `${(worldPos.x * 0.5 + 0.5) * width}px`; el.style.top = `${(-(worldPos.y * 0.5) + 0.5) * height}px`;
+                }
+            });
+        }
+
+        function buildUIListsAndHotbar() {
+            const dock = document.getElementById('mini-feature-dock'); dock.innerHTML = '';
+            VEHICLE_FEATURES.forEach((feat, idx) => {
+                const btn = document.createElement('button'); btn.id = `dock-btn-${feat.id}`;
+                btn.className = 'mc-mini-slot h-7 flex items-center justify-center text-sm';
+                btn.title = feat.name; btn.textContent = feat.icon;
+                btn.onclick = (e) => { e.stopPropagation(); selectFeatureByIndex(idx); };
+                dock.appendChild(btn);
+            });
+            makeWidgetDraggable(document.getElementById('floating-console'), [document.getElementById('console-drag-handle'), document.getElementById('console-min-drag-handle')]);
+            makeWidgetDraggable(document.getElementById('crafting-modal'), [document.getElementById('inspector-drag-handle')]);
+        }
+
+        function makeWidgetDraggable(widgetEl, handleElements) {
+            if (!widgetEl) return;
+            // 切換語言會重建 UI 並再次呼叫本函式；不先卸載前一次的監聽器，window 與拖曳把手上的 handler 會持續累加
+            if (widgetEl.__dragDispose) widgetEl.__dragDispose();
+            let isDragging = false, startX = 0, startY = 0, initialLeft = 0, initialTop = 0;
+            const onPointerDown = (e) => {
+                if (e.target.closest('button')) return;
+                isDragging = true; if (controls) controls.enabled = false;
+                const rect = widgetEl.getBoundingClientRect(); initialLeft = rect.left; initialTop = rect.top;
+                widgetEl.style.left = `${initialLeft}px`; widgetEl.style.top = `${initialTop}px`; widgetEl.style.bottom = 'auto'; widgetEl.style.right = 'auto';
+                startX = e.touches ? e.touches[0].clientX : e.clientX; startY = e.touches ? e.touches[0].clientY : e.clientY;
+                e.stopPropagation();
+            };
+            const onPointerMove = (e) => {
+                if (!isDragging) return;
+                const dx = (e.touches ? e.touches[0].clientX : e.clientX) - startX, dy = (e.touches ? e.touches[0].clientY : e.clientY) - startY;
+                const rect = widgetEl.getBoundingClientRect();
+                widgetEl.style.left = `${Math.max(6, Math.min(window.innerWidth - rect.width - 6, initialLeft + dx))}px`;
+                widgetEl.style.top = `${Math.max(6, Math.min(window.innerHeight - rect.height - 6, initialTop + dy))}px`;
+            };
+            const onPointerUp = () => { if (isDragging) { isDragging = false; if (controls) controls.enabled = true; } };
+            handleElements.forEach(handle => { if (handle) { handle.addEventListener('mousedown', onPointerDown); handle.addEventListener('touchstart', onPointerDown, { passive: true }); }});
+            window.addEventListener('mousemove', onPointerMove); window.addEventListener('touchmove', onPointerMove, { passive: true });
+            window.addEventListener('mouseup', onPointerUp); window.addEventListener('touchend', onPointerUp);
+            widgetEl.__dragDispose = () => {
+                handleElements.forEach(handle => { if (handle) { handle.removeEventListener('mousedown', onPointerDown); handle.removeEventListener('touchstart', onPointerDown); }});
+                window.removeEventListener('mousemove', onPointerMove); window.removeEventListener('touchmove', onPointerMove);
+                window.removeEventListener('mouseup', onPointerUp); window.removeEventListener('touchend', onPointerUp);
+            };
+        }
+
+        function toggleConsoleMinimize(e) {
+            if (e) e.stopPropagation(); isConsoleMinimized = !isConsoleMinimized; playSound('click');
+            const expandedEl = document.getElementById('console-expanded'), minEl = document.getElementById('console-minimized'), wrapper = document.getElementById('floating-console');
+            if (isConsoleMinimized) { expandedEl.classList.add('hidden'); minEl.classList.remove('hidden'); wrapper.classList.remove('w-60', 'sm:w-64'); wrapper.classList.add('w-auto'); }
+            else { minEl.classList.add('hidden'); expandedEl.classList.remove('hidden'); wrapper.classList.remove('w-auto'); wrapper.classList.add('w-60', 'sm:w-64'); }
+        }
+
+        function toggleInspectorCard(forceState) {
+            playSound('click'); isInspectorVisible = typeof forceState === 'boolean' ? forceState : !isInspectorVisible;
+            const modal = document.getElementById('crafting-modal');
+            if (isInspectorVisible) { modal.classList.remove('hidden'); document.getElementById('fbtn-card')?.classList.add('active-state'); }
+            else { modal.classList.add('hidden'); document.getElementById('fbtn-card')?.classList.remove('active-state'); }
+        }
+
+        function toggleInspectorCompactBody() {
+            playSound('click'); isInspectorDetailsOpen = !isInspectorDetailsOpen;
+            document.getElementById('inspector-details-body')?.classList.toggle('hidden', !isInspectorDetailsOpen);
+        }
+
+        function setupInspectorCollapse() {
+            const modal = document.getElementById('crafting-modal'), handle = document.getElementById('inspector-drag-handle');
+            if (!modal || !handle) return;
+            if (window.innerWidth < 640 || window.innerHeight < 500) modal.classList.add('inspector-collapsed');
+            // 標題列同時是拖曳把手，拖曳結束也會觸發 click；用位移量區分「點一下」與「拖曳」
+            let downX = 0, downY = 0;
+            handle.addEventListener('pointerdown', (e) => { downX = e.clientX; downY = e.clientY; });
+            handle.addEventListener('click', (e) => {
+                if ((window.innerWidth >= 640 && window.innerHeight >= 500) || e.target.closest('button')) return;
+                if (Math.abs(e.clientX - downX) > 5 || Math.abs(e.clientY - downY) > 5) return;
+                playSound('click');
+                // 切換前後以右緣與底邊為基準重新定位，並夾在視窗內
+                const beforeRect = modal.getBoundingClientRect();
+                modal.classList.toggle('inspector-collapsed');
+                const afterRect = modal.getBoundingClientRect();
+                modal.style.left = `${Math.max(6, Math.min(window.innerWidth - afterRect.width - 6, beforeRect.right - afterRect.width))}px`;
+                modal.style.top = `${Math.max(6, Math.min(window.innerHeight - afterRect.height - 6, beforeRect.bottom - afterRect.height))}px`;
+                modal.style.right = 'auto'; modal.style.bottom = 'auto';
+            });
+        }
+
+        function toggleLedScreenFlip() {
+            isLedScreenFlip = !isLedScreenFlip; playSound('piston');
+            const btn = document.getElementById('fbtn-flip');
+            if (isLedScreenFlip) {
+                btn?.classList.add('active-state');
+                if (ledScreenMesh) ledScreenMesh.material.map = ledTexOpen;
+            } else {
+                btn?.classList.remove('active-state');
+                if (ledScreenMesh) ledScreenMesh.material.map = ledTexClosed;
+            }
+        }
+
+        function selectFeatureById(id) { const idx = VEHICLE_FEATURES.findIndex(f => f.id === id); if (idx !== -1) selectFeatureByIndex(idx); }
+        function selectFeatureByIndex(index) {
+            playSound('click'); currentFeatureIndex = (index + VEHICLE_FEATURES.length) % VEHICLE_FEATURES.length;
+            const feat = VEHICLE_FEATURES[currentFeatureIndex];
+            if (feat.requireCutaway && !isCutawayOpen) setCutawayMode(true, false);
+            const distScale = (window.innerWidth < 640 && window.innerHeight > window.innerWidth) ? 1.28 : 1.0;
+            cameraLerpTarget = new THREE.Vector3(feat.cameraPos.x * distScale, feat.cameraPos.y * distScale, feat.cameraPos.z * distScale);
+            controlsTargetLerp = new THREE.Vector3(feat.lookAtPos.x, feat.lookAtPos.y, feat.lookAtPos.z);
+            if (!isInspectorVisible) toggleInspectorCard(true);
+            updateCraftingModalUI(feat); highlightQuickListButton(feat.id);
+        }
+        function cycleFeature(dir) { selectFeatureByIndex(currentFeatureIndex + dir); }
+
+        function highlightQuickListButton(activeId) {
+            VEHICLE_FEATURES.forEach(feat => { document.getElementById(`dock-btn-${feat.id}`)?.classList.toggle('active-state', feat.id === activeId); });
+            const activeFeat = VEHICLE_FEATURES.find(f => f.id === activeId);
+            if (activeFeat) {
+                const t = UI[currentLang];
+                document.getElementById('console-current-feat').textContent = `${activeFeat.icon} ${activeFeat.name}`;
+                const actionBtn = document.getElementById('modal-action-btn');
+                if (activeFeat.id === 'outdoor_stage') actionBtn.innerHTML = t.actionFlip;
+                else actionBtn.innerHTML = t.action;
+            }
+        }
+
+        function updateCraftingModalUI(feat) {
+            document.getElementById('modal-category-badge').textContent = feat.categoryLabel;
+            document.getElementById('modal-title').textContent = feat.name;
+            document.getElementById('modal-en-title').textContent = feat.enName;
+            document.getElementById('crafting-output-icon').textContent = feat.icon;
+            document.getElementById('crafting-ingredients-note').textContent = feat.recipeNote;
+            document.getElementById('modal-description').textContent = feat.description;
+            document.getElementById('modal-power-tag').textContent = feat.powerTag;
+
+            const gridEl = document.getElementById('crafting-grid'); gridEl.innerHTML = '';
+            feat.recipeGrid.forEach(item => {
+                const cell = document.createElement('div'); cell.className = 'mc-slot w-7 h-7 flex items-center justify-center text-xs bg-[#8b8b8b]';
+                cell.textContent = item; gridEl.appendChild(cell);
+            });
+            const specsEl = document.getElementById('modal-specs-list'); specsEl.innerHTML = '';
+            feat.specs.forEach(spec => {
+                specsEl.innerHTML += `<div class="flex justify-between text-[10px] font-bold text-gray-800 mb-0.5"><span>${spec.label}</span><span class="text-gray-700 truncate ml-1">${spec.value}</span></div><div class="bg-gray-700 h-2 border border-black overflow-hidden"><div class="bg-amber-400 h-full" style="width: ${spec.pct}%"></div></div>`;
+            });
+        }
+
+        function setCutawayMode(openState, moveCamera = true) {
+            if (isCutawayOpen !== openState) playSound('piston');
+            isCutawayOpen = openState;
+            const t = UI[currentLang];
+            const viewHud = document.getElementById('hud-view-mode'), extBtn = document.getElementById('fbtn-ext'), intBtn = document.getElementById('fbtn-int');
+            if (isCutawayOpen) {
+                viewHud.textContent = t.viewCut; viewHud.className = 'bg-amber-700 border border-amber-300 text-[10px] px-1 text-amber-100 font-bold shrink-0';
+                extBtn?.classList.remove('active-state'); intBtn?.classList.add('active-state');
+                if (moveCamera) { cameraLerpTarget = new THREE.Vector3(0.5, 13.5, 13.5); controlsTargetLerp = new THREE.Vector3(0, 5.2, 0); }
+            } else {
+                viewHud.textContent = t.viewExt; viewHud.className = 'bg-emerald-800 border border-emerald-400 text-[10px] px-1 text-emerald-100 font-bold shrink-0';
+                extBtn?.classList.add('active-state'); intBtn?.classList.remove('active-state');
+                if (moveCamera) resetCameraOverview();
+            }
+        }
+
+        function toggleBroadcastSignal() {
+            isBroadcasting = !isBroadcasting; playSound('beacon');
+            broadcastWaveGroup.visible = isBroadcasting;
+            const t = UI[currentLang], sc = currentScenario();
+            const btnText = document.getElementById('broadcast-btn-text'), satBtn = document.getElementById('fbtn-sat'), sigText = document.getElementById('hud-signal-text');
+            if (isBroadcasting) {
+                btnText.textContent = t.btnUplinkOn; satBtn?.classList.add('active-state');
+                const scI18n = SCENARIOS_I18N[sc.id]?.[currentLang];
+                sigText.textContent = (scI18n?.signalText) || sc.signalText || t.satLive;
+                sigText.className = 'text-lime-400 font-bold ml-1';
+            } else {
+                btnText.textContent = t.btnUplink; satBtn?.classList.remove('active-state'); sigText.textContent = t.standby; sigText.className = 'text-yellow-300 font-bold ml-1';
+            }
+        }
+
+        function toggleDayNight() {
+            isNightMode = !isNightMode; playSound('click');
+            bgmCurrentNote = 0;
+            if (isNightMode) {
+                scene.background.setHex(0x0b1021); scene.fog.color.setHex(0x0b1021); ambientLight.intensity = 0.28; sunLight.intensity = 0.25;
+                studioPointLight.intensity = 1.6; stagePointLight.intensity = 1.4; starsGroup.visible = true;
+                document.getElementById('daynight-icon').textContent = '🌙';
+            } else {
+                scene.background.setHex(0x78b7ff); scene.fog.color.setHex(0x78b7ff); ambientLight.intensity = 0.65; sunLight.intensity = 0.95;
+                studioPointLight.intensity = 1.1; stagePointLight.intensity = 0.8; starsGroup.visible = false;
+                document.getElementById('daynight-icon').textContent = '☀️';
+            }
+        }
+        function toggleLabelsVisibility() { showLabels = !showLabels; playSound('click'); }
+        function resetCameraOverview() {
+            playSound('click');
+            const c = scenarioCamera(currentScenario()); cameraLerpTarget = c.p; controlsTargetLerp = c.t;
+        }
+        function triggerFeatureAction() {
+            const feat = VEHICLE_FEATURES[currentFeatureIndex];
+            if (feat.id === 'leo_satellite') { if (!isBroadcasting) toggleBroadcastSignal(); else playSound('beacon'); }
+            else if (feat.id === 'outdoor_stage') { toggleLedScreenFlip(); }
+            else if (feat.category === 'interior') { if (!isCutawayOpen) setCutawayMode(true, true); else playSound('click'); }
+            else toggleBroadcastSignal();
+        }
+        function onKeyDown(e) {
+            if (e.key >= '1' && e.key <= '6') selectFeatureByIndex(parseInt(e.key, 10) - 1);
+            else if (e.key === 'm' || e.key === 'M') toggleScenarioMap();
+            else if (e.key === 'Escape') toggleScenarioMap(false);
+        }
+        function onWindowResize() {
+            if (!camera || !renderer) return;
+            const w = window.innerWidth || 800, h = window.innerHeight || 600;
+            camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h);
+        }
+
+
+        // =====================================================================
+        // --- 5. 央廣1號 外觀模型 (寫實比例，取代原本的方塊車體) ---
+        // 車體以「公尺」建模，再整體放大 S 倍放入場景，與原本場景座標相容
+        // =====================================================================
+        const S = 2.4, OX = -2.64;
+        const W = (x, y, z) => new THREE.Vector3(x * S + OX, y * S, z * S);   // 公尺座標 → 世界座標
+        const RED = '#e5323c', WHITE = '#f5f6f7', INK = '#1a1d22';
+        const CJK = '"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif';
+        const LATIN = '"Arial Black","Helvetica Neue",Arial,sans-serif';
+        const BOX = { x0: -2.1, x1: 2.3, y0: 1.0, y1: 3.6, w: 2.1 };
+        const BL = BOX.x1 - BOX.x0, BH = BOX.y1 - BOX.y0, HW = BOX.w / 2;
+        const CAB_X = 2.35;
+        // 右側電視牆開口 (公尺)
+        const TV = { x0: -2.1 + 0.08 * BL, w: 0.44 * BL, yTop: BOX.y1 - 0.22 * BH, h: 0.46 * BH };
+        TV.cx = TV.x0 + TV.w / 2; TV.cy = TV.yTop - TV.h / 2;
+        let hemiLight, fillLight, roofGroup, rightWallGroup, domePivot, vanGroup, controlPointLight;
+        const _noiseTex = createPixelNoiseTexture;
+
+        // 依新車體重新定位各裝備的標籤與鏡頭 (世界座標)
+        const FEATURE_LAYOUT = {
+            outdoor_stage: { marker: W(TV.cx, 3.35, 1.35), look: W(TV.cx, TV.cy, HW), cam: new THREE.Vector3(-5.5, 7.5, 17.5) },
+            mobile_studio: { marker: W(-0.8, 2.85, 0.1), look: W(-0.8, 1.9, 0), cam: new THREE.Vector3(-3.5, 14.5, 11.5) },
+            control_room: { marker: W(1.75, 2.95, 0), look: W(1.75, 2.0, 0), cam: new THREE.Vector3(4.5, 13.5, 10.5) },
+            leo_satellite: { marker: W(1.5, 4.55, -0.05), look: W(1.2, 3.8, 0), cam: new THREE.Vector3(-8, 16, 13) },
+            power_system: { marker: W(-0.9, 4.25, 0), look: W(-0.6, 2.6, -0.4), cam: new THREE.Vector3(-13, 15, -11) },
+            smart_cockpit: { marker: W(3.75, 4.05, 0), look: W(3.4, 2.0, 0), cam: new THREE.Vector3(17, 9.5, 10) }
+        };
+        VEHICLE_FEATURES.forEach(f => {
+            const L = FEATURE_LAYOUT[f.id]; if (!L) return;
+            f.markerPos = { x: L.marker.x, y: L.marker.y, z: L.marker.z };
+            f.lookAtPos = { x: L.look.x, y: L.look.y, z: L.look.z };
+            f.cameraPos = { x: L.cam.x, y: L.cam.y, z: L.cam.z };
+        });
+
+        // ---------- 貼圖工具 ----------
+        let ANISO = 4;
+        function tex(wM, hM, draw, ppm = 400, transparent = false) {
+            const c = document.createElement('canvas');
+            c.width = Math.round(wM * ppm); c.height = Math.round(hM * ppm);
+            const g = c.getContext('2d');
+            if (!transparent) { g.fillStyle = WHITE; g.fillRect(0, 0, c.width, c.height); }
+            draw(g, c.width, c.height, ppm);
+            const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; t.anisotropy = ANISO;
+            return t;
+        }
+        function rr(g, x, y, w, h, r) { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+        function rtiLogo(g, x, y, size, waves = true) {
+            g.save(); g.fillStyle = RED; g.font = `900 ${size}px ${LATIN}`; g.textBaseline = 'alphabetic';
+            g.fillText('Rt', x, y); const wRt = g.measureText('Rt').width;
+            g.fillText('i', x + wRt, y); const wi = g.measureText('i').width;
+            if (waves) {
+                const cx = x + wRt + wi * 0.5, cy = y - size * 0.72;
+                g.strokeStyle = RED; g.lineCap = 'round'; g.lineWidth = size * 0.075;
+                [0.2, 0.33, 0.46].forEach(k => { g.beginPath(); g.arc(cx, cy, size * k, -1.45, -0.25); g.stroke(); });
+            }
+            g.restore(); return wRt + wi;
+        }
+        function partnerMarks(g, x, y, s) {
+            g.save();
+            g.fillStyle = '#7d858e'; g.font = `500 ${s}px ${CJK}`; g.textBaseline = 'alphabetic';
+            g.fillText('中華電信', x, y);
+            const w = g.measureText('中華電信').width;
+            ['#2f6fd6', '#2fae5c', '#f2b62b', '#ef7a2a'].forEach((c, i) => { g.fillStyle = c; g.fillRect(x + w + s * 0.4 + i * s * 0.62, y - s * 0.82, s * 0.5, s * 0.82); });
+            g.fillStyle = '#9aa2ab'; g.font = `500 ${s * 0.62}px ${CJK}`;
+            g.fillText('Chunghwa Telecom', x, y + s * 0.85);
+            g.restore();
+        }
+        function hatchClip(g, pathFn, base, line, step, lw) {
+            g.save(); pathFn(); g.fillStyle = base; g.fill(); g.clip();
+            g.strokeStyle = line; g.lineWidth = lw;
+            const Wd = g.canvas.width, H = g.canvas.height;
+            for (let i = -H; i < Wd + H; i += step) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i + H * 0.55, H); g.stroke(); }
+            g.restore();
+        }
+
+        function buildRtiVan() {
+            const M = (o) => new THREE.MeshStandardMaterial(Object.assign({ roughness: 0.5, metalness: 0.05 }, o));
+            const tm = (t, o = {}) => M(Object.assign({ map: t, roughness: 0.45 }, o));
+            const mWhite = M({ color: WHITE, roughness: 0.42 });
+            const mGlass = M({ color: 0x1b232c, roughness: 0.12, metalness: 0.4 });
+            const mDark = M({ color: 0x22262b, roughness: 0.8 });
+            const mGrey = M({ color: 0x8d939a, roughness: 0.6 });
+            const mTire = M({ color: 0x1a1b1d, roughness: 0.92 });
+            const mRim = M({ color: 0xc9ced4, roughness: 0.35, metalness: 0.6 });
+            const mInterior = M({ color: 0xdfe3e8, roughness: 0.85 });
+            const mFoam = new THREE.MeshLambertMaterial({ map: _noiseTex('#334155', 22, 16) });
+            const mWood = new THREE.MeshLambertMaterial({ map: _noiseTex('#85522b', 18, 16) });
+            const mMetal = new THREE.MeshLambertMaterial({ map: _noiseTex('#71717a', 14, 16) });
+            const mRack = new THREE.MeshLambertMaterial({ map: _noiseTex('#27272a', 14, 16) });
+            [mFoam, mWood, mMetal, mRack].forEach(m => { m.map.encoding = THREE.sRGBEncoding; m.userData.srgbDone = true; });
+
+            vanGroup = new THREE.Group(); vanGroup.scale.setScalar(S); vanGroup.position.x = OX; scene.add(vanGroup);
+            vehicleGroup = vanGroup;
+            const add = (geo, mat, x = 0, y = 0, z = 0, parent = vanGroup) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); parent.add(m); return m; };
+            const tag = (obj, id, extra) => { obj.traverse(o => { o.userData.featureId = id; if (extra) Object.assign(o.userData, extra); }); return obj; };
+            const grp = (id, parent = vanGroup) => { const g = new THREE.Group(); parent.add(g); featureGroupsMap[id] = g; return g; };
+            function rod(a, b, r, mat, parent = vanGroup) {
+                const len = a.distanceTo(b); const m = add(new THREE.CylinderGeometry(r, r, len, 10), mat, 0, 0, 0, parent);
+                m.position.copy(a).add(b).multiplyScalar(0.5);
+                m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize());
+                return m;
+            }
+
+            // ---------- 車身貼圖 ----------
+            const texLeft = tex(BL, BH, (g, Wd, H) => {
+                const band = (a, b, c, d) => { g.beginPath(); g.moveTo(a * Wd, -20); g.lineTo(b * Wd, -20); g.lineTo(d * Wd, H + 20); g.lineTo(c * Wd, H + 20); g.closePath(); };
+                band(0.05, 0.18, 0.30, 0.44); g.fillStyle = RED; g.fill();
+                hatchClip(g, () => band(0.18, 0.36, 0.44, 0.60), '#d3d7db', '#a8aeb5', 28, 7);
+                band(0.36, 0.44, 0.60, 0.67); g.fillStyle = RED; g.fill();
+                const wg = g.createLinearGradient(0, 0.22 * H, 0, 0.8 * H); wg.addColorStop(0, '#3c4754'); wg.addColorStop(1, '#1c232b');
+                // 車廂側門：位於前段導播區 (靠車頭)
+                rr(g, 0.04 * Wd, 0.22 * H, 0.19 * Wd, 0.58 * H, 34); g.fillStyle = wg; g.fill(); g.lineWidth = 12; g.strokeStyle = '#59626d'; g.stroke();
+                const cx = 0.445 * Wd, cy = 0.56 * H, r = 0.23 * H;
+                const dg = g.createRadialGradient(cx - r * .3, cy - r * .3, r * .1, cx, cy, r); dg.addColorStop(0, '#eef0f2'); dg.addColorStop(1, '#9aa1a9');
+                g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.fillStyle = dg; g.fill(); g.lineWidth = 10; g.strokeStyle = '#626a73'; g.stroke();
+                g.lineWidth = 4; g.strokeStyle = 'rgba(80,88,97,.45)';
+                [0.72, 0.45].forEach(k => { g.beginPath(); g.arc(cx, cy, r * k, 0, Math.PI * 2); g.stroke(); });
+                for (let a = 0; a < Math.PI * 2; a += Math.PI / 6) { g.beginPath(); g.moveTo(cx + Math.cos(a) * r * .2, cy + Math.sin(a) * r * .2); g.lineTo(cx + Math.cos(a) * r * .95, cy + Math.sin(a) * r * .95); g.stroke(); }
+                g.lineCap = 'round'; g.strokeStyle = '#353b43'; g.lineWidth = 18;
+                g.beginPath(); g.moveTo(cx + r * .05, cy + r * .05); g.lineTo(cx - r * .62, cy - r * .62); g.stroke();
+                g.fillStyle = RED; g.beginPath(); g.arc(cx - r * .66, cy - r * .66, 24, 0, Math.PI * 2); g.fill();
+                partnerMarks(g, 0.43 * Wd, 0.86 * H, 34);
+                g.fillStyle = RED; g.font = `900 ${0.6 * H}px ${LATIN}`; g.fillText('Rti', 0.665 * Wd, 0.69 * H);
+                rr(g, 0.70 * Wd, 0.74 * H, 0.15 * Wd, 0.2 * H, 10); g.fillStyle = '#d8dbde'; g.fill(); g.lineWidth = 6; g.strokeStyle = '#868d95'; g.stroke();
+                g.strokeStyle = '#8f969e'; g.lineWidth = 7;
+                for (let y = 0.765 * H; y < 0.93 * H; y += 20) { g.beginPath(); g.moveTo(0.71 * Wd, y); g.lineTo(0.84 * Wd, y); g.stroke(); }
+            });
+            // 右側外牆：紅色同心圓 + 電視牆開口 (透明挖空)
+            const texRight = tex(BL, BH, (g, Wd, H) => {
+                const cx = 0.99 * Wd, cy = 0.56 * H;
+                g.strokeStyle = RED; g.lineWidth = 20;
+                for (let i = 0; i < 10; i++) { g.beginPath(); g.arc(cx, cy, 95 + i * 47, Math.PI / 2, Math.PI * 1.5); g.stroke(); }
+                g.fillStyle = RED; g.beginPath(); g.arc(cx, cy, 50, Math.PI / 2, Math.PI * 1.5); g.fill();
+                partnerMarks(g, 0.57 * Wd, 0.86 * H, 34);
+                g.clearRect(0.08 * Wd, 0.22 * H, 0.44 * Wd, 0.46 * H);
+            });
+            const texRightInner = tex(BL, BH, (g, Wd, H) => {
+                g.fillStyle = '#dfe3e8'; g.fillRect(0, 0, Wd, H);
+                g.clearRect(0.48 * Wd, 0.22 * H, 0.44 * Wd, 0.46 * H);
+            });
+            const texRear = tex(BOX.w, BH, (g, Wd, H) => {
+                g.fillStyle = RED;
+                g.fillRect(0, 0.36 * H, 0.08 * Wd, 0.64 * H); g.fillRect(0.08 * Wd, 0.55 * H, 0.09 * Wd, 0.07 * H); g.fillRect(0.13 * Wd, 0.55 * H, 0.045 * Wd, 0.45 * H);
+                rr(g, 0.22 * Wd, 0.08 * H, 0.56 * Wd, 0.9 * H, 40); g.lineWidth = 7; g.strokeStyle = '#8c949c'; g.stroke();
+                g.fillStyle = '#4b525a'; rr(g, 0.72 * Wd, 0.52 * H, 0.025 * Wd, 0.1 * H, 6); g.fill();
+                [0.18, 0.5, 0.82].forEach(v => { g.fillStyle = '#b5bbc2'; g.fillRect(0.765 * Wd, v * H, 0.02 * Wd, 0.05 * H); });
+                const cx = 0.27 * Wd, cy = 0.45 * H; g.strokeStyle = RED; g.lineCap = 'round'; g.lineWidth = 0.045 * Wd;
+                [0.1, 0.18, 0.26].forEach(k => { g.beginPath(); g.arc(cx, cy, k * Wd, -Math.PI / 2 + 0.05, -0.05); g.stroke(); });
+                g.fillStyle = RED; g.beginPath(); g.arc(cx, cy, 0.03 * Wd, 0, Math.PI * 2); g.fill();
+                const lw = rtiLogo(g, 0.36 * Wd, 0.69 * H, 110);
+                g.fillStyle = '#4a525b'; g.font = `700 30px ${CJK}`; g.fillText('中央廣播電臺', 0.36 * Wd + lw + 14, 0.665 * H);
+                g.fillStyle = '#8a939c'; g.font = `500 18px Arial`; g.fillText('Radio Taiwan International', 0.36 * Wd + lw + 14, 0.69 * H);
+                partnerMarks(g, 0.37 * Wd, 0.78 * H, 26);
+                // 車牌：車尾中間下方
+                rr(g, 0.37 * Wd, 0.875 * H, 0.26 * Wd, 0.07 * H, 8); g.fillStyle = '#fff'; g.fill(); g.lineWidth = 5; g.strokeStyle = INK; g.stroke();
+                g.fillStyle = INK; g.font = `700 40px ui-monospace,Menlo,monospace`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('CER-1928', 0.5 * Wd, 0.91 * H);
+            });
+            const texRoof = tex(BL, BOX.w, (g, Wd, H) => {
+                g.strokeStyle = '#dde1e5'; g.lineWidth = 4;
+                for (let x = 0.5; x < BL; x += 0.55) { g.beginPath(); g.moveTo(x * 400, 0); g.lineTo(x * 400, H); g.stroke(); }
+            });
+            const texLuton = tex(BOX.w, 0.58, (g, Wd, H) => {
+                const parts = [['央廣', `900 168px ${CJK}`, INK], ['1', `italic 900 196px ${LATIN}`, RED], ['號', `900 168px ${CJK}`, INK]];
+                let tot = 0; parts.forEach(p => { g.font = p[1]; p.w = g.measureText(p[0]).width; tot += p.w + (p[0] === '1' ? 20 : 0); });
+                let x = (Wd - tot) / 2;
+                parts.forEach(p => { g.font = p[1]; g.fillStyle = p[2]; if (p[0] === '1') x += 10; g.fillText(p[0], x, H * 0.8); x += p.w + (p[0] === '1' ? 10 : 0); });
+            });
+
+            // ---------- 車廂 (拆成獨立牆面，才能做車內透視) ----------
+            const T = 0.04, cx = (BOX.x0 + BOX.x1) / 2, cy = (BOX.y0 + BOX.y1) / 2;
+            // 底板與木地板
+            add(new THREE.BoxGeometry(BL, 0.06, BOX.w), [mWhite, mWhite, mWood, mGrey, mWhite, mWhite], cx, BOX.y0 + 0.03, 0);
+            // 左牆 (−z)
+            add(new THREE.BoxGeometry(BL, BH, T), [mWhite, mWhite, mWhite, mWhite, mInterior, tm(texLeft)], cx, cy, -HW + T / 2);
+            // 後牆 (−x)
+            add(new THREE.BoxGeometry(T, BH, BOX.w), [mInterior, tm(texRear), mWhite, mWhite, mWhite, mWhite], BOX.x0 + T / 2, cy, 0);
+            // 前牆 (+x，駕駛艙後方)
+            add(new THREE.BoxGeometry(T, BH, BOX.w), [mWhite, mInterior, mWhite, mWhite, mWhite, mWhite], BOX.x1 - T / 2, cy, 0);
+            // 前上方導流箱 (央廣1號字樣)
+            const LUT = { x0: BOX.x1, x1: 3.45, y0: 3.02 };
+            const luton = add(new THREE.BoxGeometry(LUT.x1 - LUT.x0, BOX.y1 - LUT.y0, BOX.w), [tm(texLuton), mWhite, mWhite, mWhite, mWhite, mWhite], (LUT.x0 + LUT.x1) / 2, (LUT.y0 + BOX.y1) / 2, 0);
+
+            // 可移除：車頂
+            roofGroup = new THREE.Group(); vanGroup.add(roofGroup); cutawayRoofGroup = roofGroup;
+            add(new THREE.BoxGeometry(BL, T, BOX.w), [mWhite, mWhite, tm(texRoof), mInterior, mWhite, mWhite], cx, BOX.y1 - T / 2, 0, roofGroup);
+            // 車頂燈條 (車內)
+            [-1.2, 0.0].forEach(x => add(new THREE.BoxGeometry(0.6, 0.02, 0.12), new THREE.MeshBasicMaterial({ color: 0xfff7e0 }), x, BOX.y1 - T - 0.01, 0, roofGroup));
+
+            // 可移除：右牆 (+z) 與電視牆
+            rightWallGroup = new THREE.Group(); vanGroup.add(rightWallGroup); cutawaySideWallGroup = rightWallGroup;
+            add(new THREE.BoxGeometry(BL, BH, T), [mWhite, mWhite, mWhite, mWhite,
+                tm(texRight, { transparent: true, alphaTest: 0.5 }), tm(texRightInner, { transparent: true, alphaTest: 0.5 })], cx, cy, HW - T / 2, rightWallGroup);
+            const glassPane = add(new THREE.PlaneGeometry(TV.w, TV.h), new THREE.MeshLambertMaterial({ color: 0x93c5fd, transparent: true, opacity: 0.25, depthWrite: false, side: THREE.DoubleSide }), TV.cx, TV.cy, HW - T / 2, rightWallGroup);
+            tag(glassPane, 'outdoor_stage');
+            // 跑馬燈 (多語全球直播)
+            marqueeTexture.encoding = THREE.sRGBEncoding;
+            const marquee = add(new THREE.PlaneGeometry(TV.w, 0.2), new THREE.MeshBasicMaterial({ map: marqueeTexture }), TV.cx, TV.yTop - TV.h - 0.16, HW + 0.002, rightWallGroup);
+            tag(marquee, 'outdoor_stage');
+
+            // 電視牆：鉸鏈在靠車頭一側，向車頭方向外翻；正面 = Rti On The Go，背面 = ON AIR 直播 LED
+            ledTexClosed = tex(TV.w, TV.h, (g, Wd, H) => {
+                rr(g, 0, 0, Wd, H, 26); g.fillStyle = '#cfd4da'; g.fill(); g.lineWidth = 6; g.strokeStyle = '#8b939c'; g.stroke();
+                rr(g, 28, 28, Wd - 56, H - 56, 12); g.fillStyle = '#fbfbfc'; g.fill();
+                // 依框內寬度自動縮放字體，確保文字完整落在電視牆框內
+                g.font = `900 160px ${LATIN}`; const w1a = g.measureText('Rti').width;
+                g.font = `italic 700 118px Arial,sans-serif`; const w2a = g.measureText(' On The Go').width;
+                const k = Math.min(1, ((Wd - 56) * 0.82) / (w1a + w2a));
+                const s1 = 160 * k, s2 = 118 * k, base = H / 2 + s1 * 0.33;
+                g.font = `900 ${s1}px ${LATIN}`; const w1 = g.measureText('Rti').width;
+                g.font = `italic 700 ${s2}px Arial,sans-serif`; const w2 = g.measureText(' On The Go').width;
+                const sx = Wd / 2 - (w1 + w2) / 2;
+                rtiLogo(g, sx, base, s1, false);
+                g.fillStyle = RED; g.font = `italic 700 ${s2}px Arial,sans-serif`; g.fillText(' On The Go', sx + w1, base);
+            });
+            ledTexOpen = createLedTextureOpen(); ledTexOpen.encoding = THREE.sRGBEncoding;
+            ledScreenPivot = new THREE.Group(); ledScreenPivot.position.set(TV.x0 + TV.w, TV.cy, HW + 0.03); rightWallGroup.add(ledScreenPivot);
+            const mFrame = M({ color: 0x2a2e34, roughness: 0.6 });
+            const panel = add(new THREE.BoxGeometry(TV.w, TV.h, 0.05),
+                [mFrame, mFrame, mFrame, mFrame, tm(ledTexClosed), new THREE.MeshBasicMaterial({ map: ledTexOpen })],
+                -TV.w / 2, 0, 0, ledScreenPivot);
+            panel.material[5].userData.srgbDone = true;
+            tag(panel, 'outdoor_stage', { isLedScreen: true });
+            ledScreenMesh = { material: {} };   // 原程式的貼圖切換改由面板正反面呈現
+            // 鉸鏈
+            [0.35, -0.35].forEach(dy => add(new THREE.CylinderGeometry(0.018, 0.018, 0.14, 10), mGrey, TV.x0 + TV.w, TV.cy + dy * TV.h, HW + 0.03, rightWallGroup));
+
+            // ---------- 車內：3:1 分區隔間 ----------
+            const PX = 1.2, FL = BOX.y0 + 0.06, CEIL = BOX.y1 - T;
+            const zIn = HW - T;
+            add(new THREE.BoxGeometry(0.06, 0.84, zIn * 2), mFoam, PX, FL + 0.42, 0);
+            add(new THREE.BoxGeometry(0.06, CEIL - (FL + 1.64), zIn * 2), mFoam, PX, (FL + 1.64 + CEIL) / 2, 0);
+            add(new THREE.BoxGeometry(0.06, 0.8, zIn - 0.45), mFoam, PX, FL + 1.24, -(0.45 + zIn) / 2);
+            add(new THREE.BoxGeometry(0.06, 0.8, zIn - 0.45), mFoam, PX, FL + 1.24, (0.45 + zIn) / 2);
+            add(new THREE.PlaneGeometry(0.9, 0.8), new THREE.MeshLambertMaterial({ color: 0x93c5fd, transparent: true, opacity: 0.3, depthWrite: false, side: THREE.DoubleSide }), PX, FL + 1.24, 0).rotation.y = Math.PI / 2;
+            // 後牆吸音棉
+            add(new THREE.BoxGeometry(0.04, 1.2, 1.5), mFoam, BOX.x0 + T + 0.02, FL + 1.35, 0);
+
+            const CH = 0.6;                // 人物縮放
+            const SEAT = FL + 0.45;
+            const stool = (x, z, parent) => { add(new THREE.BoxGeometry(0.34, 0.45, 0.34), mFoam, x, FL + 0.225, z, parent); };
+            const person = (obj, x, z, rotY, parent) => { obj.scale.setScalar(CH); obj.position.set(x, SEAT, z); obj.rotation.y = rotY; parent.add(obj); };
+
+            // 採訪區 (75%)
+            const fStudio = grp('mobile_studio');
+            const TABLE_Y = FL + 0.75;
+            add(new THREE.BoxGeometry(1.35, 0.05, 0.62), mMetal, -0.8, TABLE_Y, 0.1, fStudio);
+            add(new THREE.BoxGeometry(0.12, 0.72, 0.12), mRack, -0.8, FL + 0.36, 0.1, fStudio);
+            add(new THREE.BoxGeometry(0.5, 0.03, 0.4), mRack, -0.8, FL + 0.015, 0.1, fStudio);
+            stool(-1.15, -0.45, fStudio); stool(-0.45, -0.45, fStudio); stool(0.18, 0.1, fStudio);
+            person(buildFemaleHostVoxel(0xfacc15, 0xec4899, true), -1.15, -0.45, Math.PI, fStudio);
+            person(buildFemaleHostVoxel(0x171717, 0x0284c7, false), -0.45, -0.45, Math.PI, fStudio);
+            person(buildMaleHostVoxel(), 0.18, 0.1, Math.PI / 2, fStudio);   // 桌子靠車頭端，面向車尾
+            const micRed = new THREE.MeshLambertMaterial({ color: 0xef4444 }), micChrome = new THREE.MeshLambertMaterial({ color: 0xd1d5db });
+            [[-1.15, -0.08], [-0.45, -0.08], [-0.22, 0.1]].forEach(([x, z]) => {
+                const b = TABLE_Y + 0.025;
+                add(new THREE.BoxGeometry(0.08, 0.02, 0.08), mRack, x, b + 0.01, z, fStudio);
+                add(new THREE.BoxGeometry(0.015, 0.18, 0.015), micChrome, x, b + 0.11, z, fStudio);
+                add(new THREE.BoxGeometry(0.07, 0.02, 0.07), mRack, x, b + 0.2, z, fStudio);
+                add(new THREE.BoxGeometry(0.05, 0.1, 0.05), micRed, x, b + 0.26, z, fStudio);
+            });
+            // 背景牆 (左牆內側) 紅色 Rti On the Go 霓虹燈
+            const NEON = { x: -0.8, y: FL + 1.7, w: 1.7, h: 0.5 };
+            add(new THREE.BoxGeometry(NEON.w + 0.1, NEON.h + 0.08, 0.02), M({ color: 0x15171c, roughness: 0.9 }), NEON.x, NEON.y, -zIn + 0.012, fStudio);
+            const texNeon = tex(NEON.w, NEON.h, (g, Wd, H) => {
+                const tube = (drawFn) => {
+                    g.save(); g.shadowColor = '#ff1a1a'; g.shadowBlur = 42; g.globalAlpha = 0.9; drawFn('#ff2020', 'fill'); g.restore();
+                    g.save(); g.shadowColor = '#ff3030'; g.shadowBlur = 14; drawFn('#ff3b3b', 'fill'); g.restore();
+                    g.save(); g.lineWidth = 3; drawFn('#ffe0e0', 'stroke'); g.restore();
+                };
+                // 外框霓虹管
+                g.save(); g.shadowColor = '#ff1a1a'; g.shadowBlur = 26; g.strokeStyle = '#ff3535'; g.lineWidth = 9;
+                rr(g, 16, 16, Wd - 32, H - 32, 30); g.stroke();
+                g.shadowBlur = 0; g.strokeStyle = '#ffd5d5'; g.lineWidth = 2.5; rr(g, 16, 16, Wd - 32, H - 32, 30); g.stroke(); g.restore();
+                // 文字
+                const f1 = `900 ${H * 0.5}px ${LATIN}`, f2 = `italic 700 ${H * 0.36}px Arial,sans-serif`;
+                g.font = f1; const w1 = g.measureText('Rti').width;
+                g.font = f2; const w2 = g.measureText(' On the Go').width;
+                const sx = (Wd - w1 - w2) / 2, base = H * 0.66;
+                tube((c, mode) => {
+                    g.font = f1; g.textBaseline = 'alphabetic';
+                    if (mode === 'fill') { g.fillStyle = c; g.fillText('Rti', sx, base); } else { g.strokeStyle = c; g.strokeText('Rti', sx, base); }
+                    g.font = f2;
+                    if (mode === 'fill') { g.fillStyle = c; g.fillText(' On the Go', sx + w1, base); } else { g.strokeStyle = c; g.strokeText(' On the Go', sx + w1, base); }
+                });
+            }, 400, true);
+            neonMat = new THREE.MeshBasicMaterial({ map: texNeon, transparent: true, depthWrite: false });
+            neonMat.userData.srgbDone = true;
+            add(new THREE.PlaneGeometry(NEON.w, NEON.h), neonMat, NEON.x, NEON.y, -zIn + 0.03, fStudio).userData.noShadow = true;
+            tag(fStudio, 'mobile_studio');
+
+            // 導播區 (25%)
+            const fCtrl = grp('control_room');
+            add(new THREE.BoxGeometry(0.45, 0.05, 1.0), mMetal, 2.02, TABLE_Y, 0.38, fCtrl);
+            add(new THREE.BoxGeometry(0.4, 0.7, 0.05), mRack, 2.02, FL + 0.35, 0.86, fCtrl);
+            add(new THREE.BoxGeometry(0.3, 0.035, 0.55), mRack, 1.97, TABLE_Y + 0.04, 0.38, fCtrl);
+            const screenTex = tex(0.45, 0.28, (g, Wd, H) => {
+                g.fillStyle = '#0b1324'; g.fillRect(0, 0, Wd, H);
+                g.fillStyle = '#1d4ed8'; g.fillRect(8, 8, Wd / 2 - 12, H / 2 - 12);
+                g.fillStyle = '#dc2626'; g.fillRect(Wd / 2 + 4, 8, Wd / 2 - 12, H / 2 - 12);
+                g.fillStyle = '#22c55e'; for (let i = 0; i < 8; i++) g.fillRect(10 + i * 20, H - 14 - (i * 7 % 30), 12, 6 + (i * 7 % 30));
+            });
+            [0.12, 0.64].forEach(z => {
+                const s = add(new THREE.BoxGeometry(0.03, 0.28, 0.45), [new THREE.MeshBasicMaterial({ map: screenTex }), mRack, mRack, mRack, mRack, mRack], 2.2, TABLE_Y + 0.22, z, fCtrl);
+                s.rotation.y = Math.PI; s.position.x = 2.2;
+            });
+            add(new THREE.BoxGeometry(0.5, 2.0, 0.6), mRack, 2.0, FL + 1.0, -0.66, fCtrl);
+            add(new THREE.BoxGeometry(0.01, 1.8, 0.5), new THREE.MeshLambertMaterial({ color: 0x18181b }), 1.745, FL + 1.0, -0.66, fCtrl);
+            const ledMats = [0x22c55e, 0x38bdf8, 0x22c55e, 0xef4444, 0x22c55e, 0xfacc15];
+            for (let r = 0; r < 6; r++) for (let c = 0; c < 3; c++) {
+                const led = add(new THREE.BoxGeometry(0.02, 0.03, 0.06), new THREE.MeshBasicMaterial({ color: ledMats[(r + c) % ledMats.length] }), 1.735, FL + 0.4 + r * 0.25, -0.82 + c * 0.16, fCtrl);
+                led.userData.noShadow = true; cabinetStatusLeds.push(led);
+            }
+            stool(1.55, 0.38, fCtrl);
+            person(buildMaleEngineerVoxel(), 1.55, 0.38, -Math.PI / 2, fCtrl);
+            tag(fCtrl, 'control_room');
+
+            // 車底儲能電池
+            const fPower = grp('power_system');
+            add(new THREE.BoxGeometry(0.9, 0.38, 0.32), M({ color: 0x2b3038 }), 0.55, 0.66, -0.7, fPower);
+            add(new THREE.BoxGeometry(0.86, 0.06, 0.005), new THREE.MeshBasicMaterial({ color: 0x22c55e }), 0.55, 0.7, -0.862, fPower);
+            add(new THREE.BoxGeometry(BL - 0.1, 0.15, 1.62), mDark, cx, 0.925, 0);
+            add(new THREE.BoxGeometry(6.0, 0.2, 0.9), mDark, 0.8, 0.62, 0);
+            add(new THREE.BoxGeometry(0.16, 0.14, 1.95), mDark, BOX.x0 + 0.02, 0.72, 0);
+            [-1, 1].forEach(s => {
+                add(new THREE.BoxGeometry(0.04, 0.2, 0.26), M({ color: 0xd8202b, roughness: 0.3, emissive: 0x400000 }), BOX.x0 - 0.02, 1.16, s * 0.86);
+                add(new THREE.BoxGeometry(0.04, 0.1, 0.14), M({ color: 0xf39a1e, roughness: 0.3 }), BOX.x0 - 0.02, 1.32, s * 0.9);
+                add(new THREE.BoxGeometry(0.03, 0.42, 0.42), mDark, -1.48, 0.5, s * 0.9);
+            });
+
+            // ---------- 駕駛艙 ----------
+            const fCab = grp('smart_cockpit');
+            fCab.attach(luton);
+            const sh = new THREE.Shape();
+            const AX = 1.0, AY = 0.42, AR = 0.53, BOT = 0.75;
+            const dx = Math.sqrt(AR * AR - (BOT - AY) ** 2);
+            sh.moveTo(0, BOT); sh.lineTo(AX - dx, BOT);
+            sh.absarc(AX, AY, AR, Math.atan2(BOT - AY, -dx), Math.atan2(BOT - AY, dx), true);
+            // 駕駛艙改為中空：下半部車身 + 兩側板 + 車頂 + 後牆，讓透明擋風玻璃可看見車內
+            const BELT = 1.78, XB = 1.78 - 0.14 * (BELT - 1.65) / 1.15;
+            const bevel = { bevelEnabled: true, bevelThickness: 0.05, bevelSize: 0.05, bevelSegments: 4, curveSegments: 28 };
+            sh.lineTo(1.75, BOT); sh.lineTo(1.78, 1.65); sh.lineTo(XB, BELT); sh.lineTo(0, BELT); sh.lineTo(0, BOT);
+            const cabGeo = new THREE.ExtrudeGeometry(sh, Object.assign({ depth: 1.9 }, bevel));
+            cabGeo.translate(0, 0, -0.95);
+            add(cabGeo, mWhite, CAB_X, 0, 0, fCab);
+            const upSh = new THREE.Shape();
+            upSh.moveTo(0, BELT); upSh.lineTo(XB, BELT); upSh.lineTo(1.64, 2.8);
+            upSh.quadraticCurveTo(1.6, 2.95, 1.45, 2.95); upSh.lineTo(0, 2.95); upSh.lineTo(0, BELT);
+            [1, -1].forEach(sd => {
+                const sideGeo = new THREE.ExtrudeGeometry(upSh, Object.assign({ depth: 0.02 }, bevel));
+                sideGeo.translate(0, 0, sd > 0 ? 1.0 - 0.07 : -1.0 + 0.05);
+                add(sideGeo, mWhite, CAB_X, 0, 0, fCab);
+            });
+            const roofSh = new THREE.Shape();
+            roofSh.moveTo(0, 2.8); roofSh.lineTo(1.64, 2.8); roofSh.quadraticCurveTo(1.6, 2.95, 1.45, 2.95); roofSh.lineTo(0, 2.95); roofSh.lineTo(0, 2.8);
+            const cabRoofGeo = new THREE.ExtrudeGeometry(roofSh, Object.assign({ depth: 1.9 }, bevel));
+            cabRoofGeo.translate(0, 0, -0.95);
+            add(cabRoofGeo, mWhite, CAB_X, 0, 0, fCab);
+            add(new THREE.BoxGeometry(0.06, 2.8 - BELT, 1.9), mInterior, CAB_X + 0.03, (BELT + 2.8) / 2, 0, fCab);
+
+            // 駕駛艙內裝：儀表板、座椅、方向盤與司機 (左駕，司機在 −z 側)
+            const mSeat = M({ color: 0x2b2f36, roughness: 0.85 });
+            add(new THREE.BoxGeometry(0.3, 0.16, 1.8), mDark, CAB_X + 1.55, BELT + 0.1, 0, fCab);
+            add(new THREE.BoxGeometry(0.02, 0.06, 0.34), new THREE.MeshBasicMaterial({ color: 0x38bdf8 }), CAB_X + 1.395, BELT + 0.13, -0.45, fCab);
+            [-0.45, 0.45].forEach(z => {
+                add(new THREE.BoxGeometry(0.1, 0.7, 0.5), mSeat, CAB_X + 0.58, BELT + 0.35, z, fCab);
+                add(new THREE.BoxGeometry(0.08, 0.16, 0.3), mSeat, CAB_X + 0.58, BELT + 0.8, z, fCab);
+            });
+            const wheelGrp = new THREE.Group(); wheelGrp.position.set(CAB_X + 1.22, BELT + 0.3, -0.45); wheelGrp.rotation.z = 0.5; fCab.add(wheelGrp);
+            add(new THREE.TorusGeometry(0.17, 0.022, 10, 32), mDark, 0, 0, 0, wheelGrp).rotation.y = Math.PI / 2;
+            add(new THREE.BoxGeometry(0.02, 0.3, 0.03), mDark, 0, 0, 0, wheelGrp);
+            rod(new THREE.Vector3(CAB_X + 1.22, BELT + 0.3, -0.45), new THREE.Vector3(CAB_X + 1.45, BELT + 0.12, -0.45), 0.025, mDark, fCab);
+            const driver = buildDriverVoxel();
+            driver.scale.setScalar(CH); driver.position.set(CAB_X + 0.78, BELT - 0.14, -0.45); driver.rotation.y = -Math.PI / 2; fCab.add(driver);
+            const FRONT = CAB_X + 1.78 + 0.05;
+            const ws = new THREE.Group(); ws.position.set(FRONT, 1.65, 0); ws.rotation.z = Math.atan2(0.14, 1.15); fCab.add(ws);
+            const mClearGlass = M({ color: 0xd6ecff, roughness: 0.05, metalness: 0.1, transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide });
+            add(new THREE.PlaneGeometry(1.78, 0.96), mClearGlass, 0.012, 0.6, 0, ws).rotation.y = Math.PI / 2;
+            [-0.42, 0.38].forEach(z => { add(new THREE.BoxGeometry(0.03, 0.025, 0.62), mDark, 0.03, 0.16, z, ws).rotation.x = 0.12; });
+            const texCabFront = tex(1.9, 0.9, (g, Wd, H) => {
+                g.font = `900 82px ${LATIN}`; const lw = g.measureText('Rti').width;
+                rtiLogo(g, (Wd - lw) / 2, 0.3 * H, 82);
+                rr(g, 0.27 * Wd, 0.44 * H, 0.46 * Wd, 0.36 * H, 16); g.fillStyle = '#2a2f36'; g.fill();
+                g.strokeStyle = '#59616b'; g.lineWidth = 7;
+                for (let i = 1; i < 5; i++) { const y = 0.44 * H + i * 0.072 * H; g.beginPath(); g.moveTo(0.29 * Wd, y); g.lineTo(0.71 * Wd, y); g.stroke(); }
+                [[0.02, 1], [0.78, -1]].forEach(([u, d]) => {
+                    rr(g, u * Wd, 0.5 * H, 0.2 * Wd, 0.3 * H, 20); g.fillStyle = '#eef2f6'; g.fill(); g.lineWidth = 6; g.strokeStyle = '#59626d'; g.stroke();
+                    const ccx = (u + 0.1 + d * 0.03) * Wd; g.beginPath(); g.arc(ccx, 0.65 * H, 0.11 * H, 0, Math.PI * 2); g.fillStyle = '#c9d2da'; g.fill(); g.strokeStyle = '#7c8690'; g.lineWidth = 4; g.stroke();
+                    g.fillStyle = '#f29a24'; rr(g, (d > 0 ? u + 0.01 : u + 0.13) * Wd, 0.52 * H, 0.06 * Wd, 0.08 * H, 6); g.fill();
+                });
+            }, 400, true);
+            const cf = add(new THREE.PlaneGeometry(1.9, 0.9), tm(texCabFront, { transparent: true, alphaTest: 0.05 }), FRONT - 0.005, 1.2, 0, fCab);
+            cf.rotation.set(0, Math.PI / 2, 0); cf.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), -0.033);
+            add(new THREE.BoxGeometry(0.18, 0.28, 2.04), M({ color: 0x9aa0a7, roughness: 0.5 }), FRONT - 0.03, 0.64, 0, fCab);
+            // 車頭保險桿中間車牌 CER-1928
+            const texFrontPlate = tex(0.44, 0.15, (g, Wd, H) => {
+                rr(g, 3, 3, Wd - 6, H - 6, 10); g.fillStyle = '#ffffff'; g.fill(); g.lineWidth = 6; g.strokeStyle = INK; g.stroke();
+                g.fillStyle = INK; g.textAlign = 'center'; g.textBaseline = 'middle';
+                let fs = H * 0.6; g.font = `700 ${fs}px ui-monospace,Menlo,monospace`;
+                fs *= Math.min(1, (Wd * 0.82) / g.measureText('CER-1928').width); g.font = `700 ${fs}px ui-monospace,Menlo,monospace`;
+                g.fillText('CER-1928', Wd / 2, H * 0.54);
+            }, 500, true);
+            add(new THREE.BoxGeometry(0.01, 0.17, 0.46), mDark, FRONT + 0.065, 0.64, 0, fCab);
+            add(new THREE.PlaneGeometry(0.44, 0.15), tm(texFrontPlate, { transparent: true, alphaTest: 0.05, roughness: 0.4 }), FRONT + 0.072, 0.64, 0, fCab).rotation.y = Math.PI / 2;
+            // 夜間頭燈
+            const headMat = new THREE.MeshBasicMaterial({ color: 0xfff6d5, transparent: true, opacity: 0 });
+            [-0.68, 0.68].forEach(z => add(new THREE.CircleGeometry(0.1, 24), headMat, FRONT + 0.012, 1.0, z, fCab).rotation.y = Math.PI / 2);
+            vanGroup.userData.headMat = headMat;
+            const winShape = new THREE.Shape();
+            winShape.moveTo(0.55, 1.86); winShape.lineTo(1.6, 1.86); winShape.lineTo(1.47, 2.7); winShape.lineTo(0.55, 2.7); winShape.lineTo(0.55, 1.86);
+            const winGeo = new THREE.ShapeGeometry(winShape);
+            const cabSide = (frontLeft) => tex(1.6, 0.9, (g, Wd, H, p) => {
+                const X = x => frontLeft ? (1.7 - x) * p : (x - 0.1) * p, Y = y => (1.85 - y) * p;
+                g.strokeStyle = '#b4bac1'; g.lineWidth = 5;
+                g.beginPath(); g.moveTo(X(0.52), Y(1.85)); g.lineTo(X(0.52), Y(1.0)); g.stroke();
+                g.fillStyle = '#3b4148'; const hx = Math.min(X(0.6), X(0.76)); rr(g, hx, Y(1.72), Math.abs(X(0.76) - X(0.6)), 0.045 * p, 8); g.fill();
+                g.textAlign = 'center'; g.fillStyle = INK;
+                g.font = `700 ${0.055 * p}px ${CJK}`; g.fillText('總重5噸 限乘3人', X(0.3), Y(1.3));
+                g.font = `700 ${0.075 * p}px ui-monospace,Menlo,monospace`; g.fillText('CER-1928', X(0.3), Y(1.16));
+            }, 400, true);
+            [1, -1].forEach(sd => {
+                add(winGeo, M({ color: 0x1b232c, roughness: 0.12, metalness: 0.4, side: THREE.DoubleSide }), CAB_X, 0, sd * 1.006, fCab);
+                const d = add(new THREE.PlaneGeometry(1.6, 0.9), tm(cabSide(sd < 0), { transparent: true, alphaTest: 0.05 }), CAB_X + 0.9, 1.4, sd * 1.004, fCab);
+                if (sd < 0) d.rotation.y = Math.PI;
+                rod(new THREE.Vector3(FRONT - 0.22, 2.55, sd * 0.98), new THREE.Vector3(FRONT + 0.12, 2.42, sd * 1.22), 0.02, mDark, fCab);
+                rod(new THREE.Vector3(FRONT - 0.05, 1.95, sd * 1.0), new THREE.Vector3(FRONT + 0.12, 1.98, sd * 1.22), 0.02, mDark, fCab);
+                add(new THREE.BoxGeometry(0.07, 0.5, 0.2), mDark, FRONT + 0.14, 2.2, sd * 1.27, fCab);
+                add(new THREE.BoxGeometry(0.4, 0.04, 0.16), mDark, CAB_X + 0.35, 0.82, sd * 1.0, fCab);
+            });
+            tag(fCab, 'smart_cockpit');
+
+            // ---------- 車輪 ----------
+            function wheel(x, z, w, out) {
+                const g = new THREE.Group(); g.position.set(x, 0.42, z); vanGroup.add(g); wheelGroups.push(g);
+                add(new THREE.CylinderGeometry(0.42, 0.42, w, 40), mTire, 0, 0, 0, g).rotation.x = Math.PI / 2;
+                add(new THREE.TorusGeometry(0.36, 0.06, 10, 40), mTire, 0, 0, out * w / 2, g);
+                if (out) {
+                    add(new THREE.CylinderGeometry(0.25, 0.25, 0.02, 32), mRim, 0, 0, out * (w / 2 + 0.005), g).rotation.x = Math.PI / 2;
+                    add(new THREE.CylinderGeometry(0.09, 0.11, 0.06, 20), mGrey, 0, 0, out * (w / 2 + 0.03), g).rotation.x = Math.PI / 2;
+                    for (let i = 0; i < 6; i++) { const a = i * Math.PI / 3; add(new THREE.CylinderGeometry(0.018, 0.018, 0.04, 8), mDark, Math.cos(a) * 0.15, Math.sin(a) * 0.15, out * (w / 2 + 0.02), g).rotation.x = Math.PI / 2; }
+                }
+            }
+            [-1, 1].forEach(sd => { wheel(CAB_X + 1.0, sd * 0.87, 0.26, sd); wheel(-0.9, sd * 0.92, 0.23, sd); wheel(-0.9, sd * 0.67, 0.23, 0); });
+            rod(new THREE.Vector3(-0.9, 0.42, -0.6), new THREE.Vector3(-0.9, 0.42, 0.6), 0.08, mDark);
+            rod(new THREE.Vector3(CAB_X + 1.0, 0.42, -0.75), new THREE.Vector3(CAB_X + 1.0, 0.42, 0.75), 0.06, mDark);
+
+            // ---------- 車頂設備 (隨車頂一起移除) ----------
+            const texPanel = tex(1.05, 1.7, (g, Wd, H) => {
+                g.fillStyle = '#2b333d'; g.fillRect(0, 0, Wd, H);
+                g.strokeStyle = '#3d4856'; g.lineWidth = 3;
+                for (let x = 0; x < Wd; x += Wd / 6) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); }
+                for (let y = 0; y < H; y += H / 10) { g.beginPath(); g.moveTo(0, y); g.lineTo(Wd, y); g.stroke(); }
+                g.lineWidth = 14; g.strokeStyle = '#a2abb5'; g.strokeRect(7, 7, Wd - 14, H - 14);
+            }, 300);
+            const mPanelTop = tm(texPanel, { roughness: 0.25, metalness: 0.2 });
+            const solar = new THREE.Group(); roofGroup.add(solar);
+            [-1.48, -0.33].forEach(x => {
+                add(new THREE.BoxGeometry(1.05, 0.05, 1.7), [mGrey, mGrey, mPanelTop, mGrey, mGrey, mGrey], x, BOX.y1 + 0.09, 0, solar);
+                [-0.4, 0.4].forEach(ddx => [-0.7, 0.7].forEach(dz => add(new THREE.BoxGeometry(0.05, 0.07, 0.05), mGrey, x + ddx, BOX.y1 + 0.035, dz, solar)));
+            });
+            tag(solar, 'power_system');
+            const texRoofName = tex(0.5, 0.95, (g, Wd, H) => {
+                g.save(); g.translate(Wd / 2, H / 2); g.rotate(-Math.PI / 2); g.textBaseline = 'middle';
+                g.font = `900 ${Wd * 0.5}px ${CJK}`; const a = g.measureText('央廣').width;
+                g.font = `italic 900 ${Wd * 0.58}px ${LATIN}`; const b = g.measureText('1').width;
+                g.font = `900 ${Wd * 0.5}px ${CJK}`; const c = g.measureText('號').width;
+                let x = -(a + b + c + 16) / 2;
+                g.fillStyle = INK; g.fillText('央廣', x, 0); x += a + 8;
+                g.fillStyle = RED; g.font = `italic 900 ${Wd * 0.58}px ${LATIN}`; g.fillText('1', x, 0); x += b + 8;
+                g.fillStyle = INK; g.font = `900 ${Wd * 0.5}px ${CJK}`; g.fillText('號', x, 0);
+                g.restore();
+            }, 400, true);
+            add(new THREE.PlaneGeometry(0.5, 0.95), tm(texRoofName, { transparent: true, alphaTest: 0.05 }), 0.55, BOX.y1 + 0.003, 0, roofGroup).rotation.x = -Math.PI / 2;
+            // OneWeb 低軌衛星天線罩 (可旋轉) + 5G MIMO 天線
+            const sat = new THREE.Group(); roofGroup.add(sat);
+            const texDome = tex(0.9, 0.9, (g, Wd) => {
+                const c = Wd / 2; g.fillStyle = '#f1f3f5'; g.fillRect(0, 0, Wd, Wd);
+                g.strokeStyle = '#c3c9cf'; g.lineWidth = 6; [0.46, 0.3].forEach(k => { g.beginPath(); g.arc(c, c, Wd * k, 0, Math.PI * 2); g.stroke(); });
+                g.fillStyle = RED; g.beginPath(); g.moveTo(c, c - Wd * 0.28); g.lineTo(c - 14, c - Wd * 0.2); g.lineTo(c + 14, c - Wd * 0.2); g.fill();
+                g.fillStyle = '#9aa2ab'; g.font = `700 ${Wd * 0.07}px Arial`; g.textAlign = 'center'; g.fillText('OneWeb LEO', c, c + Wd * 0.025);
+            }, 300);
+            domePivot = new THREE.Group(); domePivot.position.set(1.5, BOX.y1, -0.05); sat.add(domePivot); leoDishPivot = domePivot;
+            add(new THREE.CylinderGeometry(0.44, 0.46, 0.2, 56), [mWhite, tm(texDome), mWhite], 0, 0.1, 0, domePivot);
+            add(new THREE.BoxGeometry(0.26, 0.07, 0.2), mGrey, 1.55, BOX.y1 + 0.035, 0.72, sat);
+            [[0.95, 0.75], [0.95, -0.75]].forEach(([x, z]) => {
+                add(new THREE.CylinderGeometry(0.035, 0.05, 0.42, 12), mWhite, x, BOX.y1 + 0.21, z, sat);
+                add(new THREE.CylinderGeometry(0.07, 0.07, 0.03, 12), mGrey, x, BOX.y1 + 0.015, z, sat);
+            });
+            tag(sat, 'leo_satellite');
+            add(new THREE.BoxGeometry(BL - 0.2, 0.05, 0.05), mGrey, 0.1, BOX.y1 + 0.03, 1.0, roofGroup);
+
+            // 陰影與互動清單
+            vanGroup.traverse(o => {
+                if (!o.isMesh) return;
+                o.castShadow = !o.userData.noShadow && !(o.material && o.material.transparent) && !(o.material && o.material.isMeshBasicMaterial);
+                o.receiveShadow = true;
+                if (o.userData.featureId) interactiveMeshes.push(o);
+            });
+        }
+
+        // 原程式的 Lambert/Basic 顏色是 sRGB 數值，轉成線性以配合 sRGB 輸出
+        function fixLegacyColors(root) {
+            root.traverse(o => {
+                if (!o.isMesh) return;
+                (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => {
+                    if (!m || m.userData.srgbDone) return;
+                    if (m.isMeshLambertMaterial || m.isMeshBasicMaterial) {
+                        if (m.color) m.color.convertSRGBToLinear();
+                        if (m.map && m.map !== marqueeTexture) m.map.encoding = THREE.sRGBEncoding;
+                    }
+                    m.userData.srgbDone = true;
+                });
+            });
+        }
+
+        function setupLighting() {
+            hemiLight = new THREE.HemisphereLight(0xffffff, 0x5d7a45, 0.7); scene.add(hemiLight);
+            ambientLight = new THREE.AmbientLight(0xffffff, 0.18); scene.add(ambientLight);
+            sunLight = new THREE.DirectionalLight(0xfffbeb, 0.9); sunLight.position.set(22, 34, 18);
+            sunLight.castShadow = true; sunLight.shadow.mapSize.set(2048, 2048);
+            Object.assign(sunLight.shadow.camera, { near: 5, far: 90, left: -20, right: 20, top: 20, bottom: -20 });
+            sunLight.shadow.bias = -0.0006;
+            scene.add(sunLight);
+            fillLight = new THREE.DirectionalLight(0xffffff, 0.3); fillLight.position.set(-20, 14, -16); scene.add(fillLight);
+            studioPointLight = new THREE.PointLight(0xffedd5, 0.9, 9); studioPointLight.position.copy(W(-0.8, 3.3, 0)); scene.add(studioPointLight);
+            controlPointLight = new THREE.PointLight(0xbfdbfe, 0.6, 5); controlPointLight.position.copy(W(1.75, 3.3, 0)); scene.add(controlPointLight);
+            neonLight = new THREE.PointLight(0xff2a2a, 0.7, 6); neonLight.position.copy(W(-0.8, 2.75, -0.7)); scene.add(neonLight);
+            stagePointLight = new THREE.PointLight(0x38bdf8, 0.6, 10); stagePointLight.position.copy(W(TV.cx - 0.6, 2.6, 2.3)); scene.add(stagePointLight);
+        }
+
+        function buildBroadcastSignalWaves() {
+            const base = W(1.5, 3.85, -0.05);
+            broadcastWaveGroup = new THREE.Group(); broadcastWaveGroup.visible = false; scene.add(broadcastWaveGroup);
+            const rings = [];
+            const cyanWaveMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.75, side: THREE.DoubleSide });
+            const beam = new THREE.Mesh(new THREE.BoxGeometry(0.35, 22, 0.35), new THREE.MeshBasicMaterial({ color: 0x00f5d4, transparent: true, opacity: 0.45 }));
+            beam.position.set(base.x, base.y + 11, base.z); broadcastWaveGroup.add(beam);
+            for (let i = 0; i < 4; i++) {
+                const ring = new THREE.Mesh(new THREE.RingGeometry(0.9, 1.25, 4), cyanWaveMat.clone());
+                ring.rotation.x = Math.PI / 2; ring.position.copy(base); ring.userData = { phase: i * 0.25 };
+                broadcastWaveGroup.add(ring); rings.push(ring);
+            }
+            broadcastWaveGroup.userData.rings = rings; broadcastWaveGroup.userData.baseY = base.y;
+            if (satelliteSpaceModel) satelliteSpaceModel.userData.baseX = base.x;
+        }
+
+        function setupRaycasting() {
+            const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
+            let downPos = { x: 0, y: 0 }, downTime = 0;
+            const dom = renderer.domElement;
+            const visibleChain = o => { while (o) { if (!o.visible) return false; o = o.parent; } return true; };
+            dom.addEventListener('pointerdown', e => { downPos = { x: e.clientX, y: e.clientY }; downTime = performance.now(); });
+            dom.addEventListener('pointerup', e => {
+                if (Math.hypot(e.clientX - downPos.x, e.clientY - downPos.y) > 9 || performance.now() - downTime > 500) return;
+                const rect = dom.getBoundingClientRect();
+                pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1; pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+                raycaster.setFromCamera(pointer, camera);
+                const hit = raycaster.intersectObject(vanGroup, true).find(h => visibleChain(h.object) && !(h.object.material && h.object.material.opacity === 0));
+                if (!hit || !hit.object.userData.featureId) return;
+                if (hit.object.userData.isLedScreen) toggleLedScreenFlip();
+                selectFeatureById(hit.object.userData.featureId);
+            });
+        }
+
+        // 覆寫：日夜切換 (依目前情境調整天空、霧、燈光、頭燈與車內燈)
+        function toggleDayNight() {
+            isNightMode = !isNightMode; playSound('click'); bgmCurrentNote = 0;
+            applyEnvironmentLighting();
+        }
+
+        // 只在直立手機 / 其他版面切換時重設鏡頭；每次 resize 都重設會把使用者轉好的視角洗掉（手機網址列伸縮也會觸發 resize）
+        let viewportCompact = window.innerWidth < 640 && window.innerHeight > window.innerWidth;
+        function onWindowResize() {
+            if (!camera || !renderer) return;
+            const w = window.innerWidth || 800, h = window.innerHeight || 600;
+            camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h);
+            const compact = w < 640 && h > w;
+            if (compact !== viewportCompact) {
+                viewportCompact = compact;
+                const c = scenarioCamera(currentScenario()); cameraLerpTarget = c.p; controlsTargetLerp = c.t;
+            }
+        }
+
+        async function initThreeScene() {
+            try {
+                await Promise.race([
+                    Promise.all([document.fonts.load('900 64px "Noto Sans TC"', '央廣號總重限乘'), document.fonts.load('500 64px "Noto Sans TC"', '中央廣播電臺中華電信全球多語直播')]),
+                    new Promise(r => setTimeout(r, 3000))]);
+            } catch (e) { }
+            const container = document.getElementById('canvas-container');
+            const w = container.clientWidth || window.innerWidth || 800, h = container.clientHeight || window.innerHeight || 600;
+            scene = new THREE.Scene(); scene.background = new THREE.Color(0x78b7ff);
+            scene.fog = new THREE.FogExp2(new THREE.Color(0x78b7ff).convertSRGBToLinear(), 0.011);
+            camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 350); camera.position.set(17, 13, 21);
+            renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+            renderer.setSize(w, h); renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+            renderer.outputEncoding = THREE.sRGBEncoding;
+            renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            ANISO = renderer.capabilities.getMaxAnisotropy();
+            container.appendChild(renderer.domElement);
+
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true; controls.dampingFactor = 0.07;
+            controls.maxPolarAngle = Math.PI / 2 - 0.03; controls.minDistance = 6.5; controls.maxDistance = 65;
+            controls.target.set(0, 5.0, 0);
+            controls.addEventListener('start', () => { cameraLerpTarget = null; controlsTargetLerp = null; });
+
+            initMarqueeTexture(); setupLighting(); buildRtiVan();
+            buildStarfieldAndOrbitSatellite(); buildBroadcastSignalWaves();
+            fixLegacyColors(scene);
+            applyScenario(SCENARIOS[0], true);
+            createFloatingHTMLMarkers(); setupRaycasting(); adjustCameraForViewport();
+            window.addEventListener('resize', onWindowResize); window.addEventListener('keydown', onKeyDown);
+        }
+
+        const clock = new THREE.Clock();
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsed = clock.getElapsedTime();
+            const dt = Math.min(0.05, elapsed - lastFrameTime); lastFrameTime = elapsed;
+            updateMarqueeTexture(elapsed);
+
+            // 情境切換：廣播車駛入 (場景向後退、車輪轉動)
+            if (driveActive && envGroup) {
+                driveProgress = Math.min(1, driveProgress + dt / 2.8);
+                const e = 1 - Math.pow(1 - driveProgress, 3), prevX = envGroup.position.x;
+                envGroup.position.x = DRIVE_DIST * (1 - e);
+                const dx = prevX - envGroup.position.x;
+                wheelGroups.forEach(w => { w.rotation.z -= dx / (0.42 * S); });
+                if (driveProgress >= 1) driveActive = false;
+            }
+            for (let i = 0; i < envAnimators.length; i++) envAnimators[i](elapsed, dt);
+
+            // 車內透視：車頂上升、右牆下降
+            cutawayProgress += ((isCutawayOpen ? 1 : 0) - cutawayProgress) * 0.1;
+            roofGroup.position.y = cutawayProgress * 2.8; roofGroup.visible = cutawayProgress < 0.85;
+            rightWallGroup.position.y = -cutawayProgress * 2.6; rightWallGroup.visible = cutawayProgress < 0.85;
+
+            // 電視牆以靠車頭側鉸鏈為軸心，向車頭外翻 (翻開後背面 LED 顯示全球多語直播)
+            ledScreenFlipProgress += ((isLedScreenFlip ? 1 : 0) - ledScreenFlipProgress) * 0.12;
+            ledScreenPivot.rotation.y = ledScreenFlipProgress * Math.PI * 0.85;
+
+            // 霓虹燈微閃爍
+            if (neonMat) {
+                const flick = (Math.sin(elapsed * 23) > 0.97 && Math.sin(elapsed * 1.3) > 0.6) ? 0.55 : 1;
+                neonMat.opacity = flick * (0.93 + Math.sin(elapsed * 3) * 0.07);
+                neonLight.intensity = (isNightMode ? 1.5 : 0.7) * flick;
+            }
+            cabinetStatusLeds.forEach((led, i) => { led.visible = Math.sin(elapsed * 4 + i * 1.7) > -0.2; });
+            domePivot.rotation.y = isBroadcasting ? elapsed * 1.4 : Math.sin(elapsed * 0.5) * 0.4;
+            if (satelliteSpaceModel) {
+                satelliteSpaceModel.position.x = -1.5 + Math.sin(elapsed * 0.4) * 6;
+                satelliteSpaceModel.position.z = Math.cos(elapsed * 0.4) * 4; satelliteSpaceModel.rotation.y = elapsed * 0.3;
+            }
+            if (isBroadcasting) {
+                const by = broadcastWaveGroup.userData.baseY;
+                broadcastWaveGroup.userData.rings.forEach(ring => {
+                    const p = (elapsed * 0.65 + ring.userData.phase) % 1;
+                    ring.position.y = by + 0.3 + p * 17.5; const s = 0.7 + p * 2.4; ring.scale.set(s, 1, s); ring.material.opacity = (1 - p) * 0.85;
+                });
+            }
+            if (cameraLerpTarget && controlsTargetLerp) {
+                camera.position.lerp(cameraLerpTarget, 0.08); controls.target.lerp(controlsTargetLerp, 0.08);
+                if (camera.position.distanceTo(cameraLerpTarget) < 0.15) { cameraLerpTarget = null; controlsTargetLerp = null; }
+            }
+            controls.update(); updateFloatingHTMLMarkers();
+            const coordsEl = document.getElementById('hud-coords');
+            if (coordsEl) coordsEl.textContent = `XYZ: ${camera.position.x.toFixed(1)}/${camera.position.y.toFixed(1)}/${camera.position.z.toFixed(1)}`;
+            renderer.render(scene, camera);
+        }
+
+        // =====================================================================
+        // --- 6. 互動地圖情境 (任務情境場景切換) ---
+        // =====================================================================
+        let envGroup = null, envAnimators = [], wheelGroups = [], currentScenarioId = 'default';
+        let driveProgress = 1, driveActive = false, isSceneTransitioning = false, lastFrameTime = 0;
+        let flagTexCache = null, missionBattery = 100, missionBodyOpen = true;
+        const DRIVE_DIST = 42;
+        const matCache = {};
+        const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
+
+        function LM(hex) { return matCache[hex] || (matCache[hex] = new THREE.MeshLambertMaterial({ color: hex })); }
+        function BMd(hex) { const k = 'd' + hex; return matCache[k] || (matCache[k] = new THREE.MeshBasicMaterial({ color: hex, side: THREE.DoubleSide })); }
+        function flagMat() {
+            if (!matCache.flag) { matCache.flag = new THREE.MeshLambertMaterial({ map: getFlagTex(), side: THREE.DoubleSide }); matCache.flag.userData.srgbDone = true; }
+            return matCache.flag;
+        }
+        function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+        function eBox(w, h, d, mat, x, y, z, parent, cast = true) {
+            const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), typeof mat === 'number' ? LM(mat) : mat);
+            m.position.set(x, y, z); m.castShadow = cast; m.receiveShadow = true; parent.add(m); return m;
+        }
+        function groundBox(w, h, d, hex, x, y, z, parent, variation = 14) {
+            const t = createPixelNoiseTexture(hex, variation, 32); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(w / 40, d / 32);
+            const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), new THREE.MeshLambertMaterial({ map: t }));
+            m.position.set(x, y, z); m.receiveShadow = true; parent.add(m); return m;
+        }
+        function canvasTex(w, h, draw) {
+            const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d'); draw(g, w, h);
+            const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; t.anisotropy = ANISO; return t;
+        }
+        function fitText(g, txt, cx, cy, maxW, weight, size, family, color) {
+            g.font = `${weight} ${size}px ${family}`; const w = g.measureText(txt).width;
+            if (w > maxW) { size = size * maxW / w; g.font = `${weight} ${size}px ${family}`; }
+            g.fillStyle = color; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(txt, cx, cy);
+        }
+        function signPanel(parent, wW, hW, x, y, z, rotY, draw, opts = {}) {
+            const px = opts.px || 1024, t = canvasTex(px, Math.round(px * hW / wW), draw);
+            const mat = opts.lit ? new THREE.MeshLambertMaterial({ map: t, side: THREE.DoubleSide }) : new THREE.MeshBasicMaterial({ map: t, side: THREE.DoubleSide });
+            mat.userData.srgbDone = true;
+            const m = new THREE.Mesh(new THREE.PlaneGeometry(wW, hW), mat); m.position.set(x, y, z); m.rotation.y = rotY || 0; parent.add(m); return m;
+        }
+        function getFlagTex() {
+            if (flagTexCache) return flagTexCache;
+            flagTexCache = canvasTex(300, 200, (g) => {
+                g.fillStyle = '#fe0000'; g.fillRect(0, 0, 300, 200);
+                g.fillStyle = '#000095'; g.fillRect(0, 0, 150, 100);
+                const cx = 75, cy = 50; g.fillStyle = '#ffffff'; g.beginPath();
+                for (let i = 0; i < 24; i++) { const a = i * Math.PI / 12 - Math.PI / 2, r = i % 2 === 0 ? 37.5 : 21; g.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r); }
+                g.closePath(); g.fill();
+                g.fillStyle = '#000095'; g.beginPath(); g.arc(cx, cy, 20, 0, Math.PI * 2); g.fill();
+                g.fillStyle = '#ffffff'; g.beginPath(); g.arc(cx, cy, 17.5, 0, Math.PI * 2); g.fill();
+            });
+            return flagTexCache;
+        }
+        function faceTo(obj, tx, tz) { obj.rotation.y = Math.atan2(-(tx - obj.position.x), -(tz - obj.position.z)); }
+
+        // ---------- 人物 (站姿，方塊風格) ----------
+        function buildPerson(o = {}) {
+            const g = new THREE.Group();
+            const skin = o.skin ?? 0xf1c27d, hair = o.hair ?? 0x1c1917, top = o.top ?? 0x3b82f6, bottom = o.bottom ?? 0x1e293b;
+            eBox(0.15, 0.75, 0.17, bottom, -0.1, 0.375, 0, g); eBox(0.15, 0.75, 0.17, bottom, 0.1, 0.375, 0, g);
+            eBox(0.16, 0.07, 0.22, 0x111827, -0.1, 0.035, -0.02, g, false); eBox(0.16, 0.07, 0.22, 0x111827, 0.1, 0.035, -0.02, g, false);
+            eBox(0.44, 0.62, 0.26, top, 0, 1.06, 0, g);
+            if (o.vest) { eBox(0.46, 0.5, 0.28, o.vest, 0, 1.04, 0, g, false); eBox(0.47, 0.06, 0.29, 0xe5e7eb, 0, 1.0, 0, g, false); }
+            const arms = [];
+            [-1, 1].forEach(sd => {
+                const pv = new THREE.Group(); pv.position.set(sd * 0.29, 1.33, 0); g.add(pv);
+                eBox(0.13, 0.52, 0.15, o.sleeve ?? top, 0, -0.26, 0, pv, false); eBox(0.12, 0.1, 0.13, skin, 0, -0.57, 0, pv, false);
+                arms.push(pv);
+            });
+            eBox(0.34, 0.34, 0.34, skin, 0, 1.6, 0, g);
+            eBox(0.06, 0.06, 0.03, 0x111827, -0.08, 1.63, -0.17, g, false); eBox(0.06, 0.06, 0.03, 0x111827, 0.08, 1.63, -0.17, g, false);
+            eBox(0.12, 0.035, 0.03, 0xb45309, 0, 1.52, -0.17, g, false);
+            if (o.hijab) {
+                eBox(0.4, 0.12, 0.4, o.hijab, 0, 1.82, 0, g, false); eBox(0.4, 0.55, 0.1, o.hijab, 0, 1.55, 0.17, g, false);
+                eBox(0.05, 0.46, 0.36, o.hijab, -0.19, 1.6, 0, g, false); eBox(0.05, 0.46, 0.36, o.hijab, 0.19, 1.6, 0, g, false);
+                eBox(0.42, 0.14, 0.36, o.hijab, 0, 1.36, 0.01, g, false);
+            } else {
+                eBox(0.36, 0.1, 0.36, hair, 0, 1.8, 0, g, false);
+                eBox(0.36, o.longHair ? 0.5 : 0.24, 0.09, hair, 0, o.longHair ? 1.55 : 1.68, 0.15, g, false);
+                if (o.longHair) { eBox(0.06, 0.4, 0.3, hair, -0.18, 1.6, 0.03, g, false); eBox(0.06, 0.4, 0.3, hair, 0.18, 1.6, 0.03, g, false); }
+            }
+            if (o.helmet) { eBox(0.4, 0.15, 0.4, o.helmet, 0, 1.86, 0, g, false); eBox(0.44, 0.04, 0.46, o.helmet, 0, 1.79, -0.02, g, false); }
+            if (o.cap) { eBox(0.38, 0.1, 0.38, o.cap, 0, 1.85, 0, g, false); eBox(0.3, 0.04, 0.18, o.cap, 0, 1.8, -0.26, g, false); }
+            if (o.flag) {
+                eBox(0.025, 0.55, 0.025, 0x8b5a2b, 0, -0.85, 0, arms[1], false);
+                const f = new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.28), flagMat()); f.position.set(0.22, -1.0, 0); f.rotation.z = Math.PI; arms[1].add(f);
+            }
+            if (o.mic) { eBox(0.06, 0.22, 0.06, 0x111827, 0, -0.68, -0.05, arms[1], false); eBox(0.09, 0.09, 0.09, 0x9ca3af, 0, -0.82, -0.05, arms[1], false); }
+            g.userData.arms = arms;
+            return g;
+        }
+        function addCrowd(parent, list, fx, fz) {
+            const ppl = [];
+            list.forEach((o, i) => {
+                const pp = buildPerson(o); pp.scale.setScalar(S * (o.kid ? 0.68 : 0.85));
+                pp.position.set(o.x, o.y ?? 0, o.z); faceTo(pp, o.fx ?? fx, o.fz ?? fz);
+                pp.userData.baseY = pp.position.y; pp.userData.phase = i * 1.37; pp.userData.mode = o.mode || 'idle';
+                parent.add(pp); ppl.push(pp);
+            });
+            envAnimators.push((t) => {
+                ppl.forEach(p => {
+                    const ph = p.userData.phase, [L, R] = p.userData.arms;
+                    switch (p.userData.mode) {
+                        case 'cheer': { const a = 2.5 + Math.sin(t * 6 + ph) * 0.35; L.rotation.z = -a; R.rotation.z = a; p.position.y = p.userData.baseY + Math.abs(Math.sin(t * 3 + ph)) * 0.35; break; }
+                        case 'wave': R.rotation.z = 2.6 + Math.sin(t * 7 + ph) * 0.4; L.rotation.z = -0.1; break;
+                        case 'flag': R.rotation.z = 2.75; R.rotation.x = Math.sin(t * 5 + ph) * 0.45; L.rotation.z = -0.15 - Math.abs(Math.sin(t * 2 + ph)) * 0.3; break;
+                        case 'dance': L.rotation.z = -1.2 - Math.sin(t * 4 + ph) * 0.6; R.rotation.z = 1.2 + Math.sin(t * 4 + ph + 1.5) * 0.6; p.rotation.y += Math.sin(t * 2 + ph) * 0.004; p.position.y = p.userData.baseY + Math.abs(Math.sin(t * 4 + ph)) * 0.2; break;
+                        case 'work': L.rotation.x = -0.9 + Math.sin(t * 2 + ph) * 0.35; R.rotation.x = -0.9 + Math.sin(t * 2 + ph + 1) * 0.35; break;
+                        case 'talk': R.rotation.x = -1.3; R.rotation.z = 0.25; L.rotation.z = -0.15 - Math.abs(Math.sin(t * 3 + ph)) * 0.25; break;
+                        default: L.rotation.z = -0.08; R.rotation.z = 0.08 + Math.sin(t * 1.5 + ph) * 0.05;
+                    }
+                });
+            });
+            return ppl;
+        }
+
+        // ---------- 共用道具 ----------
+        function tree(p, x, z, s = 1) {
+            eBox(0.8 * s, 3 * s, 0.8 * s, 0x6b4423, x, 1.5 * s, z, p);
+            eBox(3.4 * s, 2.4 * s, 3.4 * s, 0x2f7d32, x, 3.9 * s, z, p);
+            eBox(2.4 * s, 1.6 * s, 2.4 * s, 0x3a9a3e, x, 5.7 * s, z, p);
+        }
+        function flagPole(p, x, z, h, flags) {
+            eBox(0.22, h, 0.22, 0xd1d5db, x, h / 2, z, p); eBox(0.45, 0.45, 0.45, 0xfacc15, x, h + 0.2, z, p, false);
+            const pv = new THREE.Group(); pv.position.set(x + 0.12, h - 1.15, z); p.add(pv);
+            const f = new THREE.Mesh(new THREE.PlaneGeometry(3, 2), flagMat()); f.position.x = 1.5; f.castShadow = true; pv.add(f);
+            flags.push(pv);
+        }
+        function waveFlags(flags) { envAnimators.push((t) => flags.forEach((f, i) => { f.rotation.y = Math.sin(t * 2.2 + i * 0.9) * 0.28; })); }
+        function wire(p, pts) {
+            const curve = new THREE.CatmullRomCurve3(pts);
+            p.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(curve.getPoints(24)), new THREE.LineBasicMaterial({ color: 0x111111 })));
+        }
+        function bunting(p, a, b, n, colors, lanterns) {
+            const pts = [];
+            for (let i = 0; i <= n; i++) {
+                const t = i / n, v = new THREE.Vector3().lerpVectors(a, b, t); v.y -= Math.sin(Math.PI * t) * 1.6; pts.push(v);
+                if (i === 0 || i === n) continue;
+                if (lanterns && i % 2 === 0) {
+                    const l = new THREE.Mesh(new THREE.SphereGeometry(0.45, 10, 8), BMd(0xef4444)); l.position.copy(v).add(V3(0, -0.6, 0)); p.add(l);
+                    eBox(0.12, 0.4, 0.12, BMd(0xfacc15), v.x, v.y - 1.2, v.z, p, false);
+                } else {
+                    const f = new THREE.Mesh(new THREE.ConeGeometry(0.42, 0.9, 3), BMd(colors[i % colors.length])); f.rotation.x = Math.PI; f.position.copy(v).add(V3(0, -0.5, 0)); p.add(f);
+                }
+            }
+            p.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0x374151 })));
+        }
+        function tent(p, x, z, color, label, rotY = 0) {
+            const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = rotY; p.add(g);
+            [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([a, b]) => eBox(0.22, 5, 0.22, 0xe5e7eb, a * 3.4, 2.5, b * 3.4, g));
+            const roof = new THREE.Mesh(new THREE.ConeGeometry(5.3, 2.4, 4), LM(color)); roof.rotation.y = Math.PI / 4; roof.position.y = 6.2; roof.castShadow = true; g.add(roof);
+            eBox(7.2, 0.7, 0.12, color, 0, 4.65, 3.45, g, false);
+            eBox(5.2, 1.5, 1.6, 0xffffff, 0, 0.75, 1.6, g);
+            const hex = '#' + color.toString(16).padStart(6, '0');
+            signPanel(g, 5.6, 1.3, 0, 3.6, 3.52, 0, (c, W, H) => {
+                c.fillStyle = '#ffffff'; c.fillRect(0, 0, W, H); c.fillStyle = hex; c.fillRect(0, 0, W, H * 0.12); c.fillRect(0, H * 0.88, W, H * 0.12);
+                fitText(c, label, W / 2, H / 2 + 2, W * 0.9, 900, H * 0.48, CJK, '#1f2937');
+            }, { px: 640 });
+            return g;
+        }
+        function rainSystem(p, n = 700) {
+            const pos = new Float32Array(n * 6);
+            for (let i = 0; i < n; i++) {
+                const x = -45 + Math.random() * 90, y = Math.random() * 36, z = -32 + Math.random() * 64;
+                pos.set([x, y, z, x + 0.18, y - 1.3, z], i * 6);
+            }
+            const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            const lines = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ color: 0xaab8cc, transparent: true, opacity: 0.55 }));
+            lines.frustumCulled = false; p.add(lines);
+            envAnimators.push((t, dt) => {
+                for (let i = 0; i < n; i++) {
+                    let y = pos[i * 6 + 1] - 40 * dt; if (y < 0) y += 36;
+                    pos[i * 6 + 1] = y; pos[i * 6 + 4] = y - 1.3;
+                }
+                geo.attributes.position.needsUpdate = true;
+            });
+        }
+        function fireworks(p, area) {
+            const bursts = [], colors = [0xff3b3b, 0xffd23f, 0x60a5fa, 0xffffff, 0x4ade80, 0xff7ae0], N = 90;
+            for (let k = 0; k < 7; k++) {
+                const pos = new Float32Array(N * 3), vel = new Float32Array(N * 3);
+                const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+                const pts = new THREE.Points(geo, new THREE.PointsMaterial({ color: 0xffffff, size: 1.3, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending }));
+                pts.frustumCulled = false; p.add(pts);
+                bursts.push({ pts, pos, vel, life: 99, o: new THREE.Vector3() });
+            }
+            let next = 0.4;
+            envAnimators.push((t, dt) => {
+                next -= dt;
+                if (next <= 0) {
+                    next = 0.4 + Math.random() * 0.7;
+                    const b = bursts.find(b => b.life > 2) || bursts[0];
+                    b.life = 0; b.o.set(area.x0 + Math.random() * (area.x1 - area.x0), area.y0 + Math.random() * (area.y1 - area.y0), area.z);
+                    b.pts.material.color.setHex(colors[Math.floor(Math.random() * colors.length)]);
+                    const sp = 6 + Math.random() * 4;
+                    for (let i = 0; i < N; i++) {
+                        const u = Math.random() * 2 - 1, th = Math.random() * Math.PI * 2, r = Math.sqrt(1 - u * u), s = sp * (0.85 + Math.random() * 0.3);
+                        b.vel[i * 3] = r * Math.cos(th) * s; b.vel[i * 3 + 1] = u * s; b.vel[i * 3 + 2] = r * Math.sin(th) * s;
+                    }
+                }
+                bursts.forEach(b => {
+                    if (b.life > 2) { b.pts.material.opacity = 0; return; }
+                    b.life += dt; const L = b.life;
+                    for (let i = 0; i < N; i++) {
+                        b.pos[i * 3] = b.o.x + b.vel[i * 3] * L; b.pos[i * 3 + 1] = b.o.y + b.vel[i * 3 + 1] * L - 4.5 * L * L; b.pos[i * 3 + 2] = b.o.z + b.vel[i * 3 + 2] * L;
+                    }
+                    b.pts.geometry.attributes.position.needsUpdate = true;
+                    b.pts.material.opacity = Math.max(0, 1 - L / 2) * (isNightMode ? 1 : 0.8);
+                });
+            });
+        }
+        function playThunder() {
+            if (isMuted || !audioCtx) return;
+            try {
+                const len = Math.floor(audioCtx.sampleRate * 1.6), buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate), d = buf.getChannelData(0);
+                for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2);
+                const src = audioCtx.createBufferSource(); src.buffer = buf;
+                const f = audioCtx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 300;
+                const g = audioCtx.createGain(); g.gain.value = 0.3;
+                src.connect(f); f.connect(g); g.connect(audioCtx.destination); src.start();
+            } catch (e) { }
+        }
+
+        // ---------- 情境 0：央廣基地 (預設) ----------
+        function buildDefaultEnv(p) {
+            groundBox(320, 2, 220, '#4d9e34', 0, -1, 0, p, 16);
+            groundBox(320, 0.25, 13, '#3b3f46', 0, 0.125, 0, p, 12);
+            for (let x = -150; x <= 150; x += 8) { eBox(3.2, 0.04, 0.3, 0xe5e7eb, x, 0.27, 5.4, p, false); eBox(3.2, 0.04, 0.3, 0xe5e7eb, x, 0.27, -5.4, p, false); }
+            [[-22, -14], [-30, -12], [24, -15], [32, -12], [-26, 14], [28, 13]].forEach(([x, z]) => tree(p, x, z));
+            eBox(0.4, 4, 0.4, 0x6b7280, 12.8, 2, -9, p); eBox(0.4, 4, 0.4, 0x6b7280, 19.2, 2, -9, p);
+            eBox(7.2, 2.8, 0.2, 0xffffff, 16, 4.6, -9, p);
+            signPanel(p, 7, 2.6, 16, 4.6, -8.88, 0, (g, W, H) => {
+                g.fillStyle = '#ffffff'; g.fillRect(0, 0, W, H); g.fillStyle = '#e5323c'; g.fillRect(0, 0, W, H * 0.16);
+                fitText(g, '中央廣播電臺 Rti', W / 2, H * 0.47, W * 0.86, 900, H * 0.3, CJK, '#1a1d22');
+                fitText(g, '央廣1號 待命基地', W / 2, H * 0.8, W * 0.86, 700, H * 0.2, CJK, '#e5323c');
+            }, { lit: true });
+        }
+
+        // ---------- 情境 1：Young Voice 前進校園 ----------
+        function buildCampusEnv(p) {
+            groundBox(320, 2, 220, '#5aa83c', 0, -1, 0, p, 16);
+            groundBox(320, 0.25, 14, '#b8b2a7', 0, 0.125, 0, p, 10);
+            groundBox(90, 0.2, 5, '#b4533a', 0, 0.1, -10.5, p, 10);
+            [-12.6, -11.4, -10.2, -9].forEach(z => eBox(90, 0.03, 0.12, 0xffffff, 0, 0.22, z, p, false));
+            // 校舍
+            const bz = -24, fz = bz + 4;
+            eBox(58, 13, 8, 0xf2e6cf, 0, 6.5, bz, p);
+            eBox(58.4, 1.2, 8.4, 0xb45343, 0, 0.6, bz, p);
+            [4.5, 8.9].forEach(y => eBox(58.4, 0.4, 8.4, 0xd6c7aa, 0, y, bz, p, false));
+            eBox(59, 0.8, 9, 0x8b3a2e, 0, 13.4, bz, p);
+            for (const y of [2.8, 7.0, 11.1]) for (let x = -26.5; x <= 26.5; x += 3.8) {
+                if (Math.abs(x) < 6) continue;
+                eBox(2.2, 2.4, 0.2, 0x2a4a6b, x, y, fz + 0.06, p, false); eBox(2.6, 0.2, 0.4, 0xffffff, x, y - 1.3, fz + 0.1, p, false);
+            }
+            eBox(10, 18, 10, 0xefe2c8, 0, 9, bz + 1, p);
+            eBox(11, 1, 11, 0x8b3a2e, 0, 18.5, bz + 1, p);
+            const clock = new THREE.Mesh(new THREE.CylinderGeometry(1.7, 1.7, 0.25, 28), LM(0xffffff)); clock.rotation.x = Math.PI / 2; clock.position.set(0, 15.6, bz + 6.1); p.add(clock);
+            eBox(0.18, 1.2, 0.1, 0x111827, 0, 16.1, bz + 6.28, p, false); eBox(0.9, 0.16, 0.1, 0x111827, 0.4, 15.6, bz + 6.28, p, false);
+            eBox(4.4, 4.8, 0.3, 0x334155, 0, 2.4, bz + 6.05, p, false);
+            signPanel(p, 9, 3.4, 0, 10.6, bz + 6.08, 0, (g, W, H) => {
+                g.fillStyle = '#1d4ed8'; g.fillRect(0, 0, W, H); g.strokeStyle = '#facc15'; g.lineWidth = 16; g.strokeRect(10, 10, W - 20, H - 20);
+                fitText(g, 'Young Voice', W / 2, H * 0.3, W * 0.86, 900, H * 0.3, LATIN, '#facc15');
+                fitText(g, '前進校園', W / 2, H * 0.58, W * 0.86, 900, H * 0.24, CJK, '#ffffff');
+                fitText(g, '央廣1號 行動錄音室開進校園', W / 2, H * 0.83, W * 0.86, 700, H * 0.13, CJK, '#bfdbfe');
+            });
+            const flags = []; flagPole(p, 21, -14, 15, flags); waveFlags(flags);
+            [[-36, -14], [-30, -15], [32, -15], [38, -13], [-34, 13], [-26, 15], [26, 15], [36, 13]].forEach(([x, z]) => tree(p, x, z));
+            // 籃球架
+            eBox(0.4, 7, 0.4, 0x9ca3af, -27, 3.5, 11, p); eBox(3.2, 2.1, 0.2, 0xffffff, -27, 7.6, 10.4, p);
+            const rim = new THREE.Mesh(new THREE.TorusGeometry(0.6, 0.07, 6, 16), LM(0xf97316)); rim.rotation.x = Math.PI / 2; rim.position.set(-27, 6.9, 9.6); p.add(rim);
+            // 報名看板
+            eBox(0.3, 3, 0.3, 0x6b7280, 17, 1.5, -8, p);
+            signPanel(p, 4, 2.4, 17, 3.6, -7.8, -0.3, (g, W, H) => {
+                g.fillStyle = '#fef3c7'; g.fillRect(0, 0, W, H); g.fillStyle = '#e5323c'; g.fillRect(0, 0, W, H * 0.2);
+                fitText(g, 'Rti 校園廣播體驗營', W / 2, H * 0.1, W * 0.9, 900, H * 0.14, CJK, '#ffffff');
+                fitText(g, '多語 Podcast', W / 2, H * 0.45, W * 0.86, 900, H * 0.2, CJK, '#1f2937');
+                fitText(g, '現場錄音 · 歡迎報名', W / 2, H * 0.75, W * 0.86, 700, H * 0.15, CJK, '#b91c1c');
+            }, { px: 600, lit: true });
+            // 學生與老師
+            const r = rng(11), hairs = [0x1c1917, 0x292524, 0x3f2a1d, 0x0f0f0f], list = [];
+            let i = 0;
+            for (const z of [8.2, 10.2, 12.2]) for (let x = -13; x <= 2; x += 2.5) {
+                if (r() < 0.12) continue;
+                list.push({ x: x + (r() - 0.5) * 0.8, z: z + (r() - 0.5) * 0.6, kid: true, top: r() < 0.5 ? 0xf8fafc : 0xdbeafe, bottom: 0x1e3a8a, hair: hairs[i % 4], longHair: r() < 0.45, mode: r() < 0.6 ? 'cheer' : 'wave' });
+                i++;
+            }
+            list.push({ x: 4.5, z: 6.8, top: 0x334155, bottom: 0x111827, hair: 0x1c1917, mode: 'talk', mic: true });
+            addCrowd(p, list, -4.5, 2.6);
+        }
+
+        // ---------- 情境 2：新住民多語聯合聽友活動 ----------
+        function buildPlazaEnv(p) {
+            const tileTex = canvasTex(128, 128, (g) => {
+                g.fillStyle = '#d4c6a8'; g.fillRect(0, 0, 128, 128); g.strokeStyle = '#ac9c7e'; g.lineWidth = 3;
+                for (let y = 0; y < 128; y += 32) { g.beginPath(); g.moveTo(0, y); g.lineTo(128, y); g.stroke(); const off = (y / 32) % 2 ? 32 : 0; for (let x = off; x < 128; x += 64) { g.beginPath(); g.moveTo(x, y); g.lineTo(x, y + 32); g.stroke(); } }
+                g.fillStyle = 'rgba(0,0,0,0.05)'; g.fillRect(64, 32, 64, 32); g.fillRect(0, 96, 64, 32);
+            });
+            tileTex.wrapS = tileTex.wrapT = THREE.RepeatWrapping; tileTex.repeat.set(320 / 8, 220 / 8); tileTex.magFilter = THREE.NearestFilter;
+            const ground = new THREE.Mesh(new THREE.BoxGeometry(320, 2, 220), new THREE.MeshLambertMaterial({ map: tileTex })); ground.position.y = -1; ground.receiveShadow = true; p.add(ground);
+            // 歡迎拱門
+            eBox(1.6, 12, 1.6, 0xdc2626, -15, 6, -16, p); eBox(1.6, 12, 1.6, 0xdc2626, 15, 6, -16, p);
+            eBox(32, 3.6, 1, 0xb91c1c, 0, 12.4, -16, p);
+            signPanel(p, 30, 3.2, 0, 12.4, -15.45, 0, (g, W, H) => {
+                g.fillStyle = '#b91c1c'; g.fillRect(0, 0, W, H); g.strokeStyle = '#facc15'; g.lineWidth = 10; g.strokeRect(8, 8, W - 16, H - 16);
+                fitText(g, '新住民多語聯合聽友會', W / 2, H * 0.55, W * 0.9, 900, H * 0.62, CJK, '#fde68a');
+            }, { px: 1600 });
+            signPanel(p, 22, 1.8, 0, 9.4, -15.9, 0, (g, W, H) => {
+                g.fillStyle = '#1e40af'; g.fillRect(0, 0, W, H);
+                fitText(g, 'Xin chào · Selamat datang · Sawasdee · Mabuhay · 歡迎', W / 2, H * 0.55, W * 0.94, 700, H * 0.55, CJK, '#ffffff');
+            }, { px: 1600 });
+            // 攤位帳篷
+            tent(p, -28, -26, 0xdc2626, 'Tiếng Việt 越南語');
+            tent(p, -10, -26, 0x16a34a, 'Bahasa Indonesia 印尼語');
+            tent(p, 10, -26, 0x2563eb, 'Thai 泰語');
+            tent(p, 28, -26, 0xf59e0b, 'Filipino 菲律賓語');
+            tent(p, -30, 12, 0x7c3aed, '多語節目試聽', Math.PI / 2 * 0.6);
+            tent(p, 30, 11, 0xdb2777, '聽友報到處', -Math.PI / 2 * 0.6);
+            // 彩旗與燈籠
+            const bc = [0xef4444, 0xfacc15, 0x22c55e, 0x3b82f6, 0xec4899, 0xf97316];
+            bunting(p, V3(-15, 13.4, -15.4), V3(-38, 9, -8), 14, bc, false);
+            bunting(p, V3(15, 13.4, -15.4), V3(38, 9, -8), 14, bc, false);
+            bunting(p, V3(-38, 10, -20), V3(38, 10, -20), 30, bc, true);
+            [[-38, -8], [38, -8], [-38, -20], [38, -20]].forEach(([x, z]) => eBox(0.3, z === -8 ? 9 : 10, 0.3, 0x6b7280, x, (z === -8 ? 9 : 10) / 2, z, p));
+            [[-22, -36], [22, -36], [-40, 2], [40, 2]].forEach(([x, z]) => tree(p, x, z));
+            // 人群 (多元族群)
+            const r = rng(23), skins = [0xffdbac, 0xf1c27d, 0xe0ac69, 0xc68642, 0x8d5524], tops = [0xef4444, 0xf59e0b, 0x10b981, 0x3b82f6, 0x8b5cf6, 0xec4899, 0xfacc15, 0x14b8a6];
+            const list = [];
+            for (let k = 0; k < 20; k++) {
+                const ang = -Math.PI * 0.95 + r() * Math.PI * 0.9, rad = 7 + r() * 5;
+                const x = -4 + Math.cos(ang) * rad * 1.6, z = 3 - Math.sin(ang) * rad;
+                if (z < 6) continue;
+                list.push({ x, z, skin: skins[Math.floor(r() * 5)], top: tops[k % tops.length], bottom: r() < 0.5 ? 0x1f2937 : 0x6b7280, hair: 0x1c1917, longHair: r() < 0.5, hijab: r() < 0.18 ? tops[(k + 3) % tops.length] : null, mode: ['cheer', 'wave', 'dance'][k % 3] });
+            }
+            [[-28, -22.8], [-10, -22.8], [10, -22.8], [28, -22.8]].forEach(([x, z], k) => list.push({ x, z, skin: skins[(k + 1) % 5], top: tops[k * 2], hair: 0x1c1917, longHair: k % 2 === 0, mode: 'wave', fx: x, fz: 10 }));
+            addCrowd(p, list, -4.5, 2.6);
+            // 彩帶紙花
+            const conf = [], geo = new THREE.PlaneGeometry(0.3, 0.18);
+            for (let k = 0; k < 90; k++) {
+                const m = new THREE.Mesh(geo, BMd(bc[k % bc.length])); m.position.set(-24 + r() * 40, r() * 20, -14 + r() * 18); m.userData.spin = [1 + r() * 3, 1 + r() * 3]; p.add(m); conf.push(m);
+            }
+            envAnimators.push((t, dt) => conf.forEach((m, k) => {
+                m.position.y -= dt * (2 + (k % 5) * 0.4); m.position.x += Math.sin(t * 1.5 + k) * dt * 0.8;
+                m.rotation.x += dt * m.userData.spin[0]; m.rotation.y += dt * m.userData.spin[1];
+                if (m.position.y < 0.1) m.position.y = 20;
+            }));
+        }
+
+        // ---------- 情境 3：災區廣播韌性任務 ----------
+        function ruinBuilding(p, x, z, w, h, d, color, rotZ, rotX, r) {
+            const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.z = rotZ; g.rotation.x = rotX; p.add(g);
+            eBox(w, h, d, color, 0, h / 2, 0, g);
+            const rows = Math.floor(h / 3.2), cols = Math.max(2, Math.floor(w / 2.8));
+            for (let i = 0; i < rows; i++) for (let j = 0; j < cols; j++) {
+                const wx = -w / 2 + 1.4 + j * (w - 2.8) / (cols - 1), wy = 1.8 + i * 3.2;
+                eBox(1.4, 1.8, 0.15, r() < 0.4 ? 0x0b0b0b : 0x374151, wx, wy, d / 2 + 0.06, g, false);
+            }
+            eBox(w * 0.35, h * 0.22, 0.3, 0x292524, w * 0.2, h * 0.86, d / 2 + 0.1, g, false);
+            return g;
+        }
+        function buildDisasterEnv(p) {
+            const r = rng(37);
+            groundBox(320, 2, 220, '#5b4a3a', 0, -1, 0, p, 22);
+            groundBox(320, 0.25, 13, '#3a3d42', 0, 0.125, 0, p, 18);
+            for (let k = 0; k < 26; k++) { const c = eBox(1.5 + r() * 5, 0.04, 0.22, 0x111111, -60 + r() * 120, 0.27, (r() - 0.5) * 11, p, false); c.rotation.y = (r() - 0.5) * 1.6; }
+            [[-20, 10, 7, 4], [8, 11, 9, 3.5], [30, -10, 6, 4], [-6, -10, 8, 3]].forEach(([x, z, w, d]) => eBox(w, 0.06, d, 0x4a6274, x, 0.04, z, p, false));
+            // 受損建物
+            ruinBuilding(p, -24, -26, 12, 15, 8, 0x9ca3af, 0.1, 0, r);
+            ruinBuilding(p, 2, -27, 11, 10, 8, 0xa8a29e, -0.32, 0.08, r);
+            ruinBuilding(p, 26, -27, 14, 19, 9, 0x78716c, 0, 0, r);
+            [[-22, -18], [2, -19], [24, -19], [-17, 11], [14, -9], [-30, -9]].forEach((cl, ci) => {
+                for (let k = 0; k < 9; k++) {
+                    const s = 0.5 + r() * 1.8, b = eBox(s, s * 0.7, s, r() < 0.5 ? 0x78716c : 0x8b7355, cl[0] + (r() - 0.5) * 7, s * 0.3, cl[1] + (r() - 0.5) * 4, p);
+                    b.rotation.set(r(), r(), r());
+                }
+            });
+            // 傾倒電線桿與斷線
+            const pg = new THREE.Group(); pg.position.set(-14, 0, -9); pg.rotation.z = 0.32; p.add(pg);
+            eBox(0.5, 13, 0.5, 0x6b5b4b, 0, 6.5, 0, pg); eBox(4, 0.35, 0.35, 0x6b5b4b, 0, 11.8, 0, pg);
+            wire(p, [V3(-18.3, 11.0, -9), V3(-24, 4.5, -9.6), V3(-31, 0.2, -10.4)]);
+            wire(p, [V3(-15.7, 11.5, -9), V3(-10, 3, -10), V3(-6, 0.3, -11)]);
+            const fp = eBox(0.5, 13, 0.5, 0x6b5b4b, 18, 0.6, -10, p); fp.rotation.z = Math.PI / 2 - 0.06; fp.rotation.y = 0.4;
+            wire(p, [V3(12, 0.9, -12.6), V3(8, 2.2, -14), V3(4, 0.2, -16)]);
+            eBox(0.3, 7, 0.3, 0x4b5563, 34, 3.5, -8, p); eBox(1.6, 0.2, 0.3, 0x4b5563, 33.3, 7, -8, p); eBox(0.6, 0.25, 0.4, 0x374151, 32.7, 6.85, -8, p, false);
+            // 封閉路障與交通錐
+            [[10, 6.0], [12.5, 6.2], [15, 6.0], [-10, -6.4], [-12.5, -6.6], [-15, -6.4]].forEach(([x, z]) => {
+                eBox(1.1, 0.12, 1.1, 0x111111, x, 0.31, z, p, false);
+                const c = new THREE.Mesh(new THREE.ConeGeometry(0.5, 1.4, 10), LM(0xf97316)); c.position.set(x, 1.05, z); c.castShadow = true; p.add(c);
+                const band = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.36, 0.22, 10), LM(0xffffff)); band.position.set(x, 1.1, z); p.add(band);
+            });
+            [[-1, 0], [1, 0]].forEach(([s]) => eBox(0.2, 1.6, 0.6, 0x9ca3af, -24 + s * 2.6, 0.8, 8, p));
+            signPanel(p, 6, 1.2, -24, 1.9, 8.32, 0, (g, W, H) => {
+                for (let x = -H; x < W + H; x += 60) { g.fillStyle = (x / 60) % 2 ? '#f97316' : '#ffffff'; g.beginPath(); g.moveTo(x, 0); g.lineTo(x + 30, 0); g.lineTo(x + 30 - H, H); g.lineTo(x - H, H); g.fill(); }
+                g.fillStyle = 'rgba(17,24,39,0.85)'; g.fillRect(W * 0.28, H * 0.16, W * 0.44, H * 0.68);
+                fitText(g, '道路封閉', W / 2, H / 2 + 2, W * 0.4, 900, H * 0.5, CJK, '#fbbf24');
+            }, { px: 640, lit: true });
+            // 臨時救護站
+            const tg = new THREE.Group(); tg.position.set(25, 0, 11); p.add(tg);
+            eBox(8, 3.4, 6, 0xf8fafc, 0, 1.7, 0, tg);
+            const rf = new THREE.Mesh(new THREE.ConeGeometry(5.4, 2.2, 4), LM(0xe5e7eb)); rf.rotation.y = Math.PI / 4; rf.scale.z = 0.78; rf.position.y = 4.5; rf.castShadow = true; tg.add(rf);
+            eBox(0.5, 1.8, 0.1, 0xdc2626, -2, 2.0, 3.06, tg, false); eBox(1.8, 0.5, 0.1, 0xdc2626, -2, 2.0, 3.06, tg, false);
+            eBox(2, 2.6, 0.1, 0x334155, 1.8, 1.3, 3.06, tg, false);
+            signPanel(tg, 4.2, 1.1, 0, 4.0, 3.25, 0, (g, W, H) => { g.fillStyle = '#ffffff'; g.fillRect(0, 0, W, H); g.strokeStyle = '#dc2626'; g.lineWidth = 10; g.strokeRect(5, 5, W - 10, H - 10); fitText(g, '✚ 臨時救護站', W / 2, H / 2 + 2, W * 0.86, 900, H * 0.55, CJK, '#dc2626'); }, { px: 512, lit: true });
+            // 防災資訊看板 (琥珀色 LED)
+            eBox(0.3, 3, 0.3, 0x374151, -15, 1.5, 8.6, p); eBox(6.4, 2.8, 0.4, 0x111827, -15, 4.4, 8.6, p);
+            signPanel(p, 6, 2.4, -15, 4.4, 8.82, 0, (g, W, H) => {
+                g.fillStyle = '#050505'; g.fillRect(0, 0, W, H);
+                fitText(g, '⚠ 央廣防災廣播', W / 2, H * 0.32, W * 0.9, 900, H * 0.3, CJK, '#fbbf24');
+                fitText(g, '衛星備援 持續播出中', W / 2, H * 0.72, W * 0.9, 700, H * 0.24, CJK, '#f97316');
+            }, { px: 640 });
+            // 救災人員與民眾
+            const crew = [[-19, -13.5], [-15, -14.5], [4, -15.5], [20, 7], [23, 6.6], [12, -12.4]].map(([x, z]) => ({ x, z, top: 0xf97316, vest: 0xea580c, bottom: 0x1e3a8a, helmet: 0xfacc15, mode: 'work', fx: x + (r() - 0.5) * 6, fz: z - 4 }));
+            crew.push({ x: 27.5, z: 7, top: 0x64748b, bottom: 0x374151, hair: 0x1c1917, mode: 'idle', fx: 25, fz: 11 });
+            crew.push({ x: -11, z: 8.8, top: 0x0ea5e9, bottom: 0x1f2937, hair: 0x1c1917, longHair: true, mode: 'idle', fx: -15, fz: 8.6 });
+            crew.push({ x: -8.5, z: 9.4, top: 0xa3a3a3, bottom: 0x3f3f46, hair: 0x6b7280, mode: 'idle', fx: -15, fz: 8.6 });
+            addCrowd(p, crew, 0, 0);
+            rainSystem(p);
+            // 閃電
+            const flash = new THREE.DirectionalLight(0xdbeafe, 0); flash.position.set(-10, 40, 10); p.add(flash);
+            let nextFlash = 3, seq = -1, seqT = 0;
+            envAnimators.push((t, dt) => {
+                if (seq < 0) { nextFlash -= dt; if (nextFlash <= 0) { seq = 0; seqT = 0; playThunder(); } return; }
+                seqT += dt; const steps = [[0.08, 2.4], [0.08, 0], [0.12, 1.7], [0.1, 0]];
+                const st = steps[seq]; flash.intensity = st[1];
+                scene.background.setHex(st[1] > 0 ? 0x9aa5b8 : skyHex());
+                if (seqT > st[0]) { seq++; seqT = 0; if (seq >= steps.length) { seq = -1; nextFlash = 4 + Math.random() * 6; flash.intensity = 0; scene.background.setHex(skyHex()); } }
+            });
+            // 儲能電池電量 (緩慢下降，太陽能補充)
+            missionBattery = 100; let acc = 0;
+            envAnimators.push((t, dt) => {
+                missionBattery = Math.max(42, missionBattery - dt * 0.06); acc += dt;
+                if (acc > 0.5) { acc = 0; const el = document.getElementById('mission-battery'); if (el) el.textContent = `${missionBattery.toFixed(0)}% (自主供電)`; }
+            });
+        }
+
+        // ---------- 情境 4：雙十國慶 / 總統府 ----------
+        function buildPresidentialOffice(p, zf) {
+            const RB = 0xb5523b, WS = 0xf1ebe0, DG = 0x1f2937, d = 7, zc = zf - d / 2;
+            eBox(64, 15, d, RB, 0, 7.5, zc, p);
+            [[0.7, 1.4], [5.4, 0.5], [10.4, 0.5], [15.2, 0.9]].forEach(([y, h]) => eBox(64.4, h, d + 0.4, WS, 0, y, zc, p, false));
+            for (const y of [3.2, 8.0, 12.8]) for (let x = -30; x <= 30; x += 4) {
+                if (Math.abs(x) < 8 || Math.abs(x) > 22) continue;
+                eBox(1.9, 2.8, 0.2, WS, x, y, zf + 0.08, p, false); eBox(1.3, 2.2, 0.22, DG, x, y - 0.1, zf + 0.12, p, false);
+            }
+            [-1, 1].forEach(sd => {
+                const wx = sd * 28, wzc = zf + 0.5, wf = zf + 8;
+                eBox(10, 16.5, 15, RB, wx, 8.25, wzc, p);
+                [[0.7, 1.4], [5.4, 0.5], [10.4, 0.5], [16.4, 0.9]].forEach(([y, h]) => eBox(10.4, h, 15.4, WS, wx, y, wzc, p, false));
+                for (const y of [3.2, 8.0, 12.8]) for (const ox of [-2.5, 2.5]) { eBox(1.9, 2.8, 0.2, WS, wx + ox, y, wf + 0.08, p, false); eBox(1.3, 2.2, 0.22, DG, wx + ox, y - 0.1, wf + 0.12, p, false); }
+                eBox(6, 2.6, 6, RB, wx, 18.1, wf - 3.5, p); eBox(6.6, 0.6, 6.6, WS, wx, 19.6, wf - 3.5, p, false);
+            });
+            const tz = zf + 3, tf = tz + 5;
+            eBox(12, 19, 10, RB, 0, 9.5, tz, p);
+            [[0.7, 1.4], [5.4, 0.5], [10.4, 0.5], [15.2, 0.6], [19.1, 0.9]].forEach(([y, h]) => eBox(12.4, h, 10.4, WS, 0, y, tz, p, false));
+            [-3.5, 0, 3.5].forEach(x => { eBox(2.6, 4.6, 0.2, WS, x, 2.6, tf + 0.08, p, false); eBox(2.0, 4.0, 0.22, DG, x, 2.4, tf + 0.12, p, false); });
+            eBox(7, 12, 7, RB, 0, 25.5, tz, p);
+            [[19.8, 0.6], [25.5, 0.4], [31.3, 0.7]].forEach(([y, h]) => eBox(7.5, h, 7.5, WS, 0, y, tz, p, false));
+            [-1.8, 1.8].forEach(x => { eBox(1.3, 4.2, 0.2, WS, x, 25.4, tz + 3.58, p, false); eBox(0.9, 3.8, 0.22, DG, x, 25.3, tz + 3.62, p, false); });
+            eBox(5, 6, 5, RB, 0, 34.6, tz, p); eBox(5.6, 0.6, 5.6, WS, 0, 37.7, tz, p, false);
+            eBox(1.1, 2.6, 0.2, WS, 0, 34.6, tz + 2.58, p, false);
+            const cap = new THREE.Mesh(new THREE.ConeGeometry(3.6, 3.4, 4), LM(0x4b5563)); cap.rotation.y = Math.PI / 4; cap.position.set(0, 39.7, tz); cap.castShadow = true; p.add(cap);
+            eBox(0.15, 3.5, 0.15, 0xd1d5db, 0, 43, tz, p, false);
+            signPanel(p, 10, 3.4, 0, 13.2, tf + 0.1, 0, (g, W, H) => {
+                g.fillStyle = '#b91c1c'; g.fillRect(0, 0, W, H); g.strokeStyle = '#facc15'; g.lineWidth = 14; g.strokeRect(10, 10, W - 20, H - 20);
+                fitText(g, '慶祝雙十國慶', W / 2, H * 0.5, W * 0.86, 900, H * 0.56, CJK, '#fde68a');
+            });
+        }
+        function buildNationalEnv(p) {
+            const r = rng(52);
+            groundBox(320, 2, 220, '#3f4248', 0, -1, 0, p, 8);
+            groundBox(100, 0.3, 40, '#d6cfc2', 0, 0.15, -40, p, 8);
+            [-30, 30].forEach(x => groundBox(22, 0.35, 10, '#4f9a3a', x, 0.17, -17, p, 14));
+            for (let x = -150; x <= 150; x += 10) [7.5, -7.5, 15].forEach(z => eBox(4, 0.04, 0.35, 0xf8fafc, x, 0.03, z, p, false));
+            buildPresidentialOffice(p, -32);
+            const flags = [];
+            for (let x = -36; x <= 36; x += 9) flagPole(p, x, -13, 10, flags);
+            [-34, -26, 26, 34].forEach(x => flagPole(p, x, 19, 9, flags));
+            waveFlags(flags);
+            // 圍欄與人群
+            for (let x = -30; x <= 30; x += 3) eBox(0.2, 1.4, 0.2, 0x9ca3af, x, 0.7, 9.6, p, false);
+            [0.6, 1.25].forEach(y => eBox(60, 0.12, 0.12, 0x9ca3af, 0, y, 9.6, p, false));
+            const skins = [0xffdbac, 0xf1c27d, 0xe0ac69], tops = [0xdc2626, 0xffffff, 0x1d4ed8, 0xdc2626, 0xf59e0b], list = [];
+            for (const z of [11.2, 13.6]) for (let x = -26; x <= 26; x += 4) {
+                if (Math.abs(x - 12) < 3 && z < 12) continue;
+                list.push({ x: x + (r() - 0.5) * 1.2 + (z > 12 ? 2 : 0), z: z + (r() - 0.5) * 0.5, skin: skins[Math.floor(r() * 3)], top: tops[Math.floor(r() * 5)], bottom: 0x1f2937, hair: 0x1c1917, longHair: r() < 0.45, cap: r() < 0.2 ? 0xdc2626 : null, flag: true, mode: 'flag' });
+            }
+            addCrowd(p, list, 0, -10);
+            // 轉播台
+            eBox(6, 1.2, 4, 0x374151, 22, 0.6, 6.5, p);
+            [20.6, 23.4].forEach(x => {
+                [[-0.35, -0.3], [0.35, -0.3], [0, 0.4]].forEach(([dx, dz]) => { const l = eBox(0.08, 2.4, 0.08, 0x111827, x + dx, 2.3, 5.6 + dz, p, false); l.rotation.z = dx * 0.4; l.rotation.x = dz * 0.4; });
+                eBox(0.7, 0.6, 1.2, 0x111827, x, 3.7, 5.6, p);
+                const lens = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.26, 0.6, 12), LM(0x374151)); lens.rotation.x = Math.PI / 2; lens.position.set(x, 3.7, 4.75); p.add(lens);
+            });
+            addCrowd(p, [{ x: 20.6, z: 7.2, y: 1.2, top: 0x111827, bottom: 0x111827, cap: 0x111827, mode: 'work', fx: 20.6, fz: 0 }, { x: 23.4, z: 7.2, y: 1.2, top: 0x111827, bottom: 0x111827, hair: 0x1c1917, mode: 'work', fx: 23.4, fz: 0 }], 0, 0);
+            fireworks(p, { x0: -34, x1: 34, y0: 30, y1: 44, z: -40 });
+        }
+
+        // ---------- 情境資料 ----------
+        const SCENARIOS = [
+            {
+                id: 'default', icon: '🏠', name: '央廣基地', pin: '央廣基地', tagline: '回到待命基地（預設場景）', map: { x: 50, y: 56 },
+                sky: { day: 0x78b7ff, night: 0x0b1021 }, fog: 0.011, light: { sun: 1, hemi: 1 },
+                cam: { p: [17, 13, 21], t: [0, 5, 0] }, build: buildDefaultEnv,
+                desc: '央廣1號的待命基地。打開「🗺️ 任務情境地圖」選擇地點，廣播車就會開往活動或任務現場。',
+                status: [['📍 地點', '央廣1號待命基地', 'info'], ['📡 狀態', '待命中，可隨時出勤', 'ok']]
+            },
+            {
+                id: 'campus', icon: '🎓', name: 'Young Voice 前進校園', pin: '校園', tagline: '廣播車開進校園，學生體驗行動錄音室', map: { x: 20, y: 26 },
+                sky: { day: 0x8cc8ff, night: 0x0b1021 }, fog: 0.009, light: { sun: 1, hemi: 1 },
+                cam: { p: [17, 21, 30], t: [-3, 5, -5] }, build: buildCampusEnv, autoFlip: true,
+                desc: 'Young Voice 前進校園：央廣1號開進校園，化身行動錄音室，讓學生體驗多語節目製作、Podcast 錄音與現場直播，培養具國際視野的年輕聲音。',
+                status: [['📍 地點', '校園操場・校舍前', 'info'], ['🎓 活動', '校園廣播體驗・Podcast 錄製', 'info'], ['👥 對象', '高中、大學師生', 'info'], ['📺 電視牆', '外翻展示中', 'ok']]
+            },
+            {
+                id: 'plaza', icon: '🌏', name: '新住民多語聯合聽友活動', pin: '城市廣場', tagline: '廣播車開到廣場，與新住民朋友同歡', map: { x: 80, y: 70 },
+                sky: { day: 0x7ec4ff, night: 0x120d2b }, fog: 0.009, light: { sun: 1, hemi: 1.05 },
+                cam: { p: [17, 21, 30], t: [-3, 5.5, -6] }, build: buildPlazaEnv, autoFlip: true,
+                desc: '新住民多語聯合聽友活動：央廣1號開到城市廣場，由多語主持人以越南語、印尼語、泰語、菲律賓語等語言現場主持，與新住民朋友及聽友同歡交流。',
+                status: [['📍 地點', '城市廣場', 'info'], ['🌏 語言', '越・印・泰・菲・華語', 'info'], ['🎉 活動', '多語現場直播・聽友見面會', 'info'], ['📺 電視牆', '外翻展示中', 'ok']]
+            },
+            {
+                id: 'disaster', icon: '⛈️', name: '災區廣播韌性任務', pin: '災區', tagline: '天災斷電斷網，深入災區維持廣播不中斷', map: { x: 83, y: 26 },
+                sky: { day: 0x5b6470, night: 0x0a0d14 }, fog: 0.02, light: { sun: 0.35, hemi: 0.6 }, stars: false,
+                cam: { p: [20, 15, 27], t: [-2, 5, -4] }, build: buildDisasterEnv, autoBroadcast: true, signalText: '● 低軌衛星備援直播',
+                desc: '災區廣播韌性任務：颱風、地震等天災造成市電與地面網路中斷時，央廣1號深入災區，以儲能電池自主供電、低軌衛星備援傳輸，持續發布防災與救援資訊，維持廣播不中斷。',
+                status: [['⚡ 市電', '中斷 ✖', 'bad'], ['🌐 地面網路', '中斷 ✖', 'bad'], ['🛰️ 低軌衛星', '連線中 ✔', 'ok'], ['🔋 儲能電池', '100% (自主供電)', 'ok', 'mission-battery'], ['☀️ 太陽能', '補充充電中', 'ok']]
+            },
+            {
+                id: 'national', icon: '🎆', name: '雙十國慶慶典轉播', pin: '總統府', tagline: '國家重大慶典，總統府前多語轉播', map: { x: 22, y: 82 },
+                sky: { day: 0x78b7ff, night: 0x0b1021 }, fog: 0.006, light: { sun: 1, hemi: 1 },
+                cam: { p: [30, 24, 46], t: [0, 13, -12] }, build: buildNationalEnv, autoFlip: true, autoBroadcast: true, signalText: '● 慶典多語轉播中',
+                desc: '國家慶典轉播：雙十國慶等國家重大慶典時，央廣1號進駐總統府前凱達格蘭大道，以多語即時轉播慶典實況，讓全球聽眾同步感受臺灣的節慶氛圍。',
+                status: [['📍 地點', '總統府前・凱達格蘭大道', 'info'], ['🎆 活動', '雙十國慶慶典轉播', 'info'], ['🌍 轉播', '多語同步直播', 'ok'], ['🛰️ 傳輸', '5G + 低軌衛星', 'ok']]
+            }
+        ];
+        function currentScenario() { return SCENARIOS.find(s => s.id === currentScenarioId) || SCENARIOS[0]; }
+        function skyHex() { const sc = currentScenario(); return isNightMode ? sc.sky.night : sc.sky.day; }
+
+        // ---------- 場景切換 ----------
+        function disposeEnv(g) {
+            const cached = new Set(Object.values(matCache));
+            g.traverse(o => {
+                if (o.geometry) o.geometry.dispose();
+                const mats = o.material ? (Array.isArray(o.material) ? o.material : [o.material]) : [];
+                mats.forEach(m => { if (cached.has(m)) return; if (m.map && m.map !== flagTexCache) m.map.dispose(); m.dispose(); });
+            });
+        }
+        function applyEnvironmentLighting() {
+            const sc = currentScenario(), L = sc.light || { sun: 1, hemi: 1 }, n = isNightMode, sky = skyHex();
+            scene.background.setHex(sky); scene.fog.color.setHex(sky).convertSRGBToLinear(); scene.fog.density = sc.fog;
+            hemiLight.intensity = (n ? 0.18 : 0.7) * L.hemi; ambientLight.intensity = n ? 0.08 : 0.18;
+            sunLight.intensity = (n ? 0.18 : 0.9) * L.sun; sunLight.color.setHex(n ? 0x9db4ff : 0xfffbeb);
+            fillLight.intensity = (n ? 0.1 : 0.3) * L.hemi;
+            studioPointLight.intensity = n ? 1.6 : 0.9; controlPointLight.intensity = n ? 1.1 : 0.6; stagePointLight.intensity = n ? 1.4 : 0.6;
+            vanGroup.userData.headMat.opacity = n ? 1 : 0;
+            starsGroup.visible = n && sc.stars !== false;
+            document.getElementById('daynight-icon').textContent = n ? '🌙' : '☀️';
+        }
+        function scenarioCamera(sc) {
+            const portrait = window.innerWidth < 640 && window.innerHeight > window.innerWidth, k = portrait ? 1.3 : 1;
+            return { p: new THREE.Vector3(sc.cam.p[0] * k, sc.cam.p[1] * k, sc.cam.p[2] * k), t: new THREE.Vector3(...sc.cam.t) };
+        }
+        function applyScenario(sc, instant) {
+            currentScenarioId = sc.id;
+            if (envGroup) { scene.remove(envGroup); disposeEnv(envGroup); }
+            envAnimators = [];
+            envGroup = new THREE.Group(); scene.add(envGroup);
+            sc.build(envGroup);
+            fixLegacyColors(envGroup);
+            applyEnvironmentLighting();
+            const c = scenarioCamera(sc);
+            camera.position.copy(c.p); controls.target.copy(c.t); cameraLerpTarget = null; controlsTargetLerp = null; controls.update();
+            if (!instant) { driveProgress = 0; driveActive = true; envGroup.position.x = DRIVE_DIST; }
+            refreshSignalText();
+            updateScenarioUI(sc);
+        }
+        function arriveScenario(sc) {
+            if (sc.autoFlip && !isLedScreenFlip) toggleLedScreenFlip();
+            if (sc.autoBroadcast && !isBroadcasting) toggleBroadcastSignal();
+            refreshSignalText(); playSound('beacon');
+        }
+        function refreshSignalText() {
+            const el = document.getElementById('hud-signal-text'); if (!el || !isBroadcasting) return;
+            const t = UI[currentLang], sc = currentScenario(), scI18n = SCENARIOS_I18N[sc.id]?.[currentLang];
+            el.textContent = (scI18n?.signalText) || sc.signalText || t.satLive;
+        }
+        function goToScenario(id) {
+            if (isSceneTransitioning) return;
+            const sc = SCENARIOS.find(s => s.id === id); if (!sc) return;
+            isSceneTransitioning = true; initAudio(); playSound('piston');
+            placeMapVan(sc, true); highlightScenario(sc.id);
+            setTimeout(() => {
+                toggleScenarioMap(false);
+                const fade = document.getElementById('scene-fade');
+                const scI18n = SCENARIOS_I18N[sc.id]?.[currentLang];
+                document.getElementById('scene-fade-text').textContent = `${UI[currentLang].missionPrefix} ${sc.icon} ${scI18n?.name || sc.name}`;
+                fade.style.opacity = '1';
+                setTimeout(() => {
+                    applyScenario(sc, false);
+                    setTimeout(() => { fade.style.opacity = '0'; }, 150);
+                    setTimeout(() => { isSceneTransitioning = false; arriveScenario(sc); }, 2900);
+                }, 700);
+            }, 1050);
+        }
+
+        // ---------- 地圖與任務卡 UI ----------
+        let mapVanX = null;
+        function placeMapVan(sc, animate) {
+            const van = document.getElementById('map-van'); if (!van) return;
+            if (!animate) van.style.transition = 'none';
+            const dir = mapVanX !== null && sc.map.x > mapVanX ? -1 : 1;
+            van.style.left = sc.map.x + '%'; van.style.top = (sc.map.y + 6) + '%';
+            van.style.transform = `translate(-50%,-50%) scaleX(${dir})`;
+            mapVanX = sc.map.x;
+            if (!animate) { void van.offsetWidth; van.style.transition = ''; }
+        }
+        function highlightScenario(id) {
+            SCENARIOS.forEach(s => {
+                document.getElementById('pin-' + s.id)?.classList.toggle('active', s.id === id);
+                document.getElementById('card-' + s.id)?.classList.toggle('active-state', s.id === id);
+            });
+        }
+        function scT(sc) { return SCENARIOS_I18N[sc.id]?.[currentLang] || {}; }
+        function buildScenarioMapUI() {
+            const pins = document.getElementById('map-pins'), cards = document.getElementById('scenario-cards');
+            pins.innerHTML = ''; cards.innerHTML = '';
+            SCENARIOS.forEach(sc => {
+                const tr = scT(sc);
+                const pin = document.createElement('button'); pin.className = 'map-pin'; pin.id = 'pin-' + sc.id;
+                pin.style.left = sc.map.x + '%'; pin.style.top = sc.map.y + '%';
+                pin.innerHTML = `<div class="pin-badge"><span>${sc.icon}</span><span>${tr.pin || sc.pin}</span></div><div class="pin-tip"></div>`;
+                pin.onclick = (e) => { e.stopPropagation(); goToScenario(sc.id); };
+                pins.appendChild(pin);
+                const card = document.createElement('button'); card.id = 'card-' + sc.id;
+                card.className = 'scenario-card mc-mini-slot p-2 text-left flex items-start gap-2';
+                card.innerHTML = `<span class="text-xl leading-none">${sc.icon}</span><span class="min-w-0"><span class="block text-[12px] font-black text-yellow-300">${tr.name || sc.name}</span><span class="block text-[10px] text-gray-300 leading-snug mt-0.5">${tr.tagline || sc.tagline}</span></span>`;
+                card.onclick = (e) => { e.stopPropagation(); goToScenario(sc.id); };
+                cards.appendChild(card);
+            });
+            placeMapVan(currentScenario(), false); highlightScenario(currentScenarioId);
+        }
+        function toggleScenarioMap(state) {
+            const el = document.getElementById('scenario-map'); if (!el) return;
+            const show = typeof state === 'boolean' ? state : el.classList.contains('hidden');
+            el.classList.toggle('hidden', !show); el.classList.toggle('flex', show);
+            if (show) { playSound('click'); document.getElementById('map-hint-btn')?.classList.remove('animate-pulse'); }
+        }
+        function updateScenarioUI(sc) {
+            const tr = scT(sc);
+            const tagEl = document.getElementById('hud-scene'); if (tagEl) tagEl.textContent = `${sc.icon} ${tr.pin || sc.pin}`;
+            document.getElementById('mission-title').textContent = `${sc.icon} ${tr.name || sc.name}`;
+            document.getElementById('mission-desc').textContent = tr.desc || sc.desc;
+            const statusArr = tr.status || sc.status;
+            const cls = { ok: 'text-lime-400', bad: 'text-red-400', info: 'text-cyan-300' };
+            document.getElementById('mission-status').innerHTML = statusArr.map(([label, val, st, id]) =>
+                `<div class="flex justify-between gap-2 border-b border-gray-700/60 pb-0.5"><span class="text-gray-300 shrink-0">${label}</span><span ${id ? `id="${id}"` : ''} class="${cls[st]} font-bold text-right">${val}</span></div>`).join('');
+            document.getElementById('mission-card').classList.toggle('hidden', sc.id === 'default');
+            highlightScenario(sc.id);
+        }
+        function hideMissionCard() { playSound('click'); document.getElementById('mission-card').classList.add('hidden'); }
+        function toggleMissionBody() { playSound('click'); missionBodyOpen = !missionBodyOpen; document.getElementById('mission-body').classList.toggle('hidden', !missionBodyOpen); }
+
+
+        window.onload = async function () {
+            setupInspectorCollapse();
+            await initThreeScene(); buildUIListsAndHotbar(); buildScenarioMapUI();
+            makeWidgetDraggable(document.getElementById('mission-card'), [document.getElementById('mission-drag-handle')]);
+            updateCraftingModalUI(VEHICLE_FEATURES[0]); highlightQuickListButton(VEHICLE_FEATURES[0].id);
+            animate();
+        };
+    </script>
+</body>
+</html>
