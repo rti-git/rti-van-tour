@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-TW" id="root-html">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="data:image/png;base64,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">
     <link rel="apple-touch-icon" href="data:image/png;base64,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">
-
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XDE3PHY0TX"></script>
@@ -17,8 +17,7 @@
 
       gtag('config', 'G-XDE3PHY0TX');
     </script>
-
-    <title id="page-title">央廣1號 Rti 行動廣播車 · 3D 模型</title>
+    <title>央廣1號 Rti 行動廣播車 · 3D 模型</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -164,15 +163,6 @@
             border-right: 6px solid transparent;
             border-top: 8px solid #fff;
         }
-        /* 手機寬度不足以容納 nowrap 長名稱；width:max-content 避免標籤靠近螢幕右緣時被 absolute 的可用寬度壓成一個字寬 */
-        @media (max-width: 639px) {
-            .marker-label { width: max-content; }
-            .marker-badge {
-                max-width: 42vw;
-                white-space: normal;
-                line-height: 1.15;
-            }
-        }
         .floating-widget {
             position: fixed;
             z-index: 40;
@@ -187,19 +177,27 @@
         .drag-handle:active {
             cursor: grabbing;
         }
-        /* 手機（含橫向，低高度 <500）上收合圖鑑卡只剩標題列，並縮窄到控制台（w-60=240px）右側，才不會蓋住控制台底部的快捷列；
-           不用 translateY 是因為拖曳時會把 getBoundingClientRect 的位置寫回 top/left，位移會被重複計算 */
-        @media (max-width: 639px), (max-height: 499px) {
-            #crafting-modal.inspector-collapsed {
-                width: auto;
-                min-width: 56px;
-                max-width: calc(100vw - 272px);
-            }
-            #crafting-modal.inspector-collapsed #inspector-drag-handle ~ div,
-            #crafting-modal.inspector-collapsed #modal-category-badge,
-            #crafting-modal.inspector-collapsed #inspector-compact-btn { display: none; }
-            #modal-title::before { content: '▼ '; }
-            #crafting-modal.inspector-collapsed #modal-title::before { content: '▲ '; }
+        /* ===== 自適應：電腦 / 平板 / 手機 ===== */
+        header.hud-header { top: max(8px, env(safe-area-inset-top)); left: max(8px, env(safe-area-inset-left)); right: max(8px, env(safe-area-inset-right)); }
+        .hud-title-box { min-width: 0; flex: 1 1 auto; max-width: 32rem; }
+        @media (max-width: 639px), (max-height: 500px) and (orientation: landscape) {
+            .hud-compact-hide { display: none !important; }
+            .hud-btn { padding: 2px 6px !important; }
+            .hud-title-box { padding: 4px 8px !important; }
+            .hud-title-box h1 { font-size: 12px !important; }
+            .marker-badge { font-size: 10px; padding: 2px 5px; gap: 3px; }
+            .marker-pin { border-left-width: 5px; border-right-width: 5px; border-top-width: 6px; }
+            .map-pin .pin-badge { font-size: 10px; padding: 1px 4px; }
+            .map-van { font-size: 18px; }
+        }
+        @media (max-width: 380px) { .hud-scene-tag { display: none; } }
+        @media (max-height: 500px) and (orientation: landscape) {
+            #scenario-map > div { max-width: min(96vw, 820px) !important; }
+            #map-hint-text { display: none; }
+            .map-body { display: flex; gap: 8px; align-items: flex-start; }
+            .map-body #map-board { width: 54%; flex-shrink: 0; }
+            .map-body #scenario-cards { flex: 1; grid-template-columns: 1fr !important; max-height: calc(100vh - 70px); overflow-y: auto; }
+            .scenario-card { padding: 5px 7px !important; }
         }
         /* 任務情境地圖 */
         .map-pin { position: absolute; transform: translate(-50%, -100%); cursor: pointer; z-index: 3; white-space: nowrap; background: none; border: 0; padding: 0; }
@@ -218,34 +216,34 @@
     <div id="labels-container" class="inset-0 pointer-events-none fixed z-10 overflow-hidden"></div>
 
     <!-- HUD Header -->
-    <header class="fixed top-2 left-2 right-2 z-20 flex items-start justify-between gap-2 pointer-events-none">
-        <div class="mc-hud-box px-2 sm:px-3 py-1.5 pointer-events-auto max-w-[55vw] sm:max-w-lg">
+    <header class="hud-header fixed z-20 flex items-start justify-between gap-2 pointer-events-none">
+        <div class="hud-title-box mc-hud-box px-3 py-1.5 pointer-events-auto">
             <div class="flex items-center gap-2">
                 <div class="w-8 h-8 bg-white border-2 border-red-600 flex items-center justify-center font-black text-red-600 text-sm tracking-tighter shrink-0">Rti</div>
                 <div class="min-w-0">
                     <div class="flex items-center gap-1.5">
-                        <h1 id="hud-title" class="text-sm sm:text-base font-black text-yellow-300 truncate">央廣1號 Rti 行動廣播車 · 3D 模型</h1>
-                        <span id="hud-view-mode" class="bg-emerald-800 border border-emerald-400 text-[10px] px-1 text-emerald-100 font-bold shrink-0">車外全覽</span>
-                        <span id="hud-scene" class="hidden sm:inline bg-sky-800 border border-sky-400 text-[10px] px-1 text-sky-100 font-bold shrink-0">🏠 央廣基地</span>
+                        <h1 class="text-sm sm:text-base font-black text-yellow-300 truncate">央廣1號 Rti 行動廣播車 · 3D 模型</h1>
+                        <span id="hud-view-mode" class="hud-compact-hide bg-emerald-800 border border-emerald-400 text-[10px] px-1 text-emerald-100 font-bold shrink-0">車外全覽</span>
+                        <span id="hud-scene" class="hud-scene-tag bg-sky-800 border border-sky-400 text-[10px] px-1 text-sky-100 font-bold shrink-0">🏠 央廣基地</span>
                     </div>
-                    <p class="text-[10px] sm:text-xs text-gray-300 truncate">Rti On the Go</p>
+                    <p class="hud-compact-hide text-[10px] sm:text-xs text-gray-300 truncate">Rti On the Go</p>
                 </div>
             </div>
-            <div class="mt-1 pt-1 border-t border-gray-700/80 flex items-center justify-between text-[10px] font-mono">
-                <span id="hud-coords" class="text-cyan-300 hidden sm:inline">XYZ: 17.0/13.0/21.0</span>
+            <div class="mt-1 pt-1 border-t border-gray-700/80 flex items-center justify-between gap-2 text-[10px] font-mono">
+                <span id="hud-coords" class="hud-compact-hide text-cyan-300">XYZ: 17.0/13.0/21.0</span>
                 <div class="flex items-center gap-1">
-                    <span id="hud-plate-label" class="text-gray-400">車牌:</span>
-                    <span class="text-yellow-300 font-bold bg-black/60 px-1 border border-yellow-500/50">CER-1928</span>
+                    <span class="hud-compact-hide text-gray-400">車牌:</span>
+                    <span class="hud-compact-hide text-yellow-300 font-bold bg-black/60 px-1 border border-yellow-500/50">CER-1928</span>
                     <span id="hud-signal-text" class="text-lime-400 font-bold ml-1">● 待命</span>
                 </div>
             </div>
         </div>
-        <div class="flex items-center gap-1 pointer-events-auto flex-wrap justify-end shrink-0">
-            <button id="map-hint-btn" onclick="toggleScenarioMap(true)" class="hidden sm:inline-flex mc-btn mc-btn-emerald px-2 py-1 text-xs font-bold animate-pulse" title="任務情境地圖 (M)">🗺️</button>
-            <button onclick="switchLanguage()" id="lang-btn" class="mc-btn px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs font-bold" title="中/EN">🌐</button>
-            <button onclick="resetCameraOverview()" id="btn-center" class="mc-btn mc-btn-emerald px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs font-bold" title="置中廣播車">🎯</button>
-            <button onclick="toggleLabelsVisibility()" id="btn-labels" class="mc-btn px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs font-bold" title="標籤開關">🏷️</button>
-            <button onclick="toggleMute()" id="btn-music" class="mc-btn px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs font-bold" title="音樂開關"><span id="audio-icon">🔊</span></button>
+        <div class="flex items-center gap-1 pointer-events-auto shrink-0">
+            <button id="lang-btn" onclick="openLanguageScreen()" class="hud-btn mc-btn px-2 py-1 text-xs font-bold" title="語言 / Language">中</button>
+            <button id="map-hint-btn" onclick="toggleScenarioMap(true)" class="hud-btn mc-btn mc-btn-emerald px-2 py-1 text-xs font-bold animate-pulse" title="任務情境地圖 (M)">🗺️</button>
+            <button onclick="resetCameraOverview()" class="hud-btn mc-btn mc-btn-emerald px-2 py-1 text-xs font-bold" title="置中廣播車">🎯</button>
+            <button onclick="toggleLabelsVisibility()" class="hud-btn mc-btn px-2 py-1 text-xs font-bold" title="標籤開關">🏷️</button>
+            <button onclick="toggleMute()" class="hud-btn mc-btn px-2 py-1 text-xs font-bold" title="音樂開關"><span id="audio-icon">🔊</span></button>
         </div>
     </header>
 
@@ -253,15 +251,15 @@
     <div id="floating-console" class="floating-widget w-60 sm:w-64" style="left: 12px; bottom: 14px;">
         <div id="console-expanded" class="mc-hud-box overflow-hidden shadow-2xl">
             <div id="console-drag-handle" class="drag-handle px-2.5 py-1.5 flex items-center justify-between">
-                <span id="console-title" class="text-xs font-bold text-yellow-300">🎮 央廣1號控制台</span>
+                <span class="text-xs font-bold text-yellow-300">🎮 央廣1號控制台</span>
                 <button onclick="toggleConsoleMinimize(event)" class="mc-btn px-1.5 text-[10px]">_</button>
             </div>
             <div class="p-2 grid grid-cols-3 gap-1.5 bg-[#14151c]/90">
                 <button id="fbtn-ext" onclick="setCutawayMode(false, true)" class="mc-mini-slot active-state p-1.5 flex flex-col items-center justify-center">
-                    <span class="text-base">🏠</span><span id="ext-btn-text" class="text-[10px] font-bold mt-1">車外全覽</span>
+                    <span class="text-base">🏠</span><span class="text-[10px] font-bold mt-1">車外全覽</span>
                 </button>
                 <button id="fbtn-int" onclick="setCutawayMode(true, true)" class="mc-mini-slot p-1.5 flex flex-col items-center justify-center">
-                    <span class="text-base">🔍</span><span id="int-btn-text" class="text-[10px] font-bold mt-1">車內透視</span>
+                    <span class="text-base">🔍</span><span class="text-[10px] font-bold mt-1">車內透視</span>
                 </button>
                 <button id="fbtn-flip" onclick="toggleLedScreenFlip()" class="mc-mini-slot p-1.5 flex flex-col items-center justify-center">
                     <span class="text-base">📺</span><span id="flip-btn-text" class="text-[10px] font-bold mt-1">電視外翻</span>
@@ -270,25 +268,25 @@
                     <span class="text-base">📡</span><span id="broadcast-btn-text" class="text-[10px] font-bold mt-1">衛星發射</span>
                 </button>
                 <button onclick="toggleDayNight()" class="mc-mini-slot p-1.5 flex flex-col items-center justify-center">
-                    <span id="daynight-icon" class="text-base">☀️</span><span id="daynight-btn-text" class="text-[10px] font-bold mt-1">日夜切換</span>
+                    <span id="daynight-icon" class="text-base">☀️</span><span class="text-[10px] font-bold mt-1">日夜切換</span>
                 </button>
                 <button id="fbtn-card" onclick="toggleInspectorCard()" class="mc-mini-slot active-state p-1.5 flex flex-col items-center justify-center">
-                    <span class="text-base">📋</span><span id="guide-btn-text" class="text-[10px] font-bold mt-1 text-amber-300">設備圖鑑</span>
+                    <span class="text-base">📋</span><span class="text-[10px] font-bold mt-1 text-amber-300">設備圖鑑</span>
                 </button>
             </div>
             <div class="px-2 pb-2 bg-[#14151c]/90">
-                <button onclick="toggleScenarioMap(true)" class="mc-mini-slot w-full py-1.5 text-[11px] font-bold flex items-center justify-center gap-1"><span>🗺️</span><span id="map-btn-text">任務情境地圖</span></button>
+                <button onclick="toggleScenarioMap(true)" class="mc-mini-slot w-full py-1.5 text-[11px] font-bold flex items-center justify-center gap-1"><span>🗺️</span><span>任務情境地圖</span></button>
             </div>
             <div class="px-2 pb-2 pt-1 bg-[#14151c]/90 border-t border-gray-700/70">
                 <div class="flex items-center justify-between text-[10px] text-gray-400 mb-1">
-                    <span id="quickbar-label">⚡ 裝備快捷列：</span><span id="console-current-feat" class="text-cyan-300 font-bold truncate max-w-[110px]"></span>
+                    <span>⚡ 裝備快捷列：</span><span id="console-current-feat" class="text-cyan-300 font-bold truncate max-w-[110px]"></span>
                 </div>
                 <div id="mini-feature-dock" class="grid grid-cols-6 gap-1"></div>
             </div>
         </div>
         <div id="console-minimized" class="hidden">
             <div id="console-min-drag-handle" class="mc-hud-box px-3 py-2 flex items-center gap-2 border-2 border-yellow-400 shadow-2xl">
-                <span class="text-lg">🚐</span><div id="console-mini-label" class="text-[11px] font-black text-yellow-300">控制台</div>
+                <span class="text-lg">🚐</span><div class="text-[11px] font-black text-yellow-300">控制台</div>
                 <button onclick="toggleConsoleMinimize(event)" class="mc-btn px-1.5 text-xs font-bold ml-1">□</button>
             </div>
         </div>
@@ -303,11 +301,11 @@
                     <h2 id="modal-title" class="text-xs sm:text-sm font-black text-yellow-300 truncate">載入中</h2>
                 </div>
                 <div class="flex items-center gap-1 shrink-0 ml-1">
-                    <button id="inspector-compact-btn" onclick="toggleInspectorCompactBody()" class="mc-btn px-1.5 text-[10px]">↕</button>
+                    <button onclick="toggleInspectorCompactBody()" class="mc-btn px-1.5 text-[10px]">↕</button>
                     <button onclick="toggleInspectorCard(false)" class="mc-btn mc-btn-redstone px-1.5 text-[10px] font-bold">✕</button>
                 </div>
             </div>
-            <div class="p-2.5 sm:p-3 max-h-[52vh] sm:max-h-[68vh] overflow-y-auto space-y-2">
+            <div id="inspector-scroll" class="p-2.5 sm:p-3 max-h-[52vh] sm:max-h-[68vh] overflow-y-auto space-y-2">
                 <div class="flex items-center justify-between text-[10px] font-mono bg-gray-300 px-2 py-0.5 border border-gray-500 text-gray-800">
                     <span id="modal-en-title" class="truncate">Loading</span>
                     <span id="modal-power-tag" class="text-emerald-800 font-bold shrink-0"></span>
@@ -317,7 +315,7 @@
                 </div>
                 <div id="inspector-details-body" class="space-y-2">
                     <div class="bg-[#b0b0b0] border-2 border-[#555] p-2">
-                        <div id="crafting-grid-label" class="text-[11px] font-bold text-gray-800 mb-1">⚒️ 方塊合成表 (Crafting Grid)</div>
+                        <div class="text-[11px] font-bold text-gray-800 mb-1">⚒️ 方塊合成表 (Crafting Grid)</div>
                         <div class="flex items-center justify-around gap-1">
                             <div id="crafting-grid" class="grid grid-cols-3 gap-0.5 bg-[#8b8b8b] p-1 border-2 border-[#373737]"></div>
                             <span class="text-lg font-black text-gray-700">➡</span>
@@ -331,9 +329,9 @@
                     <div id="modal-specs-list" class="space-y-1 text-xs"></div>
                 </div>
                 <div class="pt-1.5 border-t border-gray-400 flex items-center justify-between gap-1">
-                    <button id="prev-btn" onclick="cycleFeature(-1)" class="mc-btn px-2 py-1 text-[11px] font-bold flex-1">◀ 上個</button>
+                    <button onclick="cycleFeature(-1)" class="mc-btn px-2 py-1 text-[11px] font-bold flex-1">◀ 上個</button>
                     <button id="modal-action-btn" onclick="triggerFeatureAction()" class="mc-btn mc-btn-emerald px-2 py-1 text-[11px] font-bold flex-1">⚡ 互動測試</button>
-                    <button id="next-btn" onclick="cycleFeature(1)" class="mc-btn px-2 py-1 text-[11px] font-bold flex-1">下個 ▶</button>
+                    <button onclick="cycleFeature(1)" class="mc-btn px-2 py-1 text-[11px] font-bold flex-1">下個 ▶</button>
                 </div>
             </div>
         </div>
@@ -350,7 +348,7 @@
                     <button onclick="hideMissionCard()" class="mc-btn mc-btn-redstone px-1.5 text-[10px] font-bold">✕</button>
                 </div>
             </div>
-            <div id="mission-body" class="p-2 bg-[#14151c]/90 space-y-1.5">
+            <div id="mission-body" class="p-2 bg-[#14151c]/90 space-y-1.5 overflow-y-auto">
                 <p id="mission-desc" class="text-[11px] leading-relaxed text-gray-200"></p>
                 <div id="mission-status" class="space-y-0.5 text-[11px]"></div>
             </div>
@@ -361,11 +359,12 @@
     <div id="scenario-map" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 p-3" onclick="if (event.target === this) toggleScenarioMap(false)">
         <div class="mc-gui-window w-full max-w-[620px] max-h-[94vh] overflow-y-auto">
             <div class="drag-handle px-3 py-1.5 flex items-center justify-between text-white" style="cursor: default;">
-                <span id="scenario-map-title" class="text-sm font-black text-yellow-300">🗺️ 央廣1號 任務情境地圖</span>
+                <span class="text-sm font-black text-yellow-300">🗺️ 央廣1號 任務情境地圖</span>
                 <button onclick="toggleScenarioMap(false)" class="mc-btn mc-btn-redstone px-1.5 text-[10px] font-bold">✕</button>
             </div>
             <div class="p-2.5 space-y-2">
-                <div id="scenario-map-hint" class="text-[11px] text-gray-800 font-bold" style="font-family: 'Noto Sans TC', sans-serif;">點選地圖上的地點或下方任務卡，央廣1號就會出發前往該情境現場。</div>
+                <div id="map-hint-text" class="text-[11px] text-gray-800 font-bold" style="font-family: 'Noto Sans TC', sans-serif;">點選地圖上的地點或下方任務卡，央廣1號就會出發前往該情境現場。</div>
+                <div class="map-body space-y-2">
                 <div id="map-board" class="relative w-full border-4 border-[#373737] overflow-hidden" style="aspect-ratio: 16 / 10; background: #6fbf4a;">
                     <svg viewBox="0 0 400 250" preserveAspectRatio="none" class="absolute inset-0 w-full h-full" shape-rendering="crispEdges">
                         <defs>
@@ -394,12 +393,21 @@
                         <!-- 城市廣場 -->
                         <circle cx="320" cy="198" r="26" fill="#d9cbb0"/>
                         <polygon points="300,196 307,186 314,196" fill="#dc2626"/><polygon points="316,192 323,182 330,192" fill="#16a34a"/><polygon points="332,198 339,188 346,198" fill="#2563eb"/>
-                        <!-- 道路 (基地 → 各地點) -->
+                        <!-- 關鍵基礎設施演習場 -->
+                            <g>
+                                <rect x="218" y="30" width="34" height="20" fill="#e5e7eb" stroke="#1e3a8a" stroke-width="2"/>
+                                <rect x="222" y="34" width="6" height="5" fill="#60a5fa"/><rect x="232" y="34" width="6" height="5" fill="#60a5fa"/><rect x="242" y="34" width="6" height="5" fill="#60a5fa"/>
+                                <rect x="256" y="12" width="4" height="38" fill="#9ca3af"/><polygon points="252,16 264,16 258,8" fill="#9ca3af"/>
+                                <rect x="212" y="40" width="5" height="10" fill="#6b7280"/>
+                                <polyline points="236,10 230,20 238,20 232,30" fill="none" stroke="#facc15" stroke-width="2.5"/>
+                                <rect x="218" y="24" width="34" height="5" fill="#1e3a8a"/>
+                            </g>
+                            <!-- 道路 (基地 → 各地點) -->
                         <g stroke="#d6d3cc" stroke-width="9" fill="none" stroke-linecap="round">
-                            <path d="M200 140 L80 65"/><path d="M200 140 L320 175"/><path d="M200 140 L332 65"/><path d="M200 140 L88 205"/>
+                            <path d="M200 140 L80 65"/><path d="M200 140 L320 175"/><path d="M200 140 L332 65"/><path d="M200 140 L88 205"/><path d="M200 140 L200 52"/>
                         </g>
                         <g stroke="#ffffff" stroke-width="1.5" fill="none" stroke-dasharray="5 5">
-                            <path d="M200 140 L80 65"/><path d="M200 140 L320 175"/><path d="M200 140 L332 65"/><path d="M200 140 L88 205"/>
+                            <path d="M200 140 L80 65"/><path d="M200 140 L320 175"/><path d="M200 140 L332 65"/><path d="M200 140 L88 205"/><path d="M200 140 L200 52"/>
                         </g>
                         <!-- 央廣基地 -->
                         <rect x="186" y="122" width="28" height="18" fill="#f5f6f7" stroke="#e5323c" stroke-width="2"/>
@@ -409,6 +417,7 @@
                     <div id="map-van" class="map-van">🚐</div>
                 </div>
                 <div id="scenario-cards" class="grid grid-cols-1 sm:grid-cols-2 gap-1.5"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -416,6 +425,24 @@
     <!-- Scene transition -->
     <div id="scene-fade" class="fixed inset-0 z-[60] pointer-events-none flex items-center justify-center bg-black" style="opacity: 0; transition: opacity 0.6s;">
         <div id="scene-fade-text" class="mc-hud-box px-4 py-2 text-yellow-300 font-black text-sm sm:text-base" style="font-family: 'Noto Sans TC', sans-serif;"></div>
+    </div>
+
+    <!-- 起始畫面：語言選擇 -->
+    <div id="lang-screen" data-noi18n class="fixed inset-0 z-[80] flex items-center justify-center p-4" style="background: radial-gradient(circle at 50% 40%, rgba(30,58,138,0.85), rgba(5,8,16,0.96));">
+        <div class="mc-gui-window w-full max-w-md text-center">
+            <div class="drag-handle px-3 py-2 text-white" style="cursor: default;"><span class="text-sm font-black text-yellow-300">🌐 語言 · Language</span></div>
+            <div class="p-4 space-y-3" style="font-family: 'Noto Sans TC', sans-serif;">
+                <div class="w-14 h-14 mx-auto bg-white border-4 border-red-600 flex items-center justify-center font-black text-red-600 text-xl tracking-tighter">Rti</div>
+                <h2 class="text-lg sm:text-xl font-black text-gray-900">央廣1號 Rti 行動廣播車</h2>
+                <p class="text-sm font-bold text-gray-800">Rti No.1 Mobile Broadcast Van</p>
+                <p class="text-xs text-gray-700">請選擇語言 · Please select a language</p>
+                <div class="grid grid-cols-2 gap-3 pt-1">
+                    <button id="lang-zh" disabled onclick="chooseLanguage('zh')" class="mc-btn mc-btn-emerald py-3 text-base font-black disabled:opacity-50">中文</button>
+                    <button id="lang-en" disabled onclick="chooseLanguage('en')" class="mc-btn py-3 text-base font-black disabled:opacity-50">English</button>
+                </div>
+                <p id="lang-loading" class="text-[11px] text-gray-700">載入中… · Loading…</p>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -545,129 +572,6 @@
             }
         ];
 
-        // --- 2b. Bilingual i18n ---
-        let currentLang = 'zh';
-        const UI = {
-            zh: {
-                htmlLang: 'zh-TW', title: '央廣1號 Rti 行動廣播車 · 3D 模型',
-                viewExt: '車外全覽', viewCut: '車內透視', plate: '車牌:', standby: '● 待命', satLive: '● 衛星+5G直播',
-                consoleTitle: '🎮 央廣1號控制台', consoleMini: '控制台',
-                btnExt: '車外全覽', btnCut: '車內透視', btnFlip: '電視外翻', btnUplink: '衛星發射', btnUplinkOn: '發射中!',
-                btnDayNight: '日夜切換', btnGuide: '設備圖鑑', quickbar: '⚡ 裝備快捷列：',
-                craftGrid: '⚒️ 方塊合成表 (Crafting Grid)', prev: '◀ 上個', next: '下個 ▶',
-                action: '⚡ 互動測試', actionFlip: '⚡ 點擊外翻電視牆', loading: '載入中',
-                tipCenter: '置中廣播車', tipLabels: '標籤開關', tipMusic: '音樂開關',
-                ledLine1: '🔴 ON AIR 全球多語直播', ledLine2: '讓臺灣的聲音走向世界', ledLine3: 'RTI MULTILINGUAL GLOBAL LIVE BROADCAST',
-                marquee: '🔴 多語全球直播  ★  中央廣播電臺 RTI MULTILINGUAL LIVE BROADCAST  ★  ',
-                mapBtn: '任務情境地圖', mapTitle: '🗺️ 央廣1號 任務情境地圖', mapHint: '點選地圖上的地點或下方任務卡，央廣1號就會出發前往該情境現場。',
-                missionPrefix: '🚐 央廣1號出發 →', hudBase: '🏠 央廣基地'
-            },
-            en: {
-                htmlLang: 'en', title: 'RTI No.1 · Rti Mobile Broadcast Van · 3D Model',
-                viewExt: 'Exterior', viewCut: 'Cutaway', plate: 'Plate:', standby: '● Standby', satLive: '● SAT+5G Live',
-                consoleTitle: '🎮 RTI No.1 Console', consoleMini: 'Console',
-                btnExt: 'Exterior', btnCut: 'Cutaway', btnFlip: 'Flip TV', btnUplink: 'Uplink', btnUplinkOn: 'Live!',
-                btnDayNight: 'Day/Night', btnGuide: 'Guide', quickbar: '⚡ Quick bar:',
-                craftGrid: '⚒️ Crafting Grid', prev: '◀ Prev', next: 'Next ▶',
-                action: '⚡ Try it', actionFlip: '⚡ Flip TV wall', loading: 'Loading',
-                tipCenter: 'Center the van', tipLabels: 'Toggle labels', tipMusic: 'Toggle music',
-                ledLine1: '🔴 ON AIR · GLOBAL MULTILINGUAL LIVE', ledLine2: "Taiwan's Voice to the World", ledLine3: 'RADIO TAIWAN INTERNATIONAL · RTI',
-                marquee: '🔴 GLOBAL MULTILINGUAL LIVE  ★  RADIO TAIWAN INTERNATIONAL · RTI  ★  ',
-                mapBtn: 'Mission Map', mapTitle: '🗺️ RTI No.1 Mission Map', mapHint: 'Click a location on the map or a mission card below, and RTI No.1 will head to the scene.',
-                missionPrefix: '🚐 RTI No.1 departing →', hudBase: '🏠 RTI Base'
-            }
-        };
-        const FEATURES_I18N = {
-            outdoor_stage: {
-                zh: { categoryLabel: '車外裝備', name: 'RTI On The Go 外翻電視牆', powerTag: '車頭側鉸鏈向車頭外翻', recipeNote: '合成材料：高畫質Rti On The Go貼圖 + 外翻鉸鏈 + 5mm觀景窗', description: '電視牆關閉時完整覆蓋採訪區玻璃窗，呈現高畫質 Rti LOGO 與 RTI On The Go 貼圖；點選時以靠車頭一側的鉸鏈為軸心，向車頭方向外翻，畫面切換為「🔴 全球多語直播」，並露出採訪區實況。', specs: [{ label: '電視牆位置', value: '車身右側採訪區外牆 (對齊採訪桌)', pct: 100 }, { label: '外翻機構', value: '靠車頭側鉸鏈，向車頭外翻開啟', pct: 100 }] },
-                en: { categoryLabel: 'Exterior', name: 'RTI On The Go Flip-Out TV Wall', powerTag: 'Front-side hinge, flips forward', recipeNote: 'Ingredients: HD Rti On The Go graphic + flip-out hinge + 5mm viewing window', description: 'When closed, the TV wall fully covers the studio glass window and shows a high-definition Rti logo and "RTI On The Go" graphic. When tapped, it swings outward toward the front on its front-side hinge, switching the screen to "🔴 Global Multilingual Live" and revealing the studio inside.', specs: [{ label: 'Location', value: 'Right-side studio wall (aligned with the table)', pct: 100 }, { label: 'Mechanism', value: 'Front-side hinge, opens toward the cab', pct: 100 }] }
-            },
-            mobile_studio: {
-                zh: { categoryLabel: '車內採訪區', name: '多語採訪區', powerTag: '採訪區佔 3/4 淨空間', recipeNote: '合成材料：木紋地板 + 折疊桌 + 電容麥克風 x3 + 主持人 x3 + 紅色霓虹燈', description: '現場採訪區，設有防滑地板與採訪桌，配備 3 支帶避震架的廣播級電容麥克風。背景牆設有紅色「Rti On the Go」霓虹燈。可提供主持人及來賓進行現場訪問錄音及直播。', specs: [{ label: '空間比例', value: '車廂 75% 淨空間 (與導播區 3:1)', pct: 75 }, { label: '主持卡司', value: '三主持人 (金髮女, 黑髮女, 男性主持人)', pct: 100 }] },
-                en: { categoryLabel: 'Interior · Studio', name: 'Multilingual Studio', powerTag: 'Studio: 3/4 of cabin space', recipeNote: 'Ingredients: wood-grain floor + folding table + condenser mic x3 + hosts x3 + red neon sign', description: 'On-site interview studio with a non-slip floor and an interview table, equipped with three broadcast-grade condenser microphones on shock mounts. A red "Rti On the Go" neon sign lights up the back wall. Hosts and guests can record on-site interviews and broadcast live from here.', specs: [{ label: 'Space ratio', value: '75% of cabin (3:1 with control room)', pct: 75 }, { label: 'Hosts', value: 'Three hosts (blonde, black-haired, male)', pct: 100 }] }
-            },
-            control_room: {
-                zh: { categoryLabel: '車內導播區', name: '前段導播區', powerTag: '車頭 1/4 獨立機櫃區', recipeNote: '合成材料：硬式滑門隔板 + 4K導播機 + 閃爍機櫃 + 男性工程師', description: '靠車頭前段獨立導播區，配有滑門隔板與高密度機櫃，整合 4K 導播機、成音設備、儲能/逆變器面板、傳輸設備，坐著 1 位導播，並可搭配1位工程師協同作業。', specs: [{ label: '空間比例', value: '靠車頭 25% 獨立空間 (3:1 分區)', pct: 25 }, { label: '機櫃監控', value: '導播/成音/電力/通訊一體化閃爍機櫃', pct: 100 }] },
-                en: { categoryLabel: 'Interior · Control', name: 'Front Control Room', powerTag: 'Front 1/4 equipment rack zone', recipeNote: 'Ingredients: rigid sliding partition + 4K switcher + blinking rack + engineer', description: 'A separate control room at the front of the cabin, with a sliding partition and a high-density equipment rack integrating a 4K video switcher, audio equipment, a battery/inverter panel and transmission gear. One director is seated here and can work together with an engineer.', specs: [{ label: 'Space ratio', value: 'Front 25% separate zone (3:1 layout)', pct: 25 }, { label: 'Rack', value: 'Integrated video/audio/power/comms rack', pct: 100 }] }
-            },
-            leo_satellite: {
-                zh: { categoryLabel: '車外裝備', name: 'OneWeb 低軌衛星 & 5G 陣列天線', powerTag: '極端備援: 雙重防線', recipeNote: '合成材料：OneWeb 低軌衛星圓盤 + 5G MIMO 天線', description: '車頂搭載中華電信 OneWeb 低軌衛星天線與 5G 4X4 MIMO 陣列天線，平時利用5G行動通訊網路進行節目傳輸，在極端情境下利用低軌衛星保持雙重備援通訊。', specs: [{ label: '韌性通訊', value: '低軌衛星 + 5G Bonding 雙備援', pct: 100 }, { label: '災防應變', value: '斷網不斷訊對外權威發送', pct: 98 }] },
-                en: { categoryLabel: 'Exterior', name: 'OneWeb LEO Satellite & 5G Array Antenna', powerTag: 'Extreme backup: dual redundancy', recipeNote: 'Ingredients: OneWeb LEO satellite dish + 5G MIMO antenna', description: 'The roof carries a Chunghwa Telecom OneWeb low-Earth-orbit (LEO) satellite antenna and a 5G 4X4 MIMO array antenna. Programs are normally transmitted over the 5G mobile network; in extreme situations, the LEO satellite keeps a redundant backup link running.', specs: [{ label: 'Resilient comms', value: 'LEO satellite + 5G bonding dual backup', pct: 100 }, { label: 'Disaster response', value: 'Stays on air even when networks go down', pct: 98 }] }
-            },
-            power_system: {
-                zh: { categoryLabel: '車外裝備', name: '綠能儲能與 800W 太陽能板', powerTag: '自主電力: 6-8小時', recipeNote: '合成材料：太陽能板 x2 + 20kWh 鋰鐵電池', description: '車頂配有雙太陽能板，車底配備 20kWh 鋰鐵儲能電池與雙 3000W 逆變器，可透過太陽能及行駛中充電，不靠外部電源可連續播音 6-8 小時。', specs: [{ label: '續航力', value: '20kWh 鋰鐵電池 (UN38.3認證)', pct: 96 }, { label: '太陽能', value: '車頂 800W 綠能輔助充電', pct: 90 }] },
-                en: { categoryLabel: 'Exterior', name: 'Green Energy Storage & 800W Solar Panels', powerTag: 'Self-powered: 6-8 hours', recipeNote: 'Ingredients: solar panel x2 + 20kWh LiFePO4 battery', description: 'Two solar panels on the roof, plus a 20kWh LiFePO4 battery and dual 3000W inverters under the chassis. Charged by solar power and while driving, it can broadcast continuously for 6-8 hours without external power.', specs: [{ label: 'Endurance', value: '20kWh LiFePO4 battery (UN38.3 certified)', pct: 96 }, { label: 'Solar', value: 'Roof 800W green auxiliary charging', pct: 90 }] }
-            },
-            smart_cockpit: {
-                zh: { categoryLabel: '車外裝備', name: '智慧駕駛艙', powerTag: '5噸柴油底盤 / 歐盟六期', recipeNote: '合成材料：5噸全新底盤 + CER-1928 車牌 + 導流套件', description: '5 噸柴油全新貨車底盤，掛有 CER-1928 歷史特選車牌（象徵央廣於 1928 年成立）。小型車普通駕照即可駕駛，機動性強。駕駛座上的司機除了駕駛任務外，也兼任工程任務。', specs: [{ label: '底盤動力', value: '5噸六期柴油 / 普通駕照可開', pct: 95 }, { label: '歷史密碼', value: 'CER-1928 特選專屬車牌', pct: 100 }] },
-                en: { categoryLabel: 'Exterior', name: 'Smart Cockpit', powerTag: '5-ton diesel chassis / Euro 6', recipeNote: 'Ingredients: new 5-ton chassis + CER-1928 plate + aero kit', description: 'A brand-new 5-ton diesel truck chassis bearing the special CER-1928 license plate (marking RTI founding in 1928). It can be driven with a regular car license and is highly mobile. Besides driving, the driver also takes on engineering duties.', specs: [{ label: 'Chassis', value: '5-ton Euro 6 diesel / regular license', pct: 95 }, { label: 'Heritage code', value: 'CER-1928 special-issue plate', pct: 100 }] }
-            }
-        };
-        const SCENARIOS_I18N = {
-            default: { en: { name: 'RTI Base', pin: 'RTI Base', tagline: 'Return to standby base (default scene)', desc: 'The RTI No.1 standby base. Open the "🗺️ Mission Map" to choose a location, and the broadcast van will drive to the event or mission site.', status: [['📍 Location', 'RTI No.1 Standby Base', 'info'], ['📡 Status', 'Standing by, ready to deploy', 'ok']] } },
-            campus: { en: { name: 'Young Voice Campus Tour', pin: 'Campus', tagline: 'Broadcast van enters campus; students experience the mobile studio', desc: 'Young Voice Campus Tour: RTI No.1 drives into a school campus to become a mobile recording studio, letting students experience multilingual program production, Podcast recording and live broadcasting, nurturing young voices with a global perspective.', status: [['📍 Location', 'Campus field & main building', 'info'], ['🎓 Event', 'Campus broadcast workshop & Podcast recording', 'info'], ['👥 Audience', 'High-school & university students', 'info'], ['📺 TV Wall', 'Flipped out, displaying', 'ok']] } },
-            plaza: { en: { name: 'Multilingual Community Festival', pin: 'City Square', tagline: 'Broadcast van arrives at the square for a multicultural celebration', desc: 'Multilingual Community Festival: RTI No.1 pulls into the city square, where multilingual hosts broadcast live in Vietnamese, Indonesian, Thai, Filipino and more, connecting with new immigrant friends and listeners in a festive gathering.', status: [['📍 Location', 'City Square', 'info'], ['🌏 Languages', 'Vietnamese, Indonesian, Thai, Filipino, Mandarin', 'info'], ['🎉 Event', 'Multilingual live broadcast & listener meetup', 'info'], ['📺 TV Wall', 'Flipped out, displaying', 'ok']] } },
-            disaster: { en: { name: 'Disaster Resilience Mission', pin: 'Disaster Zone', tagline: 'Power & network down; broadcasting continues via satellite backup', desc: 'Disaster Resilience Mission: When typhoons, earthquakes or other disasters knock out mains power and terrestrial networks, RTI No.1 enters the disaster zone, powered by its own battery storage and transmitting via LEO satellite backup, to keep broadcasting disaster-relief and rescue information without interruption.', signalText: '● LEO Satellite Backup Live', status: [['⚡ Mains Power', 'Down ✖', 'bad'], ['🌐 Terrestrial Network', 'Down ✖', 'bad'], ['🛰️ LEO Satellite', 'Connected ✔', 'ok'], ['🔋 Battery', '100% (self-powered)', 'ok', 'mission-battery'], ['☀️ Solar', 'Supplemental charging', 'ok']] } },
-            national: { en: { name: 'National Day Celebration Broadcast', pin: 'Presidential Office', tagline: 'Multilingual live broadcast at national celebrations', desc: 'National Day Celebration Broadcast: During major national celebrations like Double Ten Day, RTI No.1 is stationed in front of the Presidential Office Building on Ketagalan Boulevard, broadcasting the festivities live in multiple languages so audiences worldwide can share the festive atmosphere of Taiwan.', signalText: '● National Day Multilingual Broadcast', status: [['📍 Location', 'Presidential Office Bldg. & Ketagalan Blvd.', 'info'], ['🎆 Event', 'Double Ten National Day Broadcast', 'info'], ['🌍 Broadcast', 'Multilingual simultaneous live', 'ok'], ['🛰️ Transmission', '5G + LEO Satellite', 'ok']] } }
-        };
-        function applyFeatureLang(lang) {
-            VEHICLE_FEATURES.forEach(f => {
-                const t = FEATURES_I18N[f.id]?.[lang]; if (!t) return;
-                f.categoryLabel = t.categoryLabel; f.name = t.name; f.powerTag = t.powerTag;
-                f.recipeNote = t.recipeNote; f.description = t.description; f.specs = t.specs;
-            });
-        }
-        let _marqueeFullText = null;
-        function switchLanguage() {
-            currentLang = currentLang === 'zh' ? 'en' : 'zh'; playSound('click');
-            const t = UI[currentLang];
-            document.getElementById('root-html').lang = t.htmlLang;
-            document.getElementById('page-title').textContent = t.title;
-            document.getElementById('hud-title').textContent = t.title;
-            document.getElementById('hud-plate-label').textContent = t.plate;
-            if (!isBroadcasting) document.getElementById('hud-signal-text').textContent = t.standby;
-            document.getElementById('console-title').textContent = t.consoleTitle;
-            document.getElementById('console-mini-label').textContent = t.consoleMini;
-            document.getElementById('ext-btn-text').textContent = t.btnExt;
-            document.getElementById('int-btn-text').textContent = t.btnCut;
-            const flipText = document.getElementById('flip-btn-text'); if (flipText) flipText.textContent = t.btnFlip;
-            document.getElementById('daynight-btn-text').textContent = t.btnDayNight;
-            document.getElementById('guide-btn-text').textContent = t.btnGuide;
-            const uplinkText = document.getElementById('broadcast-btn-text'); if (uplinkText) uplinkText.textContent = isBroadcasting ? t.btnUplinkOn : t.btnUplink;
-            document.getElementById('quickbar-label').textContent = t.quickbar;
-            document.getElementById('crafting-grid-label').textContent = t.craftGrid;
-            document.getElementById('prev-btn').textContent = t.prev;
-            document.getElementById('next-btn').textContent = t.next;
-            document.getElementById('btn-center').title = t.tipCenter;
-            document.getElementById('btn-labels').title = t.tipLabels;
-            document.getElementById('btn-music').title = t.tipMusic;
-            const mapBtnText = document.getElementById('map-btn-text'); if (mapBtnText) mapBtnText.textContent = t.mapBtn;
-            const viewHud = document.getElementById('hud-view-mode');
-            if (viewHud) viewHud.textContent = isCutawayOpen ? t.viewCut : t.viewExt;
-            applyFeatureLang(currentLang);
-            createFloatingHTMLMarkers(); buildUIListsAndHotbar();
-            if (typeof currentFeatureIndex !== 'undefined') { updateCraftingModalUI(VEHICLE_FEATURES[currentFeatureIndex]); highlightQuickListButton(VEHICLE_FEATURES[currentFeatureIndex].id); }
-            rebuildLedTexture(); rebuildMarqueeText();
-            updateScenarioLang();
-        }
-        function rebuildLedTexture() {
-            if (!ledTexOpen || !ledScreenPivot) return;
-            const oldTex = ledTexOpen;
-            ledTexOpen = createLedTextureOpen(); ledTexOpen.encoding = THREE.sRGBEncoding;
-            const panel = ledScreenPivot.children[0];
-            if (panel && panel.material && panel.material[5]) { panel.material[5].map = ledTexOpen; panel.material[5].needsUpdate = true; }
-            oldTex.dispose();
-        }
-        function rebuildMarqueeText() { _marqueeFullText = UI[currentLang].marquee; }
-        function updateScenarioLang() {
-            const sc = currentScenario(); if (!sc) return;
-            const t = UI[currentLang];
-            const mapTitleEl = document.getElementById('scenario-map-title'); if (mapTitleEl) mapTitleEl.textContent = t.mapTitle;
-            const mapHintEl = document.getElementById('scenario-map-hint'); if (mapHintEl) mapHintEl.textContent = t.mapHint;
-            updateScenarioUI(sc);
-            buildScenarioMapUI();
-        }
-
         // --- 3. Texture Generators ---
         function createPixelNoiseTexture(baseHex, variation = 14, size = 16) {
             const canvas = document.createElement('canvas'); canvas.width = size; canvas.height = size;
@@ -685,35 +589,27 @@
         }
 
         // LEFT WALL TEXTURE (Red Geometric Slash & Large Red 'R')
-        function fitFont(ctx, text, maxW, maxSz, family, weight) {
-            for (let s = maxSz; s >= 12; s -= 2) { ctx.font = `${weight} ${s}px ${family}`; if (ctx.measureText(text).width <= maxW) return s; }
-            ctx.font = `${weight} 12px ${family}`; return 12;
-        }
         function createLedTextureOpen() {
-            const t = UI[currentLang];
             const canvas = document.createElement('canvas'); canvas.width = 1024; canvas.height = 512;
             const ctx = canvas.getContext('2d');
             ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, 1024, 512);
-
+            
             ctx.strokeStyle = 'rgba(234, 179, 8, 0.3)'; ctx.lineWidth = 3;
             for (let i = 0; i < 360; i += 15) {
                 const rad = i * Math.PI / 180;
                 ctx.beginPath(); ctx.moveTo(512, 256); ctx.lineTo(512 + Math.cos(rad) * 600, 256 + Math.sin(rad) * 600); ctx.stroke();
             }
             ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 16; ctx.strokeRect(12, 12, 1000, 488);
-
+            
             ctx.fillStyle = '#dc2626'; ctx.fillRect(40, 40, 944, 110);
-            ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center';
-            fitFont(ctx, t.ledLine1, 920, 68, '"Noto Sans TC", sans-serif', '900');
-            ctx.fillText(t.ledLine1, 512, 120);
-
-            ctx.fillStyle = '#facc15'; ctx.shadowColor = '#000'; ctx.shadowBlur = 12;
-            fitFont(ctx, t.ledLine2, 920, 85, '"Noto Sans TC", sans-serif', '900');
-            ctx.fillText(t.ledLine2, 512, 290); ctx.shadowBlur = 0;
-
-            ctx.fillStyle = '#38bdf8';
-            fitFont(ctx, t.ledLine3, 920, 36, 'monospace', 'bold');
-            ctx.fillText(t.ledLine3, 512, 410);
+            ctx.fillStyle = '#ffffff'; ctx.font = '900 68px "Noto Sans TC", sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText('🔴 ON AIR 全球多語直播', 512, 120);
+            
+            ctx.fillStyle = '#facc15'; ctx.font = '900 85px "Noto Sans TC", sans-serif'; ctx.shadowColor = '#000'; ctx.shadowBlur = 12;
+            ctx.fillText('讓臺灣的聲音走向世界', 512, 290); ctx.shadowBlur = 0;
+            
+            ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 36px monospace';
+            ctx.fillText('RTI MULTILINGUAL GLOBAL LIVE BROADCAST', 512, 410);
             ctx.textAlign = 'left';
 
             const tex = new THREE.CanvasTexture(canvas); tex.magFilter = THREE.NearestFilter; tex.minFilter = THREE.NearestFilter; return tex;
@@ -731,7 +627,7 @@
             if (!marqueeCtx) return;
             marqueeCtx.fillStyle = '#05070a'; marqueeCtx.fillRect(0, 0, 1024, 96);
             marqueeCtx.strokeStyle = '#dc2626'; marqueeCtx.lineWidth = 6; marqueeCtx.strokeRect(4, 4, 1016, 88);
-            const fullText = _marqueeFullText || UI[currentLang].marquee;
+            const fullText = "🔴 多語全球直播  ★  中央廣播電臺 RTI MULTILINGUAL LIVE BROADCAST  ★  ";
             marqueeCtx.font = 'bold 50px "Noto Sans TC", sans-serif'; marqueeCtx.fillStyle = '#facc15';
             const textWidth = marqueeCtx.measureText(fullText).width;
             const scrollX = 1024 - ((elapsed * 160) % (textWidth + 1024));
@@ -963,8 +859,6 @@
 
         function makeWidgetDraggable(widgetEl, handleElements) {
             if (!widgetEl) return;
-            // 切換語言會重建 UI 並再次呼叫本函式；不先卸載前一次的監聽器，window 與拖曳把手上的 handler 會持續累加
-            if (widgetEl.__dragDispose) widgetEl.__dragDispose();
             let isDragging = false, startX = 0, startY = 0, initialLeft = 0, initialTop = 0;
             const onPointerDown = (e) => {
                 if (e.target.closest('button')) return;
@@ -985,51 +879,33 @@
             handleElements.forEach(handle => { if (handle) { handle.addEventListener('mousedown', onPointerDown); handle.addEventListener('touchstart', onPointerDown, { passive: true }); }});
             window.addEventListener('mousemove', onPointerMove); window.addEventListener('touchmove', onPointerMove, { passive: true });
             window.addEventListener('mouseup', onPointerUp); window.addEventListener('touchend', onPointerUp);
-            widgetEl.__dragDispose = () => {
-                handleElements.forEach(handle => { if (handle) { handle.removeEventListener('mousedown', onPointerDown); handle.removeEventListener('touchstart', onPointerDown); }});
-                window.removeEventListener('mousemove', onPointerMove); window.removeEventListener('touchmove', onPointerMove);
-                window.removeEventListener('mouseup', onPointerUp); window.removeEventListener('touchend', onPointerUp);
-            };
         }
 
         function toggleConsoleMinimize(e) {
-            if (e) e.stopPropagation(); isConsoleMinimized = !isConsoleMinimized; playSound('click');
+            if (e) e.stopPropagation(); playSound('click'); setConsoleMinimized(!isConsoleMinimized);
+        }
+        function setConsoleMinimized(state) {
+            isConsoleMinimized = state;
             const expandedEl = document.getElementById('console-expanded'), minEl = document.getElementById('console-minimized'), wrapper = document.getElementById('floating-console');
             if (isConsoleMinimized) { expandedEl.classList.add('hidden'); minEl.classList.remove('hidden'); wrapper.classList.remove('w-60', 'sm:w-64'); wrapper.classList.add('w-auto'); }
             else { minEl.classList.add('hidden'); expandedEl.classList.remove('hidden'); wrapper.classList.remove('w-auto'); wrapper.classList.add('w-60', 'sm:w-64'); }
+            updateCompactVisibility();
         }
 
-        function toggleInspectorCard(forceState) {
-            playSound('click'); isInspectorVisible = typeof forceState === 'boolean' ? forceState : !isInspectorVisible;
+        function toggleInspectorCard(forceState, silent) {
+            if (!silent) playSound('click'); isInspectorVisible = typeof forceState === 'boolean' ? forceState : !isInspectorVisible;
             const modal = document.getElementById('crafting-modal');
             if (isInspectorVisible) { modal.classList.remove('hidden'); document.getElementById('fbtn-card')?.classList.add('active-state'); }
             else { modal.classList.add('hidden'); document.getElementById('fbtn-card')?.classList.remove('active-state'); }
+            updateCompactVisibility();
         }
 
         function toggleInspectorCompactBody() {
-            playSound('click'); isInspectorDetailsOpen = !isInspectorDetailsOpen;
-            document.getElementById('inspector-details-body')?.classList.toggle('hidden', !isInspectorDetailsOpen);
+            playSound('click'); setInspectorDetails(!isInspectorDetailsOpen);
         }
-
-        function setupInspectorCollapse() {
-            const modal = document.getElementById('crafting-modal'), handle = document.getElementById('inspector-drag-handle');
-            if (!modal || !handle) return;
-            if (window.innerWidth < 640 || window.innerHeight < 500) modal.classList.add('inspector-collapsed');
-            // 標題列同時是拖曳把手，拖曳結束也會觸發 click；用位移量區分「點一下」與「拖曳」
-            let downX = 0, downY = 0;
-            handle.addEventListener('pointerdown', (e) => { downX = e.clientX; downY = e.clientY; });
-            handle.addEventListener('click', (e) => {
-                if ((window.innerWidth >= 640 && window.innerHeight >= 500) || e.target.closest('button')) return;
-                if (Math.abs(e.clientX - downX) > 5 || Math.abs(e.clientY - downY) > 5) return;
-                playSound('click');
-                // 切換前後以右緣與底邊為基準重新定位，並夾在視窗內
-                const beforeRect = modal.getBoundingClientRect();
-                modal.classList.toggle('inspector-collapsed');
-                const afterRect = modal.getBoundingClientRect();
-                modal.style.left = `${Math.max(6, Math.min(window.innerWidth - afterRect.width - 6, beforeRect.right - afterRect.width))}px`;
-                modal.style.top = `${Math.max(6, Math.min(window.innerHeight - afterRect.height - 6, beforeRect.bottom - afterRect.height))}px`;
-                modal.style.right = 'auto'; modal.style.bottom = 'auto';
-            });
+        function setInspectorDetails(state) {
+            isInspectorDetailsOpen = state;
+            document.getElementById('inspector-details-body')?.classList.toggle('hidden', !isInspectorDetailsOpen);
         }
 
         function toggleLedScreenFlip() {
@@ -1061,11 +937,10 @@
             VEHICLE_FEATURES.forEach(feat => { document.getElementById(`dock-btn-${feat.id}`)?.classList.toggle('active-state', feat.id === activeId); });
             const activeFeat = VEHICLE_FEATURES.find(f => f.id === activeId);
             if (activeFeat) {
-                const t = UI[currentLang];
                 document.getElementById('console-current-feat').textContent = `${activeFeat.icon} ${activeFeat.name}`;
                 const actionBtn = document.getElementById('modal-action-btn');
-                if (activeFeat.id === 'outdoor_stage') actionBtn.innerHTML = t.actionFlip;
-                else actionBtn.innerHTML = t.action;
+                if (activeFeat.id === 'outdoor_stage') actionBtn.innerHTML = '⚡ 點擊外翻電視牆';
+                else actionBtn.innerHTML = '⚡ 互動測試';
             }
         }
 
@@ -1092,14 +967,13 @@
         function setCutawayMode(openState, moveCamera = true) {
             if (isCutawayOpen !== openState) playSound('piston');
             isCutawayOpen = openState;
-            const t = UI[currentLang];
             const viewHud = document.getElementById('hud-view-mode'), extBtn = document.getElementById('fbtn-ext'), intBtn = document.getElementById('fbtn-int');
             if (isCutawayOpen) {
-                viewHud.textContent = t.viewCut; viewHud.className = 'bg-amber-700 border border-amber-300 text-[10px] px-1 text-amber-100 font-bold shrink-0';
+                viewHud.textContent = '車內透視'; viewHud.className = 'hud-compact-hide bg-amber-700 border border-amber-300 text-[10px] px-1 text-amber-100 font-bold shrink-0';
                 extBtn?.classList.remove('active-state'); intBtn?.classList.add('active-state');
                 if (moveCamera) { cameraLerpTarget = new THREE.Vector3(0.5, 13.5, 13.5); controlsTargetLerp = new THREE.Vector3(0, 5.2, 0); }
             } else {
-                viewHud.textContent = t.viewExt; viewHud.className = 'bg-emerald-800 border border-emerald-400 text-[10px] px-1 text-emerald-100 font-bold shrink-0';
+                viewHud.textContent = '車外全覽'; viewHud.className = 'hud-compact-hide bg-emerald-800 border border-emerald-400 text-[10px] px-1 text-emerald-100 font-bold shrink-0';
                 extBtn?.classList.add('active-state'); intBtn?.classList.remove('active-state');
                 if (moveCamera) resetCameraOverview();
             }
@@ -1108,15 +982,11 @@
         function toggleBroadcastSignal() {
             isBroadcasting = !isBroadcasting; playSound('beacon');
             broadcastWaveGroup.visible = isBroadcasting;
-            const t = UI[currentLang], sc = currentScenario();
             const btnText = document.getElementById('broadcast-btn-text'), satBtn = document.getElementById('fbtn-sat'), sigText = document.getElementById('hud-signal-text');
             if (isBroadcasting) {
-                btnText.textContent = t.btnUplinkOn; satBtn?.classList.add('active-state');
-                const scI18n = SCENARIOS_I18N[sc.id]?.[currentLang];
-                sigText.textContent = (scI18n?.signalText) || sc.signalText || t.satLive;
-                sigText.className = 'text-lime-400 font-bold ml-1';
+                btnText.textContent = '發射中!'; satBtn?.classList.add('active-state'); sigText.textContent = currentScenario().signalText || '● 衛星+5G直播'; sigText.className = 'text-lime-400 font-bold ml-1';
             } else {
-                btnText.textContent = t.btnUplink; satBtn?.classList.remove('active-state'); sigText.textContent = t.standby; sigText.className = 'text-yellow-300 font-bold ml-1';
+                btnText.textContent = '衛星發射'; satBtn?.classList.remove('active-state'); sigText.textContent = '● 待命'; sigText.className = 'text-yellow-300 font-bold ml-1';
             }
         }
 
@@ -1726,17 +1596,11 @@
             applyEnvironmentLighting();
         }
 
-        // 只在直立手機 / 其他版面切換時重設鏡頭；每次 resize 都重設會把使用者轉好的視角洗掉（手機網址列伸縮也會觸發 resize）
-        let viewportCompact = window.innerWidth < 640 && window.innerHeight > window.innerWidth;
         function onWindowResize() {
             if (!camera || !renderer) return;
             const w = window.innerWidth || 800, h = window.innerHeight || 600;
             camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h);
-            const compact = w < 640 && h > w;
-            if (compact !== viewportCompact) {
-                viewportCompact = compact;
-                const c = scenarioCamera(currentScenario()); cameraLerpTarget = c.p; controlsTargetLerp = c.t;
-            }
+            applyResponsiveLayout(false);
         }
 
         async function initThreeScene() {
@@ -2412,8 +2276,7 @@
         }
         function refreshSignalText() {
             const el = document.getElementById('hud-signal-text'); if (!el || !isBroadcasting) return;
-            const t = UI[currentLang], sc = currentScenario(), scI18n = SCENARIOS_I18N[sc.id]?.[currentLang];
-            el.textContent = (scI18n?.signalText) || sc.signalText || t.satLive;
+            el.textContent = currentScenario().signalText || '● 衛星+5G直播';
         }
         function goToScenario(id) {
             if (isSceneTransitioning) return;
@@ -2423,8 +2286,7 @@
             setTimeout(() => {
                 toggleScenarioMap(false);
                 const fade = document.getElementById('scene-fade');
-                const scI18n = SCENARIOS_I18N[sc.id]?.[currentLang];
-                document.getElementById('scene-fade-text').textContent = `${UI[currentLang].missionPrefix} ${sc.icon} ${scI18n?.name || sc.name}`;
+                document.getElementById('scene-fade-text').textContent = `🚐 央廣1號出發 → ${sc.icon} ${sc.name}`;
                 fade.style.opacity = '1';
                 setTimeout(() => {
                     applyScenario(sc, false);
@@ -2451,20 +2313,18 @@
                 document.getElementById('card-' + s.id)?.classList.toggle('active-state', s.id === id);
             });
         }
-        function scT(sc) { return SCENARIOS_I18N[sc.id]?.[currentLang] || {}; }
         function buildScenarioMapUI() {
             const pins = document.getElementById('map-pins'), cards = document.getElementById('scenario-cards');
             pins.innerHTML = ''; cards.innerHTML = '';
             SCENARIOS.forEach(sc => {
-                const tr = scT(sc);
                 const pin = document.createElement('button'); pin.className = 'map-pin'; pin.id = 'pin-' + sc.id;
                 pin.style.left = sc.map.x + '%'; pin.style.top = sc.map.y + '%';
-                pin.innerHTML = `<div class="pin-badge"><span>${sc.icon}</span><span>${tr.pin || sc.pin}</span></div><div class="pin-tip"></div>`;
+                pin.innerHTML = `<div class="pin-badge"><span>${sc.icon}</span><span>${sc.pin}</span></div><div class="pin-tip"></div>`;
                 pin.onclick = (e) => { e.stopPropagation(); goToScenario(sc.id); };
                 pins.appendChild(pin);
                 const card = document.createElement('button'); card.id = 'card-' + sc.id;
                 card.className = 'scenario-card mc-mini-slot p-2 text-left flex items-start gap-2';
-                card.innerHTML = `<span class="text-xl leading-none">${sc.icon}</span><span class="min-w-0"><span class="block text-[12px] font-black text-yellow-300">${tr.name || sc.name}</span><span class="block text-[10px] text-gray-300 leading-snug mt-0.5">${tr.tagline || sc.tagline}</span></span>`;
+                card.innerHTML = `<span class="text-xl leading-none">${sc.icon}</span><span class="min-w-0"><span class="block text-[12px] font-black text-yellow-300">${sc.name}</span><span class="block text-[10px] text-gray-300 leading-snug mt-0.5">${sc.tagline}</span></span>`;
                 card.onclick = (e) => { e.stopPropagation(); goToScenario(sc.id); };
                 cards.appendChild(card);
             });
@@ -2477,27 +2337,469 @@
             if (show) { playSound('click'); document.getElementById('map-hint-btn')?.classList.remove('animate-pulse'); }
         }
         function updateScenarioUI(sc) {
-            const tr = scT(sc);
-            const tagEl = document.getElementById('hud-scene'); if (tagEl) tagEl.textContent = `${sc.icon} ${tr.pin || sc.pin}`;
-            document.getElementById('mission-title').textContent = `${sc.icon} ${tr.name || sc.name}`;
-            document.getElementById('mission-desc').textContent = tr.desc || sc.desc;
-            const statusArr = tr.status || sc.status;
+            const tagEl = document.getElementById('hud-scene'); if (tagEl) tagEl.textContent = `${sc.icon} ${sc.pin}`;
+            document.getElementById('mission-title').textContent = `${sc.icon} ${sc.name}`;
+            document.getElementById('mission-desc').textContent = sc.desc;
             const cls = { ok: 'text-lime-400', bad: 'text-red-400', info: 'text-cyan-300' };
-            document.getElementById('mission-status').innerHTML = statusArr.map(([label, val, st, id]) =>
+            document.getElementById('mission-status').innerHTML = sc.status.map(([label, val, st, id]) =>
                 `<div class="flex justify-between gap-2 border-b border-gray-700/60 pb-0.5"><span class="text-gray-300 shrink-0">${label}</span><span ${id ? `id="${id}"` : ''} class="${cls[st]} font-bold text-right">${val}</span></div>`).join('');
             document.getElementById('mission-card').classList.toggle('hidden', sc.id === 'default');
             highlightScenario(sc.id);
         }
         function hideMissionCard() { playSound('click'); document.getElementById('mission-card').classList.add('hidden'); }
-        function toggleMissionBody() { playSound('click'); missionBodyOpen = !missionBodyOpen; document.getElementById('mission-body').classList.toggle('hidden', !missionBodyOpen); }
+        function toggleMissionBody() { playSound('click'); setMissionBody(!missionBodyOpen); }
+        function setMissionBody(state) { missionBodyOpen = state; document.getElementById('mission-body').classList.toggle('hidden', !missionBodyOpen); }
+
+        // =====================================================================
+        // --- 7. 自適應版面 (電腦 / 平板 / 手機直式 / 手機橫式) ---
+        // =====================================================================
+        let currentLayout = null;
+        function layoutMode() {
+            const w = window.innerWidth, h = window.innerHeight;
+            if (h < 500 && w > h) return 'phoneL';
+            if (w < 640) return 'phoneP';
+            if (w < 1024 || (w < 1200 && h > w)) return 'tablet';
+            return 'desktop';
+        }
+        function isCompactLayout() { return currentLayout === 'phoneP' || currentLayout === 'phoneL'; }
+        function setBox(el, o) { if (!el) return; ['left', 'right', 'top', 'bottom', 'width'].forEach(k => { el.style[k] = (k in o) ? o[k] : ''; }); }
+        function headerBottom() { const h = document.querySelector('header'); return h ? Math.round(h.getBoundingClientRect().bottom) + 6 : 100; }
+        function positionWidgets() {
+            const con = document.getElementById('floating-console'), insp = document.getElementById('crafting-modal'), mis = document.getElementById('mission-card');
+            const hb = headerBottom(), sb = 'calc(8px + env(safe-area-inset-bottom))';
+            if (currentLayout === 'phoneP') {
+                setBox(con, { left: '8px', bottom: sb });
+                setBox(insp, { left: '8px', bottom: sb, width: 'calc(100vw - 16px)' });
+                setBox(mis, { left: '8px', top: hb + 'px', width: 'calc(100vw - 16px)' });
+            } else if (currentLayout === 'phoneL') {
+                setBox(con, { left: 'max(8px, env(safe-area-inset-left))', bottom: sb });
+                setBox(insp, { right: 'max(8px, env(safe-area-inset-right))', top: hb + 'px', width: '300px' });
+                setBox(mis, { left: 'max(8px, env(safe-area-inset-left))', top: hb + 'px', width: '270px' });
+            } else {
+                setBox(con, { left: '12px', bottom: '14px' });
+                setBox(insp, { right: '12px', bottom: '14px' });
+                setBox(mis, { left: '12px', top: hb + 'px' });
+            }
+        }
+        function sizeWidgets() {
+            const vh = window.innerHeight, hb = headerBottom();
+            const sc = document.getElementById('inspector-scroll'), ce = document.getElementById('console-expanded'), mb = document.getElementById('mission-body');
+            if (currentLayout === 'phoneP') {
+                sc.style.maxHeight = Math.round(vh * 0.4) + 'px'; ce.style.maxHeight = (vh - hb - 16) + 'px'; mb.style.maxHeight = Math.round(vh * 0.3) + 'px';
+            } else if (currentLayout === 'phoneL') {
+                sc.style.maxHeight = (vh - hb - 52) + 'px'; ce.style.maxHeight = (vh - hb - 16) + 'px'; mb.style.maxHeight = (vh - hb - 60) + 'px';
+            } else {
+                sc.style.maxHeight = ''; ce.style.maxHeight = (vh - hb - 24) + 'px'; mb.style.maxHeight = Math.round(vh * 0.45) + 'px';
+            }
+            ce.style.overflowY = 'auto';
+        }
+        // 手機上避免面板互相重疊：開啟設備圖鑑時暫時收起控制台 / 任務卡內容
+        function updateCompactVisibility() {
+            const con = document.getElementById('floating-console'); if (!con) return;
+            if (currentLayout === 'phoneP') con.style.display = isInspectorVisible ? 'none' : '';
+            else if (currentLayout === 'phoneL') con.style.display = (isInspectorVisible && !isConsoleMinimized) ? 'none' : '';
+            else con.style.display = '';
+        }
+        function clampWidgets() {
+            ['floating-console', 'crafting-modal', 'mission-card'].forEach(id => {
+                const el = document.getElementById(id); if (!el || el.classList.contains('hidden') || el.style.display === 'none') return;
+                const r = el.getBoundingClientRect(), vw = window.innerWidth, vh = window.innerHeight;
+                if (r.right > vw - 4 || r.left < 4 || r.bottom > vh - 4 || r.top < 4) {
+                    const left = Math.max(4, Math.min(vw - r.width - 4, r.left)), top = Math.max(4, Math.min(vh - r.height - 4, r.top));
+                    el.style.left = left + 'px'; el.style.top = top + 'px'; el.style.right = 'auto'; el.style.bottom = 'auto';
+                }
+            });
+        }
+        function applyResponsiveLayout(force) {
+            const mode = layoutMode(), changed = mode !== currentLayout;
+            currentLayout = mode; document.body.dataset.layout = mode;
+            if (changed || force) {
+                const compact = isCompactLayout();
+                if (compact) {
+                    setConsoleMinimized(true); setInspectorDetails(false); setMissionBody(false);
+                    toggleInspectorCard(false, true);
+                } else {
+                    setConsoleMinimized(false); setInspectorDetails(true); setMissionBody(true);
+                    if (mode === 'desktop' || mode === 'tablet') toggleInspectorCard(true, true);
+                }
+                positionWidgets();
+            }
+            sizeWidgets(); updateCompactVisibility();
+            requestAnimationFrame(clampWidgets);
+        }
+
+
+
+        // =====================================================================
+        // --- 8. 雙語介面 (中文 / English) ---
+        // 車體上的文字圖樣不翻譯；其餘介面、說明與場景看板依選擇語言顯示
+        // =====================================================================
+        let LANG = 'zh';
+        const ORIG_TITLE = document.title;
+        const I18N_EN = {
+            // 標題與 HUD
+            '央廣1號 Rti 行動廣播車 · 3D 模型': 'Rti No.1 Mobile Broadcast Van · 3D Model',
+            '車外全覽': 'Exterior View', '車內透視': 'Interior View', '央廣基地': 'Rti Base', '車牌:': 'Plate:',
+            '● 待命': '● Standby', '● 衛星+5G直播': '● Satellite + 5G Live', '發射中!': 'Transmitting!',
+            '● 低軌衛星備援直播': '● LEO Satellite Backup Live', '● 慶典多語轉播中': '● Multilingual Celebration Live', '● 演習備援直播': '● Drill Backup Live',
+            '任務情境地圖 (M)': 'Mission Scenario Map (M)', '置中廣播車': 'Center on the van', '標籤開關': 'Toggle labels', '音樂開關': 'Toggle music', '語言 / Language': 'Language / 語言',
+            // 控制台
+            '央廣1號控制台': 'Rti No.1 Console', '控制台': 'Console', '電視外翻': 'Flip TV Wall', '衛星發射': 'Satellite Uplink',
+            '日夜切換': 'Day / Night', '設備圖鑑': 'Equipment Guide', '任務情境地圖': 'Mission Scenario Map', '裝備快捷列：': 'Equipment Hotbar:',
+            // 設備圖鑑
+            '載入中': 'Loading', '車外裝備': 'Exterior Equipment', '車內採訪區': 'Interior Studio', '車內導播區': 'Interior Director Area',
+            '方塊合成表 (Crafting Grid)': 'Crafting Grid', '◀ 上個': '◀ Prev', '下個 ▶': 'Next ▶', '⚡ 點擊外翻電視牆': '⚡ Flip the TV Wall', '⚡ 互動測試': '⚡ Try It',
+            'RTI On The Go 外翻電視牆': 'RTI On The Go Fold-out TV Wall',
+            '多語採訪區': 'Multilingual Interview Studio',
+            '前段導播區': 'Front Director Area',
+            'OneWeb 低軌衛星 & 5G 陣列天線': 'OneWeb LEO Satellite & 5G Array Antenna',
+            '綠能儲能與 800W 太陽能板': 'Green Energy Storage & 800W Solar Panels',
+            '智慧駕駛艙': 'Smart Cockpit',
+            '車頭側鉸鏈向車頭外翻': 'Front-side hinge, folds toward the cab',
+            '電視牆關閉時完整覆蓋採訪區玻璃窗，呈現高畫質 Rti LOGO 與 RTI On The Go 貼圖；點選時以靠車頭一側的鉸鏈為軸心，向車頭方向外翻，畫面切換為「🔴 全球多語直播」，並露出採訪區實況。': 'When closed, the TV wall fully covers the interview studio window and shows the high-resolution Rti logo and RTI On The Go artwork. When selected, it swings outward toward the cab on its front-side hinge, the screen switches to "🔴 Global Multilingual Live", and the studio inside is revealed.',
+            '合成材料：高畫質Rti On The Go貼圖 + 外翻鉸鏈 + 5mm觀景窗': 'Materials: HD Rti On The Go artwork + fold-out hinge + 5mm viewing window',
+            '電視牆位置': 'TV wall position', '車身右側採訪區外牆 (對齊採訪桌)': 'Right-side outer wall of the studio (aligned with the desk)',
+            '外翻機構': 'Fold-out mechanism', '靠車頭側鉸鏈，向車頭外翻開啟': 'Front-side hinge, opens outward toward the cab',
+            '採訪區佔 3/4 淨空間': 'Studio uses 3/4 of the space',
+            '現場採訪區，設有防滑地板與採訪桌，配備 3 支帶避震架的廣播級電容麥克風。背景牆設有紅色「Rti On the Go」霓虹燈。可提供主持人及來賓進行現場訪問錄音及直播。': 'An on-site interview studio with an anti-slip floor and interview desk, equipped with 3 broadcast-grade condenser microphones on shock mounts. A red "Rti On the Go" neon sign lights the back wall. Hosts and guests can record interviews and go live here.',
+            '合成材料：木紋地板 + 折疊桌 + 電容麥克風 x3 + 主持人 x3 + 紅色霓虹燈': 'Materials: wood floor + folding desk + condenser mic x3 + host x3 + red neon sign',
+            '空間比例': 'Space ratio', '車廂 75% 淨空間 (與導播區 3:1)': '75% of the cabin (3:1 with the director area)',
+            '主持卡司': 'Host cast', '三主持人 (金髮女, 黑髮女, 男性主持人)': 'Three hosts (blonde female, dark-haired female, male host)',
+            '車頭 1/4 獨立機櫃區': 'Separate rack zone in the front 1/4',
+            '靠車頭前段獨立導播區，配有滑門隔板與高密度機櫃，整合 4K 導播機、成音設備、儲能/逆變器面板、傳輸設備，坐著 1 位導播，並可搭配1位工程師協同作業。': 'A separate director area at the front, with a sliding partition and a high-density rack that integrates a 4K switcher, audio equipment, battery/inverter panels and transmission gear. One director sits here, with room for an engineer to assist.',
+            '合成材料：硬式滑門隔板 + 4K導播機 + 閃爍機櫃 + 男性工程師': 'Materials: rigid sliding partition + 4K switcher + blinking rack + male engineer',
+            '靠車頭 25% 獨立空間 (3:1 分區)': 'Front 25% separate space (3:1 split)',
+            '機櫃監控': 'Rack monitoring', '導播/成音/電力/通訊一體化閃爍機櫃': 'Integrated switching / audio / power / comms rack with status lights',
+            '極端備援: 雙重防線': 'Extreme backup: two lines of defense',
+            '車頂搭載中華電信 OneWeb 低軌衛星天線與 5G 4X4 MIMO 陣列天線，平時利用5G行動通訊網路進行節目傳輸，在極端情境下利用低軌衛星保持雙重備援通訊。': 'The roof carries a Chunghwa Telecom OneWeb low-earth-orbit satellite antenna and a 5G 4X4 MIMO array antenna. Programs normally go out over the 5G mobile network; in extreme situations the LEO satellite keeps a second backup link.',
+            '合成材料：OneWeb 低軌衛星圓盤 + 5G MIMO 天線': 'Materials: OneWeb LEO satellite dish + 5G MIMO antenna',
+            '韌性通訊': 'Resilient comms', '低軌衛星 + 5G Bonding 雙備援': 'LEO satellite + 5G bonding dual backup',
+            '災防應變': 'Disaster response', '斷網不斷訊對外權威發送': 'Authoritative updates even when networks fail',
+            '自主電力: 6-8小時': 'Self-powered: 6–8 hours',
+            '車頂配有雙太陽能板，車底配備 20kWh 鋰鐵儲能電池與雙 3000W 逆變器，可透過太陽能及行駛中充電，不靠外部電源可連續播音 6-8 小時。': 'Two solar panels on the roof, plus a 20kWh lithium iron phosphate battery and dual 3000W inverters under the floor. Charged by solar power and while driving, the van can broadcast for 6–8 hours without external power.',
+            '合成材料：太陽能板 x2 + 20kWh 鋰鐵電池': 'Materials: solar panel x2 + 20kWh LFP battery',
+            '續航力': 'Endurance', '20kWh 鋰鐵電池 (UN38.3認證)': '20kWh LFP battery (UN38.3 certified)',
+            '太陽能': 'Solar', '車頂 800W 綠能輔助充電': '800W rooftop solar top-up charging',
+            '5噸柴油底盤 / 歐盟六期': '5-ton diesel chassis / Euro 6',
+            '5 噸柴油全新貨車底盤，掛有 CER-1928 歷史特選車牌（象徵央廣於 1928 年成立）。小型車普通駕照即可駕駛，機動性強。駕駛座上的司機除了駕駛任務外，也兼任工程任務。': 'A brand-new 5-ton diesel truck chassis with the specially chosen CER-1928 plate (marking Rti\'s founding in 1928). It can be driven on a regular car licence and is highly mobile. Besides driving, the driver also takes on engineering duties.',
+            '合成材料：5噸全新底盤 + CER-1928 車牌 + 導流套件': 'Materials: new 5-ton chassis + CER-1928 plate + aero kit',
+            '底盤動力': 'Chassis & power', '5噸六期柴油 / 普通駕照可開': '5-ton Euro 6 diesel / regular licence',
+            '歷史密碼': 'Historic code', 'CER-1928 特選專屬車牌': 'Specially chosen CER-1928 plate',
+            // 任務情境地圖
+            '央廣1號 任務情境地圖': 'Rti No.1 Mission Scenario Map',
+            '點選地圖上的地點或下方任務卡，央廣1號就會出發前往該情境現場。': 'Tap a location on the map or a mission card below, and Rti No.1 will head to that scene.',
+            '任務情境': 'Mission Scenario', '央廣1號出發 →': 'Rti No.1 departing →',
+            '校園': 'Campus', '城市廣場': 'City Plaza', '災區': 'Disaster Zone', '總統府': 'Presidential Office', '演習場': 'Drill Site',
+            '回到待命基地（預設場景）': 'Return to the standby base (default scene)',
+            'Young Voice 前進校園': 'Young Voice Campus Tour', '廣播車開進校園，學生體驗行動錄音室': 'The van visits campuses so students can try a mobile studio',
+            '新住民多語聯合聽友活動': 'New Immigrants Multilingual Listener Festival', '廣播車開到廣場，與新住民朋友同歡': 'The van comes to the plaza to celebrate with new immigrant friends',
+            '災區廣播韌性任務': 'Disaster Broadcast Resilience Mission', '天災斷電斷網，深入災區維持廣播不中斷': 'When disasters cut power and networks, keep broadcasting from the disaster zone',
+            '雙十國慶慶典轉播': 'National Day Celebration Broadcast', '國家重大慶典，總統府前多語轉播': 'Multilingual coverage of national celebrations at the Presidential Office',
+            '關鍵基礎設施演習訓練': 'Critical Infrastructure Drill', '同仁模擬各種突發狀況，實地操作廣播車': 'Staff simulate emergencies and operate the van on site',
+            // 任務卡
+            '央廣1號的待命基地。打開「🗺️ 任務情境地圖」選擇地點，廣播車就會開往活動或任務現場。': 'Rti No.1\'s standby base. Open the "🗺️ Mission Scenario Map" and pick a location, and the van will drive to the event or mission site.',
+            '地點': 'Location', '央廣1號待命基地': 'Rti No.1 standby base', '狀態': 'Status', '待命中，可隨時出勤': 'On standby, ready to deploy',
+            'Young Voice 前進校園：央廣1號開進校園，化身行動錄音室，讓學生體驗多語節目製作、Podcast 錄音與現場直播，培養具國際視野的年輕聲音。': 'Young Voice Campus Tour: Rti No.1 drives onto campus and becomes a mobile recording studio, letting students try multilingual program production, podcast recording and live broadcasting, nurturing young voices with an international outlook.',
+            '校園操場・校舍前': 'School sports field · in front of the classrooms', '活動': 'Event', '校園廣播體驗・Podcast 錄製': 'Campus broadcasting experience · podcast recording',
+            '對象': 'Audience', '高中、大學師生': 'High school and university students and teachers', '電視牆': 'TV wall', '外翻展示中': 'Folded out on display',
+            '新住民多語聯合聽友活動：央廣1號開到城市廣場，由多語主持人以越南語、印尼語、泰語、菲律賓語等語言現場主持，與新住民朋友及聽友同歡交流。': 'New Immigrants Multilingual Listener Festival: Rti No.1 comes to the city plaza, where multilingual hosts present live in Vietnamese, Indonesian, Thai, Filipino and more, celebrating with new immigrant friends and listeners.',
+            '語言': 'Languages', '越・印・泰・菲・華語': 'Vietnamese · Indonesian · Thai · Filipino · Mandarin', '多語現場直播・聽友見面會': 'Multilingual live show · listener meet-up',
+            '災區廣播韌性任務：颱風、地震等天災造成市電與地面網路中斷時，央廣1號深入災區，以儲能電池自主供電、低軌衛星備援傳輸，持續發布防災與救援資訊，維持廣播不中斷。': 'Disaster Broadcast Resilience Mission: when typhoons, earthquakes or other disasters knock out mains power and ground networks, Rti No.1 goes into the disaster zone, runs on its own battery and transmits over LEO satellite backup, keeping disaster-prevention and rescue information on air without interruption.',
+            '市電': 'Mains power', '中斷 ✖': 'Down ✖', '地面網路': 'Ground network', '低軌衛星': 'LEO satellite', '連線中 ✔': 'Connected ✔',
+            '儲能電池': 'Battery', '(自主供電)': '(self-powered)', '補充充電中': 'Topping up',
+            '國家慶典轉播：雙十國慶等國家重大慶典時，央廣1號進駐總統府前凱達格蘭大道，以多語即時轉播慶典實況，讓全球聽眾同步感受臺灣的節慶氛圍。': 'National Celebration Broadcast: on Double Tenth National Day and other major national celebrations, Rti No.1 sets up on Ketagalan Boulevard in front of the Presidential Office and broadcasts the festivities live in multiple languages, so listeners around the world can share Taiwan\'s celebrations.',
+            '總統府前・凱達格蘭大道': 'Presidential Office · Ketagalan Boulevard', '轉播': 'Coverage', '多語同步直播': 'Simultaneous multilingual live', '傳輸': 'Transmission', '5G + 低軌衛星': '5G + LEO satellite',
+            // 關鍵基礎設施演習
+            '關鍵基礎設施演習訓練：配合關鍵基礎設施防護演習，央廣同仁在變電與通訊設施現場模擬市電中斷、網路中斷、火警疏散、資安攻擊與人員受傷等狀況，實地操作廣播車的儲能供電、衛星備援與外場播音，確保緊急時刻廣播不中斷。': 'Critical Infrastructure Drill: as part of the critical infrastructure protection exercise, Rti staff at a power and telecom facility simulate a mains outage, network outage, fire evacuation, cyberattack and staff injury, operating the van\'s battery power, satellite backup and field broadcasting on site to keep broadcasts running in an emergency.',
+            '演習': 'Drill', '關鍵基礎設施防護演習': 'Critical Infrastructure Protection Exercise', '目前狀況': 'Current situation', '應變操作': 'Response',
+            '演習計時': 'Drill timer', '參演': 'Participants', '央廣工程、節目與行政同仁': 'Rti engineering, program and admin staff',
+            '狀況一：市電中斷': 'Situation 1: Mains power outage', '切換 20kWh 儲能電池供電': 'Switch to the 20kWh battery',
+            '狀況二：地面網路中斷': 'Situation 2: Ground network outage', '啟動 OneWeb 低軌衛星備援傳輸': 'Start OneWeb LEO satellite backup',
+            '狀況三：機房火警疏散': 'Situation 3: Equipment room fire evacuation', '展開電視牆，設立外場臨時播音站': 'Open the TV wall and set up a field broadcast point',
+            '狀況四：資安攻擊演練': 'Situation 4: Cyberattack drill', '切換 5G Bonding 備援，確認訊號安全': 'Switch to 5G bonding backup and verify signal security',
+            '狀況五：人員受傷演練': 'Situation 5: Staff injury drill', '急救處置並以廣播發布現場資訊': 'Give first aid and broadcast on-site updates',
+            // 場景看板 (3D 看板文字)
+            '中央廣播電臺 Rti': 'Radio Taiwan International (Rti)', '央廣1號 待命基地': 'Rti No.1 Standby Base',
+            '前進校園': 'Campus Tour', '央廣1號 行動錄音室開進校園': 'Rti No.1 mobile studio on campus', 'Rti 校園廣播體驗營': 'Rti Campus Broadcasting Camp',
+            '多語 Podcast': 'Multilingual Podcast', '現場錄音 · 歡迎報名': 'Live recording · Sign up now', '新住民多語聯合聽友會': 'New Immigrants Listener Festival',
+            'Xin chào · Selamat datang · Sawasdee · Mabuhay · 歡迎': 'Xin chào · Selamat datang · Sawasdee · Mabuhay · Welcome',
+            'Tiếng Việt 越南語': 'Tiếng Việt', 'Bahasa Indonesia 印尼語': 'Bahasa Indonesia', 'Thai 泰語': 'Thai', 'Filipino 菲律賓語': 'Filipino',
+            '多語節目試聽': 'Multilingual program preview', '聽友報到處': 'Listener check-in', '道路封閉': 'ROAD CLOSED', '✚ 臨時救護站': '✚ First Aid Station',
+            '⚠ 央廣防災廣播': '⚠ Rti Disaster Broadcast', '衛星備援 持續播出中': 'Satellite backup · still on air', '慶祝雙十國慶': 'Happy Double Tenth Day',
+            '演習指揮所': 'Drill Command Post', '🛡️ 關鍵基礎設施演習': '🛡️ Critical Infrastructure Drill', '演習進行中 · 非真實狀況': 'Drill in progress · not a real emergency',
+            // 通用
+            '央廣1號': 'Rti No.1', '中央廣播電臺': 'Radio Taiwan International', '央廣': 'Rti'
+        };
+        const I18N_KEYS = Object.keys(I18N_EN).sort((a, b) => b.length - a.length);
+        const HAS_CJK = /[㐀-鿿＀-￯]/;
+        function tr(text) {
+            if (LANG !== 'en' || !text || !HAS_CJK.test(text)) return text;
+            const m = text.match(/^(\s*)([\s\S]*?)(\s*)$/), core = m[2];
+            if (I18N_EN[core] !== undefined) return m[1] + I18N_EN[core] + m[3];
+            let out = core;
+            for (const k of I18N_KEYS) if (out.includes(k)) out = out.split(k).join(I18N_EN[k]);
+            return m[1] + out + m[3];
+        }
+        // 3D 場景看板：繪製時依語言翻譯 (車體貼圖不經過 fitText，維持原樣)
+        const _fitTextZh = fitText;
+        fitText = function (g, txt, ...rest) { return _fitTextZh(g, tr(txt), ...rest); };
+
+        // DOM 文字自動翻譯 (含程式動態更新的文字)
+        let i18nBusy = false;
+        const skipNode = (n) => { const el = n.nodeType === 1 ? n : n.parentElement; return !el || el.closest('script,style,[data-noi18n]'); };
+        function i18nText(n) {
+            if (skipNode(n)) return;
+            const v = n.nodeValue;
+            if (LANG === 'en') {
+                if (!HAS_CJK.test(v)) return;
+                const t = tr(v); if (t === v) return;
+                n.__zh = v; n.__en = t; i18nBusy = true; n.nodeValue = t; i18nBusy = false;
+            } else if (n.__zh !== undefined && v === n.__en) {
+                i18nBusy = true; n.nodeValue = n.__zh; i18nBusy = false;
+            }
+        }
+        function i18nTitle(el) {
+            if (skipNode(el)) return;
+            const v = el.getAttribute('title'); if (v == null) return;
+            if (LANG === 'en') { if (!HAS_CJK.test(v)) return; el.__zhT = v; el.__enT = tr(v); i18nBusy = true; el.setAttribute('title', el.__enT); i18nBusy = false; }
+            else if (el.__zhT !== undefined && v === el.__enT) { i18nBusy = true; el.setAttribute('title', el.__zhT); i18nBusy = false; }
+        }
+        function i18nTree(root) {
+            if (root.nodeType === 3) { i18nText(root); return; }
+            if (root.nodeType !== 1) return;
+            const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT); let n;
+            const list = []; while ((n = w.nextNode())) list.push(n);
+            list.forEach(i18nText);
+            if (root.hasAttribute && root.hasAttribute('title')) i18nTitle(root);
+            root.querySelectorAll && root.querySelectorAll('[title]').forEach(i18nTitle);
+        }
+        new MutationObserver(muts => {
+            if (i18nBusy || LANG !== 'en') return;
+            muts.forEach(m => {
+                if (m.type === 'characterData') i18nText(m.target);
+                else if (m.type === 'attributes') i18nTitle(m.target);
+                else m.addedNodes.forEach(i18nTree);
+            });
+        }).observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ['title'] });
+
+        function setLanguage(lang) {
+            const changed = lang !== LANG;
+            LANG = lang;
+            document.documentElement.lang = lang === 'en' ? 'en' : 'zh-TW';
+            document.title = lang === 'en' ? 'Rti No.1 Mobile Broadcast Van · 3D Model' : ORIG_TITLE;
+            i18nTree(document.body);
+            if (changed && scene && envGroup) {     // 重新繪製場景看板文字
+                const keepFlip = isLedScreenFlip, keepCast = isBroadcasting;
+                applyScenario(currentScenario(), true);
+                if (keepFlip !== isLedScreenFlip) toggleLedScreenFlip();
+                if (keepCast !== isBroadcasting) toggleBroadcastSignal();
+            }
+            const lb = document.getElementById('lang-btn'); if (lb) lb.textContent = lang === 'en' ? 'EN' : '中';
+        }
+        function chooseLanguage(lang) {
+            initAudio(); setLanguage(lang); playSound('click');
+            document.getElementById('lang-screen').classList.add('hidden');
+            document.getElementById('lang-screen').classList.remove('flex');
+            toggleScenarioMap(true);
+        }
+        function openLanguageScreen() {
+            playSound('click'); toggleScenarioMap(false);
+            const el = document.getElementById('lang-screen'); el.classList.remove('hidden'); el.classList.add('flex');
+        }
+
+        // =====================================================================
+        // --- 9. 新情境：關鍵基礎設施演習訓練 ---
+        // =====================================================================
+        const DRILL_STEPS = [
+            { s: '狀況一：市電中斷', a: '切換 20kWh 儲能電池供電', op: () => { if (isBroadcasting) toggleBroadcastSignal(); } },
+            { s: '狀況二：地面網路中斷', a: '啟動 OneWeb 低軌衛星備援傳輸', op: () => { if (!isBroadcasting) toggleBroadcastSignal(); } },
+            { s: '狀況三：機房火警疏散', a: '展開電視牆，設立外場臨時播音站', op: () => { if (!isLedScreenFlip) toggleLedScreenFlip(); } },
+            { s: '狀況四：資安攻擊演練', a: '切換 5G Bonding 備援，確認訊號安全', op: () => { if (!isBroadcasting) toggleBroadcastSignal(); } },
+            { s: '狀況五：人員受傷演練', a: '急救處置並以廣播發布現場資訊', op: () => { if (isLedScreenFlip) toggleLedScreenFlip(); } }
+        ];
+        function buildDrillEnv(p) {
+            const r = rng(91);
+            groundBox(320, 2, 220, '#5f8f4e', 0, -1, 0, p, 14);
+            groundBox(320, 0.25, 13, '#3b3f46', 0, 0.125, 0, p, 12);
+            for (let x = -150; x <= 150; x += 8) { eBox(3.2, 0.04, 0.3, 0xfacc15, x, 0.27, 5.4, p, false); eBox(3.2, 0.04, 0.3, 0xfacc15, x, 0.27, -5.4, p, false); }
+            groundBox(84, 0.2, 18, '#a8adb5', 0, 0.1, -21, p, 10);
+            // 圍籬
+            for (let x = -40; x <= 40; x += 4) eBox(0.2, 2.6, 0.2, 0x9ca3af, x, 1.3, -11.5, p);
+            eBox(80, 0.12, 0.12, 0x9ca3af, 0, 2.5, -11.5, p, false); eBox(80, 0.12, 0.12, 0x9ca3af, 0, 1.3, -11.5, p, false);
+            // 變電設施 (變壓器 + 鐵塔 + 電線)
+            [-30, -22].forEach(x => {
+                eBox(5, 4, 3.5, 0x6b7280, x, 2, -20, p);
+                for (let k = -2; k <= 2; k++) eBox(0.15, 3.2, 3.8, 0x4b5563, x + k * 0.9, 2, -20, p, false);
+                eBox(0.5, 1.4, 0.5, 0xd1d5db, x - 1.5, 4.7, -20, p); eBox(0.5, 1.4, 0.5, 0xd1d5db, x + 1.5, 4.7, -20, p);
+            });
+            const tower = (x, z, h) => {
+                [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([a, b]) => eBox(0.25, h, 0.25, 0x9ca3af, x + a * 1.2, h / 2, z + b * 1.2, p));
+                for (let y = 2; y < h; y += 3) {
+                    eBox(2.6, 0.15, 0.15, 0x9ca3af, x, y, z - 1.2, p, false); eBox(2.6, 0.15, 0.15, 0x9ca3af, x, y, z + 1.2, p, false);
+                    eBox(0.15, 0.15, 2.6, 0x9ca3af, x - 1.2, y, z, p, false); eBox(0.15, 0.15, 2.6, 0x9ca3af, x + 1.2, y, z, p, false);
+                }
+                eBox(7, 0.3, 0.3, 0x9ca3af, x, h - 1, z, p);
+            };
+            tower(-38, -24, 16); tower(-12, -26, 14);
+            wire(p, [V3(-41.5, 15, -24), V3(-26, 10.5, -25), V3(-15.5, 13, -26)]); wire(p, [V3(-34.5, 15, -24), V3(-22, 10, -25), V3(-8.5, 13, -26)]);
+            // 機房 / 控制大樓
+            eBox(18, 9, 10, 0xe5e7eb, 14, 4.5, -24, p); eBox(18.6, 0.6, 10.6, 0x94a3b8, 14, 9.2, -24, p);
+            for (let i = 0; i < 5; i++) { eBox(2, 1.6, 0.1, 0x60a5fa, 7 + i * 3.5, 6.2, -18.95, p, false); if (i !== 2) eBox(2, 1.6, 0.1, 0x60a5fa, 7 + i * 3.5, 2.8, -18.95, p, false); }
+            eBox(2.6, 3.2, 0.1, 0x374151, 14, 1.6, -18.95, p, false);
+            [6.5, 21.5].forEach(x => eBox(0.3, 2.8, 0.3, 0x475569, x, 10.8, -19.3, p));
+            signPanel(p, 16, 2.2, 14, 11.0, -19.1, 0, (g, W, H) => {
+                g.fillStyle = '#1e3a8a'; g.fillRect(0, 0, W, H); g.fillStyle = '#facc15'; g.fillRect(0, H * 0.86, W, H * 0.14);
+                fitText(g, '關鍵基礎設施防護演習', W / 2, H * 0.44, W * 0.92, 900, H * 0.5, CJK, '#ffffff');
+            }, { lit: true });
+            // 通訊鐵塔與碟型天線
+            eBox(0.7, 9, 0.7, 0xd1d5db, 20, 14, -27, p);
+            const dish = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 0.4, 0.5, 20), LM(0xf8fafc)); dish.position.set(20, 16.5, -26); dish.rotation.x = Math.PI / 2.4; dish.castShadow = true; p.add(dish);
+            // 火警演練煙霧
+            const smokeMat = new THREE.MeshLambertMaterial({ color: 0xb4bcc8, transparent: true, opacity: 0.55, depthWrite: false });
+            const puffs = [];
+            for (let i = 0; i < 12; i++) { const s = new THREE.Mesh(new THREE.SphereGeometry(1, 10, 8), smokeMat); s.userData.ph = i / 12; p.add(s); puffs.push(s); }
+            envAnimators.push((t) => puffs.forEach(s => {
+                const k = (t * 0.12 + s.userData.ph) % 1;
+                s.position.set(9 + Math.sin(k * 6 + s.userData.ph * 9) * 1.2 + k * 4, 9.8 + k * 12, -26 + Math.cos(s.userData.ph * 7) * 1.2);
+                s.scale.setScalar(0.8 + k * 2.6);
+            }));
+            // 指揮所帳篷
+            tent(p, 29, 9.5, 0x1d4ed8, '演習指揮所');
+            // 警示燈
+            const beacons = [];
+            [[-18, 7.8], [12, 7.6], [-6, -8], [22, -8]].forEach(([x, z]) => {
+                eBox(0.18, 2.4, 0.18, 0x374151, x, 1.2, z, p);
+                const b = new THREE.Mesh(new THREE.SphereGeometry(0.35, 12, 10), new THREE.MeshBasicMaterial({ color: 0xf59e0b })); b.position.set(x, 2.6, z); b.userData.srgbDone = true; p.add(b); beacons.push(b);
+            });
+            // 交通錐
+            [[-14, 7.4], [-11, 7.6], [15, 7.4], [18, 7.6], [-3, -8.2], [3, -8.2]].forEach(([x, z]) => {
+                const c = new THREE.Mesh(new THREE.ConeGeometry(0.5, 1.4, 10), LM(0xf97316)); c.position.set(x, 1.0, z); c.castShadow = true; p.add(c);
+                const band = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.36, 0.22, 10), LM(0xffffff)); band.position.set(x, 1.05, z); p.add(band);
+            });
+            // 演習狀況看板 (LED，隨狀況更新)
+            eBox(0.3, 3, 0.3, 0x374151, -16, 1.5, 8.6, p); eBox(7.4, 3.2, 0.4, 0x111827, -16, 4.6, 8.6, p);
+            let stepIdx = 0;
+            const drawBoard = (g, W, H) => {
+                g.fillStyle = '#050505'; g.fillRect(0, 0, W, H);
+                g.strokeStyle = '#facc15'; g.lineWidth = 6; g.strokeRect(6, 6, W - 12, H - 12);
+                fitText(g, '🛡️ 關鍵基礎設施演習', W / 2, H * 0.19, W * 0.88, 900, H * 0.16, CJK, '#38bdf8');
+                fitText(g, DRILL_STEPS[stepIdx].s, W / 2, H * 0.45, W * 0.9, 900, H * 0.2, CJK, '#fbbf24');
+                fitText(g, '→ ' + DRILL_STEPS[stepIdx].a, W / 2, H * 0.68, W * 0.9, 700, H * 0.13, CJK, '#4ade80');
+                fitText(g, '演習進行中 · 非真實狀況', W / 2, H * 0.87, W * 0.8, 700, H * 0.1, CJK, '#94a3b8');
+            };
+            const board = signPanel(p, 7, 2.8, -16, 4.6, 8.82, 0, drawBoard, { px: 768 });
+            // 參演同仁 (藍色背心、安全帽)
+            const staff = { top: 0x1e40af, vest: 0x0ea5e9, bottom: 0x1f2937, helmet: 0xf8fafc };
+            const crew = [
+                { x: 10.5, z: 4.3, mode: 'work', fx: 7, fz: 1 },
+                { x: -3.5, z: 5.6, mode: 'work', fx: -3.5, fz: 2 },
+                { x: -11, z: 2.6, mode: 'talk', fx: -6, fz: 1 },
+                { x: 3, z: -5.4, mode: 'wave', fx: 3, fz: 0 },
+                { x: -6, z: -5.2, mode: 'work', fx: -6, fz: -1 },
+                { x: 27, z: 6.2, mode: 'talk', fx: 29, fz: 9 },
+                { x: 31, z: 6.4, mode: 'idle', fx: 29, fz: 9, longHair: true },
+                { x: -13.5, z: 6.6, mode: 'idle', fx: -16, fz: 8.6, longHair: true },
+                { x: 16.5, z: 4.6, mode: 'wave', fx: 30, fz: 4 }
+            ].map(o => Object.assign({}, staff, o));
+            crew.push({ x: 13.5, z: -17.6, top: 0xf97316, vest: 0xea580c, bottom: 0x1e3a8a, helmet: 0xfacc15, mode: 'work', fx: 14, fz: -19 });
+            crew.push({ x: 16, z: -17.2, top: 0xf97316, vest: 0xea580c, bottom: 0x1e3a8a, helmet: 0xfacc15, mode: 'wave', fx: 0, fz: 0 });
+            addCrowd(p, crew, 0, 0);
+            // 演習流程：每 7 秒切換一種狀況，並由同仁操作廣播車
+            let stT = 99, timer = 0, acc = 0;
+            envAnimators.push((t, dt) => {
+                timer += dt; stT += dt; acc += dt;
+                beacons.forEach((b, i) => b.material.color.setHex(Math.sin(t * 8 + i * 1.6) > 0 ? 0xf59e0b : 0x7c2d12));
+                if (stT > 7) {
+                    stT = 0; stepIdx = (stepIdx + (timer > 1 ? 1 : 0)) % DRILL_STEPS.length;
+                    const c = board.material.map.image; drawBoard(c.getContext('2d'), c.width, c.height); board.material.map.needsUpdate = true;
+                    const st = document.getElementById('drill-step'), ac = document.getElementById('drill-action');
+                    if (st) st.textContent = DRILL_STEPS[stepIdx].s; if (ac) ac.textContent = DRILL_STEPS[stepIdx].a;
+                    if (currentScenarioId === 'drill' && timer > 1) DRILL_STEPS[stepIdx].op();
+                }
+                if (acc > 0.5) {
+                    acc = 0; const el = document.getElementById('drill-timer');
+                    if (el) el.textContent = `${String(Math.floor(timer / 60)).padStart(2, '0')}:${String(Math.floor(timer % 60)).padStart(2, '0')}`;
+                }
+            });
+        }
+        SCENARIOS.push({
+            id: 'drill', icon: '🛡️', name: '關鍵基礎設施演習訓練', pin: '演習場', tagline: '同仁模擬各種突發狀況，實地操作廣播車', map: { x: 50, y: 20 },
+            sky: { day: 0x8fb8d9, night: 0x0b1021 }, fog: 0.012, light: { sun: 0.9, hemi: 1 },
+            cam: { p: [20, 17, 30], t: [-2, 5, -6] }, build: buildDrillEnv, signalText: '● 演習備援直播',
+            desc: '關鍵基礎設施演習訓練：配合關鍵基礎設施防護演習，央廣同仁在變電與通訊設施現場模擬市電中斷、網路中斷、火警疏散、資安攻擊與人員受傷等狀況，實地操作廣播車的儲能供電、衛星備援與外場播音，確保緊急時刻廣播不中斷。',
+            status: [['🛡️ 演習', '關鍵基礎設施防護演習', 'info'], ['📋 目前狀況', '狀況一：市電中斷', 'bad', 'drill-step'], ['🔧 應變操作', '切換 20kWh 儲能電池供電', 'ok', 'drill-action'], ['⏱️ 演習計時', '00:00', 'info', 'drill-timer'], ['👥 參演', '央廣工程、節目與行政同仁', 'info']]
+        });
+
+        // =====================================================================
+        // --- 10. 情境配樂：每個情境一首電子合成音樂 (夜間為柔和版) ---
+        // =====================================================================
+        const NT = (m) => m ? 440 * Math.pow(2, (m - 69) / 12) : 0;
+        const BGM_TRACKS = {
+            default: { step: 0.16, wave: 'square', vol: 0.02, lead: DAY_MELODY, bass: [48, 0, 0, 0, 53, 0, 0, 0, 55, 0, 0, 0, 48, 0, 43, 0].map(NT), bassWave: 'triangle', drums: 'none', night: NIGHT_MELODY },
+            campus: { step: 0.13, wave: 'square', vol: 0.02, lead: [67, 71, 74, 71, 69, 72, 76, 72, 71, 74, 79, 74, 72, 71, 69, 0].map(NT), bass: [43, 0, 43, 0, 40, 0, 40, 0, 36, 0, 36, 0, 38, 0, 38, 0].map(NT), bassWave: 'sawtooth', drums: 'pop' },
+            plaza: { step: 0.14, wave: 'triangle', vol: 0.03, lead: [76, 0, 79, 76, 0, 74, 72, 0, 69, 72, 0, 74, 76, 0, 79, 0].map(NT), bass: [48, 0, 43, 0, 45, 0, 40, 0, 41, 0, 48, 0, 43, 0, 43, 0].map(NT), bassWave: 'square', drums: 'latin' },
+            disaster: { step: 0.2, wave: 'sawtooth', vol: 0.014, lead: [57, 60, 64, 69, 55, 59, 64, 67, 53, 57, 60, 65, 52, 56, 59, 64].map(NT), bass: [33, 0, 33, 0, 31, 0, 31, 0, 29, 0, 29, 0, 28, 0, 28, 0].map(NT), bassWave: 'sine', drums: 'pulse' },
+            national: { step: 0.18, wave: 'square', vol: 0.02, lead: [72, 72, 67, 72, 76, 0, 74, 72, 74, 74, 71, 67, 72, 0, 67, 0].map(NT), bass: [48, 0, 43, 0, 48, 0, 43, 0, 43, 0, 50, 0, 48, 0, 43, 0].map(NT), bassWave: 'triangle', drums: 'march' },
+            drill: { step: 0.125, wave: 'square', vol: 0.018, lead: [64, 0, 64, 67, 0, 69, 0, 67, 64, 0, 62, 64, 0, 59, 0, 0].map(NT), bass: [40, 40, 52, 40, 40, 52, 40, 52, 38, 38, 50, 38, 43, 43, 55, 43].map(NT), bassWave: 'sawtooth', drums: 'techno' }
+        };
+        let bgmTrackKey = null, noiseBuf = null;
+        function bgmTone(freq, t, dur, wave, vol) {
+            const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+            o.type = wave; o.frequency.value = freq; o.connect(g); g.connect(audioCtx.destination);
+            g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0008, t + dur);
+            o.start(t); o.stop(t + dur + 0.02);
+        }
+        function bgmDrum(kind, t) {
+            if (kind === 'kick') {
+                const o = audioCtx.createOscillator(), g = audioCtx.createGain(); o.type = 'sine';
+                o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.14);
+                g.gain.setValueAtTime(0.09, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.18); o.connect(g); g.connect(audioCtx.destination); o.start(t); o.stop(t + 0.2);
+                return;
+            }
+            if (!noiseBuf) { noiseBuf = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.3, audioCtx.sampleRate); const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+            const s = audioCtx.createBufferSource(), f = audioCtx.createBiquadFilter(), g = audioCtx.createGain(); s.buffer = noiseBuf;
+            const hat = kind === 'hat';
+            f.type = hat ? 'highpass' : 'bandpass'; f.frequency.value = hat ? 7000 : 1800;
+            const dur = hat ? 0.04 : 0.12, vol = hat ? 0.025 : 0.05;
+            g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+            s.connect(f); f.connect(g); g.connect(audioCtx.destination); s.start(t); s.stop(t + dur + 0.02);
+        }
+        const DRUM_PATTERNS = {
+            pop: (i) => [i % 4 === 0 && 'kick', i % 4 === 2 && 'snare', i % 2 === 1 && 'hat'],
+            latin: (i) => [(i === 0 || i === 6 || i === 8 || i === 14) && 'kick', (i === 4 || i === 12) && 'snare', 'hat'],
+            pulse: (i) => [i % 8 === 0 && 'kick'],
+            march: (i) => [i % 8 === 0 && 'kick', (i % 4 === 2 || i === 15) && 'snare'],
+            techno: (i) => [i % 4 === 0 && 'kick', i % 4 === 2 && 'hat', i % 8 === 4 && 'snare'],
+            none: () => []
+        };
+        function bgmScheduler() {
+            if (isMuted || !isBgmPlaying || !audioCtx) return;
+            const sid = (typeof currentScenarioId !== 'undefined' && BGM_TRACKS[currentScenarioId]) ? currentScenarioId : 'default';
+            const key = sid + (isNightMode ? ':n' : ':d');
+            if (key !== bgmTrackKey) { bgmTrackKey = key; bgmCurrentNote = 0; bgmNextNoteTime = Math.max(bgmNextNoteTime, audioCtx.currentTime + 0.05); }
+            const T = BGM_TRACKS[sid], night = isNightMode, step = T.step * (night ? 1.35 : 1);
+            while (bgmNextNoteTime < audioCtx.currentTime + 0.1) {
+                const i = bgmCurrentNote % 16, t = bgmNextNoteTime;
+                const lead = night && T.night ? T.night[i] : T.lead[i];
+                if (lead > 0) bgmTone(lead, t, step * (night ? 1.4 : 0.8), night ? 'sine' : T.wave, night ? T.vol * 1.1 : T.vol);
+                if (T.bass[i] > 0) bgmTone(T.bass[i], t, step * 1.6, night ? 'sine' : T.bassWave, night ? 0.025 : 0.03);
+                if (!night) DRUM_PATTERNS[T.drums](i).forEach(d => d && bgmDrum(d, t));
+                bgmNextNoteTime += step; bgmCurrentNote++;
+            }
+            bgmTimerID = setTimeout(bgmScheduler, 25);
+        }
 
 
         window.onload = async function () {
-            setupInspectorCollapse();
             await initThreeScene(); buildUIListsAndHotbar(); buildScenarioMapUI();
             makeWidgetDraggable(document.getElementById('mission-card'), [document.getElementById('mission-drag-handle')]);
+            applyResponsiveLayout(true);
+            window.addEventListener('orientationchange', () => setTimeout(onWindowResize, 250));
             updateCraftingModalUI(VEHICLE_FEATURES[0]); highlightQuickListButton(VEHICLE_FEATURES[0].id);
             animate();
+            // 起始畫面：語言選擇就緒 → 選擇後進入任務情境地圖
+            ['lang-zh', 'lang-en'].forEach(id => document.getElementById(id).disabled = false);
+            document.getElementById('lang-loading').classList.add('hidden');
         };
     </script>
 </body>
